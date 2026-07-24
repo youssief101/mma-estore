@@ -9,13 +9,13 @@ const categorySchema = new mongoose.Schema(
             required: [true, "Category name is required"],
             unique: true,
             trim: true, // no 'T-Shirts', ' T-Shirts', 'T-shirts  '
-            maxLength: [100, "Category name can't exceed 100 chars"]
+            maxlength: [100, "Category name can't exceed 100 chars"]
         },
         description: {
             type: String,
             required: true,
             trim: true,
-            maxLength: [500, "Description can't exceed 500 chars"]
+            maxlength: [500, "Description can't exceed 500 chars"]
         },
         image: {
             type: String,
