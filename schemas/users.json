@@ -1,0 +1,13 @@
+{
+    _id,
+    username, (unique) // indexed
+    firstName,
+    lastName,
+    email, (unique) // indexed
+    passwordHash,
+    role,
+    phone,
+    addresses:[ObjectId],
+    createdAt,
+    updatedAt
+}

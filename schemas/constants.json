@@ -1,0 +1,44 @@
+{
+    "Sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL",
+        "3XL"
+    ],
+
+    "Audience": [
+        "Men",
+        "Women",
+        "Kids",
+        "Babies",
+        "Unisex"
+    ],
+
+    "Role": [
+        "Customer",
+        "Admin"
+    ],
+
+    "EventType": [
+        "PPV",
+        "Fight Night",
+        "Noche UFC"
+    ],
+
+    "OrderStatus": [
+        "Pending",
+        "Paid",
+        "Shipped",
+        "Delivered",
+        "Cancelled"
+    ],
+
+    "PaymentMethod": [
+        "Visa",
+        "Mastercard",
+        "Gift Card"
+    ]
+}

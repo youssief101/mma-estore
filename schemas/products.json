@@ -1,0 +1,48 @@
+{
+    _id: ObjectId(),
+    productCode: Number, // Indexed
+    name: String, // Indexed
+    brandId: ObjectId, // Indexed
+    description: String,
+    price: Number,
+    oldPrice: Number,
+    discountPercentage: Number,
+    onSale: Boolean, // indexed
+    categoryId: ObjectId, // indexed
+    fighterId: ObjectId, // indexed
+    eventId: ObjectId, // indexed
+    departmentId: ObjectId, // indexed
+    audience: String, // indexed
+    images: [
+        {
+            url: String,
+            alt: String,
+            isPrimary: Boolean
+        }
+    ],
+    inventory: {
+        totalStock: Number,
+        variants: [
+            {
+                size: String,
+                stock: Number
+            }
+        ]
+    },
+    specifications: [
+        {
+            key: String,
+            value: String
+        }
+    ],
+    display: {
+        featured: Boolean,
+        trending: Boolean,
+        championGear: Boolean,
+        newArrival: Boolean
+    },
+    slug: String, // indexed
+    active: Boolean,
+    createdAt: Date,
+    updatedAt: Date
+}

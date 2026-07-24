@@ -1,0 +1,16 @@
+{
+    _id: ObjectId(),
+    firstName: String,
+    lastName: String,
+    nickname: String,
+    gender: String,
+    weightClass: String,
+    ranking: String,
+    nationality: String,
+    image: String,
+    champion: Boolean,
+    active: Boolean,
+    displayOrder: Number,
+    createdAt: Date,
+    updatedAt: Date
+}

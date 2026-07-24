@@ -1,0 +1,16 @@
+{
+    _id: ObjectId(),
+    userId: ObjectId(),
+    items:[
+        {
+            productId:ObjectId(),
+            productName: ,
+            productImage: ,
+            size:String,
+            quantity:Number,
+            unitPrice:Number
+        }
+    ],
+    totalPrice:Number,
+    updatedAt:Date
+}
