@@ -2,6 +2,7 @@
 //          it will reference UFC, Fanatics, etc ...
 
 const mongoose = require("mongoose");
+
 const brandSchema = new mongoose.Schema(
     {
         name: {
@@ -9,12 +10,12 @@ const brandSchema = new mongoose.Schema(
             required: [true, "Brand name is required"],
             unique: true,
             trim: true,
-            maxlength: [100, "Brand name can't exceed 100 chars"]
+            maxlength: [100, "Brand name cannot exceed 100 characters"]
         },
         description: {
             type: String,
             trim: true,
-            maxlength: [500, "Description can't exceed 500 chars"],
+            maxlength: [500, "Description cannot exceed 500 characters"],
             default: ""
         },
         logo: {

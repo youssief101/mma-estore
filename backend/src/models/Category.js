@@ -2,20 +2,21 @@
 //          for example t-shirts, shorts, belts, etc ...
 
 const mongoose = require("mongoose");
+
 const categorySchema = new mongoose.Schema(
     {
         name: {
             type: String,
             required: [true, "Category name is required"],
             unique: true,
-            trim: true, // no 'T-Shirts', ' T-Shirts', 'T-shirts  '
-            maxlength: [100, "Category name can't exceed 100 chars"]
+            trim: true,
+            maxlength: [100, "Category name cannot exceed 100 characters"]
         },
         description: {
             type: String,
             required: true,
             trim: true,
-            maxlength: [500, "Description can't exceed 500 chars"]
+            maxlength: [500, "Description cannot exceed 500 characters"]
         },
         image: {
             type: String,

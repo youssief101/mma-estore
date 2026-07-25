@@ -2,7 +2,7 @@
 //          referenced by products
 
 const mongoose = require("mongoose");
-const {EventTypes} = require("../constants/enums");
+const { EventTypes } = require("../constants/enums");
 
 const eventSchema = new mongoose.Schema(
     {
@@ -11,11 +11,17 @@ const eventSchema = new mongoose.Schema(
             required: [true, "Event name is required"],
             unique: true,
             trim: true,
-            maxlength: [150, "Event name can't exceed 150 chars"]
+            maxlength: [150, "Event name cannot exceed 150 characters"]
         },
         eventDate: {
             type: Date,
-            required: [true, "Event data is required"]
+            required: [true, "Event date is required"]
+        },
+        location: {
+            type: String,
+            required: [true, "Event location is required"],
+            trim: true,
+            maxlength: [150, "Location cannot exceed 150 characters"]
         },
         image: {
             type: String,
@@ -25,7 +31,7 @@ const eventSchema = new mongoose.Schema(
         description: {
             type: String,
             trim: true,
-            maxlength: [1000, "Description can't exceed 1000 chars"],
+            maxlength: [1000, "Description cannot exceed 1000 characters"],
             default: ""
         },
         eventType: {

@@ -2,6 +2,7 @@
 //          of the existing merchendise for example footwear, jerseys, etc ..
 
 const mongoose = require("mongoose");
+
 const departmentSchema = new mongoose.Schema(
     {
         name: {
@@ -9,14 +10,14 @@ const departmentSchema = new mongoose.Schema(
             required: [true, "Department name is required"],
             unique: true,
             trim: true,
-            maxlength: [100, "Department name can't exceed 100 chars"]
+            maxlength: [100, "Department name cannot exceed 100 characters"]
         },
         description: {
             type: String,
             required: true,
             trim: true,
-            maxlength: [500, "Description can't exceed 500 chars"]
-        }, 
+            maxlength: [500, "Description cannot exceed 500 characters"]
+        },
         image: {
             type: String,
             required: true,
@@ -27,7 +28,7 @@ const departmentSchema = new mongoose.Schema(
         timestamps: true,
         versionKey: false
     }
-)
+);
 
 module.exports = mongoose.model("Department", departmentSchema);
 
