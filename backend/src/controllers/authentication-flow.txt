@@ -1,0 +1,77 @@
+authentication flow
+Client
+    │
+    ▼
+Route
+    │
+    ▼
+Controller
+    │
+    ▼
+User Model
+    │
+    ▼
+MongoDB
+
+register flow
+Receive Request
+        │
+        ▼
+Validate Input
+        │
+        ▼
+Check Email Exists
+        │
+        ▼
+Check Username Exists
+        │
+        ▼
+Hash Password
+        │
+        ▼
+Create User
+        │
+        ▼
+Generate JWT
+        │
+        ▼
+Return User + Token
+
+=====================
+=====================
+
+login flow
+Receive Email
+        │
+        ▼
+Find User
+        │
+        ▼
+Include passwordHash
+        │
+        ▼
+Compare Password
+        │
+        ▼
+Generate JWT
+        │
+        ▼
+Update lastLogin
+        │
+        ▼
+Return User
+
+=====================
+=====================
+
+me flow
+Receive JWT
+        │
+        ▼
+Middleware verifies JWT
+        │
+        ▼
+req.user
+        │
+        ▼
+Return current user
