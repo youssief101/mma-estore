@@ -6,7 +6,7 @@ const helmet = require("helmet"); // *
 const morgan = require("morgan"); // *
 
 const connectDB = require("./src/config/database");
-const authRoutes = require("./routes/auth.routes");
+const authRoutes = require("./src/routes/auth.routes");
 const app = express();
 
 connectDB();

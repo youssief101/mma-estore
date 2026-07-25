@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+
 const authenticate = async (req, res, next) => {
     try {
 
@@ -38,6 +41,7 @@ const authenticate = async (req, res, next) => {
         next();
 
     } catch (error) {
+        console.error(error);
 
         if (error.name === "TokenExpiredError") {
             return res.status(401).json({
@@ -59,3 +63,5 @@ const authenticate = async (req, res, next) => {
         });
     }
 };
+
+module.exports = authenticate;
