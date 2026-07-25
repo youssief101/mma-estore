@@ -6,6 +6,7 @@ const helmet = require("helmet"); // *
 const morgan = require("morgan"); // *
 
 const connectDB = require("./src/config/database");
+const authRoutes = require("./routes/auth.routes");
 const app = express();
 
 connectDB();
@@ -14,6 +15,7 @@ app.use(cors()); // allowing angular to communicate with express
 app.use(helmet()); // adds security headers automatically
 app.use(morgan("dev")); // logs every request
 app.use(express.json()); // parse incoming json request bodies
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res)=> {
     res.json({

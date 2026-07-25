@@ -15,63 +15,75 @@ MongoDB
 
 register flow
 Receive Request
-        │
-        ▼
-Validate Input
-        │
-        ▼
-Check Email Exists
-        │
-        ▼
-Check Username Exists
-        │
-        ▼
-Hash Password
-        │
-        ▼
-Create User
-        │
-        ▼
+      │
+      ▼
+Extract user data
+      │
+      ▼
+Check duplicate username
+      │
+      ▼
+Check duplicate email
+      │
+      ▼
+Hash password
+      │
+      ▼
+Create user
+      │
+      ▼
 Generate JWT
-        │
-        ▼
-Return User + Token
+      │
+      ▼
+Return response
 
-=====================
-=====================
+=============================
+=============================
 
 login flow
-Receive Email
-        │
-        ▼
+Client
+   │
+   ▼
+Email + Password
+   │
+   ▼
 Find User
-        │
-        ▼
-Include passwordHash
-        │
-        ▼
+   │
+   ▼
 Compare Password
-        │
-        ▼
-Generate JWT
-        │
-        ▼
+   │
+   ▼
 Update lastLogin
-        │
-        ▼
-Return User
+   │
+   ▼
+Generate JWT
+   │
+   ▼
+Return User + Token
 
-=====================
-=====================
+=============================
+=============================
 
-me flow
-Receive JWT
-        │
-        ▼
-Middleware verifies JWT
-        │
-        ▼
-req.user
-        │
-        ▼
+Client
+   │
+   │ Authorization: Bearer eyJhbGciOiJIUzI1Ni...
+   ▼
+Authentication Middleware
+   │
+   ▼
+Verify JWT
+   │
+   ▼
+Extract user id
+   │
+   ▼
+Load user from MongoDB
+   │
+   ▼
+Attach user to req.user
+   │
+   ▼
+Controller
+   │
+   ▼
 Return current user
