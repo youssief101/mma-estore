@@ -2,7 +2,7 @@
     _id:ObjectId(),
     code:String, (uniqe) // indexed
     amount:Number,
-    active:Boolean,
+    isActive:Boolean,
     expirationDate:Date,
     createdAt:Date
 }

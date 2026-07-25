@@ -26,3 +26,18 @@ const PORT = process.env.PORT;
 app.listen(PORT, ()=> {
     console.log(`Server running on port ${PORT}`);
 });
+
+// testing
+require("./src/models/Category");
+require("./src/models/Department");
+require("./src/models/Brand");
+require("./src/models/Event");
+require("./src/models/Fighter");
+require("./src/models/Product");
+require("./src/models/Address");
+require("./src/models/User");
+require("./src/models/GiftCard");
+require("./src/models/Cart");
+require("./src/models/Order");
+
+console.log("All models loaded successfully.");
