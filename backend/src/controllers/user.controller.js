@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const Address = require("../models/Address");
 const formatProfileResponse = require("../utils/formatProfileResponse");
+
 
 const getProfile = async (req, res) => {
     try {
@@ -185,9 +187,76 @@ const getAddresses = async (req, res) => {
     }
 };
 
+const addAddress = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+
+        if (user.addresses.length === 0) {
+            req.body.isDefault = true;
+        }
+
+        const {
+            fullName,
+            phone,
+            country,
+            city,
+            street,
+            building,
+            governorate,
+            apartment,
+            postalCode,
+            isDefault
+        } = req.body;
+
+        if (isDefault) {
+            await Address.updateMany(
+                {
+                    _id: { $in: user.addresses }
+                },
+                {
+                    isDefault: false
+                }
+            );
+        }
+        const address = await Address.create({
+            userID: user._id,
+            fullName,
+            phone,
+            country,
+            city,
+            street,
+            building,
+            governorate, 
+            apartment,
+            postalCode,
+            isDefault
+        });
+        user.addresses.push(address._id);
+        await user.save();
+        return res.status(201).json({
+            success: true,
+            message: "Address added successfully.",
+            address
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+    }
+};
+
 module.exports = {
     getProfile,
     updateProfile,
     changePassword,
-    getAddresses
+    getAddresses,
+    addAddress
 };
