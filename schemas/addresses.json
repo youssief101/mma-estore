@@ -1,15 +1,16 @@
 {
     _id: ObjectId(),
-    userId: ObjectId(),
+    userID: ObjectId(),
     fullName: String,
     phone: String,
     country: String,
+    governorate: String,
     city: String,
-    state: String,
     street: String,
+    building: String,
+    appartment: String,
     postalCode: String,
     isDefault: Boolean,
-    label: String,
     createdAt: Date,
     updatedAt: Date
 }
