@@ -1,0 +1,16 @@
+{
+    _id: ObjectId(),
+    userID: ObjectId(),
+    fullName: String,
+    phone: String,
+    country: String,
+    governorate: String,
+    city: String,
+    street: String,
+    building: String,
+    appartment: String,
+    postalCode: String,
+    isDefault: Boolean,
+    createdAt: Date,
+    updatedAt: Date
+}

@@ -1,0 +1,9 @@
+{
+    _id: ObjectId(),
+    name: String,
+    description: String
+    logo: String,
+    website: String,
+    createdAt: Date,
+    updatedAt: Date
+}

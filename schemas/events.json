@@ -1,0 +1,12 @@
+{
+    _id: ObjectId(),
+    name: String,
+    eventType: String,
+    eventDate: Date,
+    location: String,
+    venue: String,
+    image: String,
+    description: String,
+    createdAt: Date,
+    updatedAt: Date
+}

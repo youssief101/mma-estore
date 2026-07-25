@@ -1,0 +1,13 @@
+technologies used in my project
+- node.js
+- express
+- mongoose
+- dotenv
+- cors
+- helmet
+- morgan
+- bcrypt
+- jsonwebtoken
+- cookie-parser
+- express-validator multer
+- nodemon

@@ -1,0 +1,29 @@
+{
+    _id:ObjectId(),
+    orderNumber:Number, (unique) // indexed
+    userId:ObjectId(), // indexed
+    addressId:ObjectId(),
+    items:[
+        {
+            productId:ObjectId(),
+            productName: String,
+            productImage: String,
+            size: Number,
+            priceAtPurchase: Number,
+            size:String,
+            quantity:Number,
+            unitPrice:Number
+        }
+    ],
+    subtotal:Number,
+    shipping:Number,
+    total:Number,
+    payment:{
+        method:String,
+        status:String,
+        paidAt:Date
+    },
+    orderStatus:String,
+    createdAt:Date,
+    updatedAt:Date
+}

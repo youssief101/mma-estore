@@ -1,0 +1,15 @@
+{
+    _id,
+    firstName,
+    lastName,
+    nickname,
+    gender,
+    weightClass,
+    ranking,
+    nationality,
+    image,
+    champion,
+    active,
+    createdAt,
+    updatedAt
+}
