@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const formatProfileResponse = require("../utils/formatProfileResponse");
 
@@ -105,7 +106,63 @@ const updateProfile = async (req, res) => {
     }
 };
 
+const changePassword = async (req, res) => {
+    try {
+        const {
+            currentPassword,
+            newPassword
+        } = req.body;
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Current password and new password are required."
+            });
+        }
+        const user = await User.findById(req.user._id)
+            .select("+passwordHash");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+        const isCurrentPasswordCorrect = await bcrypt.compare(
+            currentPassword,
+            user.passwordHash
+        );
+        if (!isCurrentPasswordCorrect) {
+            return res.status(401).json({
+                success: false,
+                message: "Current password is incorrect."
+            });
+        }
+        const isSamePassword = await bcrypt.compare(
+            newPassword,
+            user.passwordHash
+        );
+        if (isSamePassword) {
+            return res.status(400).json({
+                success: false,
+                message: "New password must be different from the current password."
+            });
+        }
+        user.passwordHash = await bcrypt.hash(newPassword, 12);
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: "Password changed successfully."
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+    }
+};
+
 module.exports = {
     getProfile,
-    updateProfile
+    updateProfile,
+    changePassword
 };
