@@ -46,6 +46,13 @@ const FighterGenders = [
     "Female"
 ];
 
+const PaymentStatuses = [
+    "Pending",
+    "Paid",
+    "Failed",
+    "Refunded"
+];
+
 module.exports = {
     Sizes,
     Audiences,
@@ -53,5 +60,6 @@ module.exports = {
     EventTypes,
     OrderStatuses,
     PaymentMethods,
+    PaymentStatuses,
     FighterGenders
 };
