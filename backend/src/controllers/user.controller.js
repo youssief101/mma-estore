@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const Address = require("../models/Address");
+// const Address = require("../models/Address");
 const formatProfileResponse = require("../utils/formatProfileResponse");
 
 
@@ -253,10 +254,91 @@ const addAddress = async (req, res) => {
     }
 };
 
+const updateAddress = async (req, res) => {
+    try {
+
+        const { addressId } = req.params;
+
+        const address = await Address.findById(addressId);
+
+        if (!address) {
+            return res.status(404).json({
+                success: false,
+                message: "Address not found."
+            });
+        }
+
+        if (address.userID.toString() !== req.user._id.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized to update this address."
+            });
+        }
+
+        const {
+            fullName,
+            phone,
+            country,
+            governorate,
+            city,
+            street,
+            building,
+            apartment,
+            postalCode,
+            isDefault
+        } = req.body;
+
+        if (isDefault) {
+            await Address.updateMany(
+                {
+                    userID: req.user._id,
+                    _id: { $ne: addressId }
+                },
+                {
+                    isDefault: false
+                }
+            );
+        }
+
+        address.fullName = fullName ?? address.fullName;
+        address.phone = phone ?? address.phone;
+        address.country = country ?? address.country;
+        address.governorate = governorate ?? address.governorate;
+        address.city = city ?? address.city;
+        address.street = street ?? address.street;
+        address.building = building ?? address.building;
+        address.apartment = apartment ?? address.apartment;
+        address.postalCode = postalCode ?? address.postalCode;
+
+        if (typeof isDefault === "boolean") {
+            address.isDefault = isDefault;
+        }
+
+        await address.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Address updated successfully.",
+            address
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getProfile,
     updateProfile,
     changePassword,
     getAddresses,
-    addAddress
+    addAddress,
+    updateAddress
 };
