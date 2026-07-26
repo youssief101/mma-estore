@@ -128,8 +128,115 @@ const createDepartment = async (req, res) => {
     }
 };
 
+// @youssef: Update department
+const updateDepartment = async (req, res) => {
+    try {
+
+        const { departmentId } = req.params;
+
+        const department = await Department.findById(departmentId);
+
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found."
+            });
+        }
+
+        const {
+            name,
+            description,
+            image,
+            isActive
+        } = req.body;
+
+        if (name !== undefined) {
+
+            const trimmedName = name.trim();
+
+            if (!trimmedName) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Department name cannot be empty."
+                });
+            }
+
+            const duplicateDepartment = await Department.findOne({
+                _id: { $ne: departmentId },
+                name: {
+                    $regex: new RegExp(`^${trimmedName}$`, "i")
+                }
+            });
+
+            if (duplicateDepartment) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Department already exists."
+                });
+            }
+
+            department.name = trimmedName;
+            department.slug = generateSlug(trimmedName);
+        }
+
+        if (description !== undefined) {
+
+            if (!description.trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Description cannot be empty."
+                });
+            }
+
+            department.description = description.trim();
+        }
+
+        if (image !== undefined) {
+
+            if (!image.trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Image cannot be empty."
+                });
+            }
+
+            department.image = image.trim();
+        }
+
+        if (typeof isActive === "boolean") {
+            department.isActive = isActive;
+        }
+
+        await department.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Department updated successfully.",
+            department
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid department ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllDepartments,
     getDepartmentById,
-    createDepartment
+    createDepartment,
+    updateDepartment
 };
