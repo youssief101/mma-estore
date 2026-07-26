@@ -234,9 +234,74 @@ const updateDepartment = async (req, res) => {
     }
 };
 
+// @youssef: Soft delete department
+const deleteDepartment = async (req, res) => {
+    try {
+
+        const { departmentId } = req.params;
+
+        const department = await Department.findById(departmentId);
+
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found."
+            });
+        }
+
+        if (!department.isActive) {
+            return res.status(409).json({
+                success: false,
+                message: "Department is already inactive."
+            });
+        }
+
+        const Product = require("../models/Product");
+
+        const productsCount = await Product.countDocuments({
+            departmentID: department._id,
+            isActive: true
+        });
+
+        if (productsCount > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "Cannot delete department because it contains active products."
+            });
+        }
+
+        department.isActive = false;
+
+        await department.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Department deleted successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid department ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllDepartments,
     getDepartmentById,
     createDepartment,
-    updateDepartment
+    updateDepartment,
+    deleteDepartment
 };
