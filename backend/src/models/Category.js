@@ -26,7 +26,14 @@ const categorySchema = new mongoose.Schema(
         isActive: {
             type: Boolean,
             default: true
-        }
+        },
+        slug: {
+            type: String,
+            required: [true, "Category slug is required"],
+            unique: true,
+            trim: true,
+            lowercase: true
+        },
     },
     {
         timestamps: true,
