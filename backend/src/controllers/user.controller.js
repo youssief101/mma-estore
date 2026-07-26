@@ -259,7 +259,10 @@ const updateAddress = async (req, res) => {
 
         const { addressId } = req.params;
 
-        const address = await Address.findById(addressId);
+        const address = await Address.findOne({
+            _id: addressId,
+            userID: req.user._id
+        });
 
         if (!address) {
             return res.status(404).json({
@@ -334,11 +337,134 @@ const updateAddress = async (req, res) => {
     }
 };
 
+const deleteAddress = async (req, res) => {
+    try {
+        const { addressId } = req.params;
+        const address = await Address.findById(addressId);
+        if (!address) {
+            return res.status(404).json({
+                success: false,
+                message: "Address not found."
+            });
+        }
+        if (address.userID.toString() !== req.user._id.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized to delete this address."
+            });
+        }
+
+        const wasDefault = address.isDefault;
+        await Address.findByIdAndDelete(addressId);
+
+        await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                $pull: {
+                    addresses: addressId
+                }
+            }
+        );
+
+        if (wasDefault) {
+            const nextDefault = await Address.findOne({
+                userID: req.user._id
+            });
+            if (nextDefault) {
+                nextDefault.isDefault = true;
+                await nextDefault.save();
+            }
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Address deleted successfully."
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+    }
+};
+
+const getAllUsers = async (req, res) => {
+    try {
+        // @youssef: adding pagination for increasing performance
+        const page = Math.max(parseInt(req.query.page) || 1, 1);
+        const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+        const skip = (page - 1) * limit;
+
+        const totalUsers = await User.countDocuments();
+
+        const users = await User.find()
+            .select("-passwordHash")
+            .populate("addresses")
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        return res.status(200).json({
+            success: true,
+            page,
+            limit,
+            totalUsers,
+            totalPages: Math.ceil(totalUsers / limit),
+            count: users.length,
+            users
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
+const getUserById = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId)
+            .select("username firstName lastName email role phone isActive lastLogin createdAt addresses")
+            .populate("addresses");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            user
+        });
+
+    } catch (error) {
+        console.error(error);
+        // @youssef: Invalid ObjectId
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID."
+            });
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+    }
+};
+
 module.exports = {
     getProfile,
     updateProfile,
     changePassword,
     getAddresses,
     addAddress,
-    updateAddress
+    updateAddress,
+    deleteAddress,
+    getAllUsers,
+    getUserById
 };
