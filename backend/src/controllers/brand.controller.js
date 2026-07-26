@@ -238,9 +238,74 @@ const updateBrand = async (req, res) => {
     }
 };
 
+// @youssef: Soft delete brand
+const deleteBrand = async (req, res) => {
+    try {
+
+        const { brandId } = req.params;
+
+        const brand = await Brand.findById(brandId);
+
+        if (!brand) {
+            return res.status(404).json({
+                success: false,
+                message: "Brand not found."
+            });
+        }
+
+        if (!brand.isActive) {
+            return res.status(409).json({
+                success: false,
+                message: "Brand is already inactive."
+            });
+        }
+
+        const Product = require("../models/Product");
+
+        const productsCount = await Product.countDocuments({
+            brandID: brand._id,
+            isActive: true
+        });
+
+        if (productsCount > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "Cannot delete brand because it is assigned to active products."
+            });
+        }
+
+        brand.isActive = false;
+
+        await brand.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Brand deleted successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid brand ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllBrands,
     getBrandById,
     createBrand,
-    updateBrand
+    updateBrand,
+    deleteBrand
 };
