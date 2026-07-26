@@ -41,16 +41,7 @@ const categorySchema = new mongoose.Schema(
     }
 );
 
+
+
 module.exports = mongoose.model("Category", categorySchema);
 
-/*
-    @youssef: example of the schema structure
-    {
-        "_id": "...",
-        "name": "T-Shirts",
-        "description": "Official UFC T-Shirts",
-        "image": "/uploads/categories/tshirts.png",
-        "createdAt": "...",
-        "updatedAt": "..."
-    }
-*/
