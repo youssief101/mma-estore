@@ -1,4 +1,5 @@
 const Department = require("../models/Department");
+const generateSlug = require("../utils/generateSlug");
 
 // @youssef: Get all departments
 const getAllDepartments = async (req, res) => {
@@ -68,7 +69,67 @@ const getDepartmentById = async (req, res) => {
     }
 };
 
+// @youssef: Create department
+const createDepartment = async (req, res) => {
+    try {
+
+        const {
+            name,
+            description,
+            image
+        } = req.body;
+
+        if (!name || !description || !image) {
+            return res.status(400).json({
+                success: false,
+                message: "Name, description and image are required."
+            });
+        }
+
+        const trimmedName = name.trim();
+
+        const existingDepartment = await Department.findOne({
+            name: {
+                $regex: new RegExp(`^${trimmedName}$`, "i")
+            }
+        });
+
+        if (existingDepartment) {
+            return res.status(409).json({
+                success: false,
+                message: "Department already exists."
+            });
+        }
+
+        const slug = generateSlug(trimmedName);
+
+        const department = await Department.create({
+            name: trimmedName,
+            slug,
+            description: description.trim(),
+            image: image.trim()
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Department created successfully.",
+            department
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllDepartments,
-    getDepartmentById
+    getDepartmentById,
+    createDepartment
 };
