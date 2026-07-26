@@ -1,4 +1,5 @@
 const Fighter = require("../models/Fighter");
+const generateSlug = require("../utils/generateSlug");
 
 // @youssef: Get all fighters
 const getAllFighters = async (req, res) => {
@@ -72,7 +73,92 @@ const getFighterById = async (req, res) => {
     }
 };
 
+// @youssef: Create fighter
+const createFighter = async (req, res) => {
+    try {
+
+        const {
+            firstName,
+            lastName,
+            nickname,
+            gender,
+            weightClass,
+            ranking,
+            country,
+            image,
+            champion
+        } = req.body;
+
+        if (
+            !firstName ||
+            !lastName ||
+            !gender ||
+            !weightClass ||
+            !country ||
+            !image
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide all required fields."
+            });
+        }
+
+        const trimmedFirstName = firstName.trim();
+        const trimmedLastName = lastName.trim();
+
+        const existingFighter = await Fighter.findOne({
+            firstName: {
+                $regex: new RegExp(`^${trimmedFirstName}$`, "i")
+            },
+            lastName: {
+                $regex: new RegExp(`^${trimmedLastName}$`, "i")
+            }
+        });
+
+        if (existingFighter) {
+            return res.status(409).json({
+                success: false,
+                message: "Fighter already exists."
+            });
+        }
+
+        const slug = generateSlug(
+            `${trimmedFirstName} ${trimmedLastName}`
+        );
+
+        const fighter = await Fighter.create({
+            firstName: trimmedFirstName,
+            lastName: trimmedLastName,
+            nickname: nickname?.trim() ?? "",
+            slug,
+            gender,
+            weightClass: weightClass.trim(),
+            ranking: ranking ?? null,
+            country: country.trim(),
+            image: image.trim(),
+            champion: champion ?? false
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Fighter created successfully.",
+            fighter
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllFighters,
-    getFighterById
+    getFighterById,
+    createFighter
 };
