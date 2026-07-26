@@ -457,6 +457,65 @@ const getUserById = async (req, res) => {
     }
 };
 
+const updateUserStatus = async (req, res) => {
+    try {
+
+        const { userId } = req.params;
+        const { isActive } = req.body;
+
+        if (typeof isActive !== "boolean") {
+            return res.status(400).json({
+                success: false,
+                message: "isActive must be a boolean value."
+            });
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+
+        // preventing admins from accidently deactivating themselves
+        if (user._id.toString() === req.user._id.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: "You cannot deactivate your own account."
+            });
+        }
+
+        user.isActive = isActive;
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: `User has been ${isActive ? "activated" : "deactivated"} successfully.`,
+            user
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getProfile,
     updateProfile,
@@ -466,5 +525,6 @@ module.exports = {
     updateAddress,
     deleteAddress,
     getAllUsers,
-    getUserById
+    getUserById,
+    updateUserStatus
 };
