@@ -204,9 +204,74 @@ const updateCategory = async (req, res) => {
     }
 };
 
+// @youssef: Soft delete category
+const deleteCategory = async (req, res) => {
+    try {
+
+        const { categoryId } = req.params;
+
+        const category = await Category.findById(categoryId);
+
+        if (!category) {
+            return res.status(404).json({
+                success: false,
+                message: "Category not found."
+            });
+        }
+
+        if (!category.isActive) {
+            return res.status(409).json({
+                success: false,
+                message: "Category is already inactive."
+            });
+        }
+
+        const Product = require("../models/Product");
+
+        const productsCount = await Product.countDocuments({
+            categoryID: category._id,
+            active: true
+        });
+
+        if (productsCount > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "Cannot delete category because it is assigned to active products."
+            });
+        }
+
+        category.isActive = false;
+
+        await category.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Category deleted successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid category ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllCategories,
     getCategoryById,
     createCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
 };
