@@ -13,6 +13,7 @@ const authRoutes = require("./src/routes/auth.routes");
 const userRoutes = require("./src/routes/user.routes");
 const categoryRoutes = require("./src/routes/category.routes");
 const departmentRoutes = require("./src/routes/department.routes");
+const brandRoutes = require("./src/routes/brand.routes");
 const app = express();
 
 connectDB();
@@ -25,6 +26,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/departments", departmentRoutes);
+app.use("/api/brands", brandRoutes);
 
 app.get("/", (req, res)=> {
     res.json({
