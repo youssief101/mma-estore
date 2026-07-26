@@ -19,6 +19,40 @@ const getAllCategories = async (req, res) => {
     }
 };
 
+// @youssef: Get category by ID
+const getCategoryById = async (req, res) => {
+    try {
+        const { categoryId } = req.params;
+        const category = await Category.findOne({
+            _id: categoryId,
+            isActive: true
+        });
+        if (!category) {
+            return res.status(404).json({
+                success: false,
+                message: "Category not found."
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            category
+        });
+    } catch (error) {
+        console.error(error);
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid category ID."
+            });
+        }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+    }
+};
+
 module.exports = {
-    getAllCategories
+    getAllCategories,
+    getCategoryById
 };
