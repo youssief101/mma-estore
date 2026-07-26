@@ -1,18 +1,24 @@
-const Category = require("../models/Category");
+const Department = require("../models/Department");
 const generateSlug = require("../utils/generateSlug");
 
-
-// @youssef: Get all categories
-const getAllCategories = async (req, res) => {
+// @youssef: Get all departments
+const getAllDepartments = async (req, res) => {
     try {
-        const categories = await Category.find({isActive: true}).sort({ name: 1 });
+
+        const departments = await Department
+            .find({ isActive: true })
+            .sort({ name: 1 });
+
         return res.status(200).json({
             success: true,
-            count: categories.length,
-            categories
+            count: departments.length,
+            departments
         });
+
     } catch (error) {
+
         console.error(error);
+
         return res.status(500).json({
             success: false,
             message: "Internal server error."
@@ -21,42 +27,50 @@ const getAllCategories = async (req, res) => {
     }
 };
 
-// @youssef: Get category by ID
-const getCategoryById = async (req, res) => {
+// @youssef: Get department by ID
+const getDepartmentById = async (req, res) => {
     try {
-        const { categoryId } = req.params;
-        const category = await Category.findOne({
-            _id: categoryId,
+
+        const { departmentId } = req.params;
+
+        const department = await Department.findOne({
+            _id: departmentId,
             isActive: true
         });
-        if (!category) {
+
+        if (!department) {
             return res.status(404).json({
                 success: false,
-                message: "Category not found."
+                message: "Department not found."
             });
         }
+
         return res.status(200).json({
             success: true,
-            category
+            department
         });
+
     } catch (error) {
+
         console.error(error);
+
         if (error.name === "CastError") {
             return res.status(400).json({
                 success: false,
-                message: "Invalid category ID."
+                message: "Invalid department ID."
             });
         }
+
         return res.status(500).json({
             success: false,
             message: "Internal server error."
         });
+
     }
 };
 
-// @youssef: Create category
-// @youssef: Create category
-const createCategory = async (req, res) => {
+// @youssef: Create department
+const createDepartment = async (req, res) => {
     try {
 
         const {
@@ -74,22 +88,22 @@ const createCategory = async (req, res) => {
 
         const trimmedName = name.trim();
 
-        const existingCategory = await Category.findOne({
+        const existingDepartment = await Department.findOne({
             name: {
                 $regex: new RegExp(`^${trimmedName}$`, "i")
             }
         });
 
-        if (existingCategory) {
+        if (existingDepartment) {
             return res.status(409).json({
                 success: false,
-                message: "Category already exists."
+                message: "Department already exists."
             });
         }
 
         const slug = generateSlug(trimmedName);
 
-        const category = await Category.create({
+        const department = await Department.create({
             name: trimmedName,
             slug,
             description: description.trim(),
@@ -98,8 +112,8 @@ const createCategory = async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: "Category created successfully.",
-            category
+            message: "Department created successfully.",
+            department
         });
 
     } catch (error) {
@@ -114,18 +128,18 @@ const createCategory = async (req, res) => {
     }
 };
 
-// @youssef: Update category
-const updateCategory = async (req, res) => {
+// @youssef: Update department
+const updateDepartment = async (req, res) => {
     try {
 
-        const { categoryId } = req.params;
+        const { departmentId } = req.params;
 
-        const category = await Category.findById(categoryId);
+        const department = await Department.findById(departmentId);
 
-        if (!category) {
+        if (!department) {
             return res.status(404).json({
                 success: false,
-                message: "Category not found."
+                message: "Department not found."
             });
         }
 
@@ -136,29 +150,37 @@ const updateCategory = async (req, res) => {
             isActive
         } = req.body;
 
-        if (name) {
+        if (name !== undefined) {
 
             const trimmedName = name.trim();
 
-            const duplicateCategory = await Category.findOne({
-                _id: { $ne: categoryId },
+            if (!trimmedName) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Department name cannot be empty."
+                });
+            }
+
+            const duplicateDepartment = await Department.findOne({
+                _id: { $ne: departmentId },
                 name: {
                     $regex: new RegExp(`^${trimmedName}$`, "i")
                 }
             });
 
-            if (duplicateCategory) {
+            if (duplicateDepartment) {
                 return res.status(409).json({
                     success: false,
-                    message: "Category already exists."
+                    message: "Department already exists."
                 });
             }
 
-            category.name = trimmedName;
-            category.slug = generateSlug(trimmedName);
+            department.name = trimmedName;
+            department.slug = generateSlug(trimmedName);
         }
 
         if (description !== undefined) {
+
             if (!description.trim()) {
                 return res.status(400).json({
                     success: false,
@@ -166,23 +188,31 @@ const updateCategory = async (req, res) => {
                 });
             }
 
-            category.description = description.trim();
+            department.description = description.trim();
         }
 
         if (image !== undefined) {
-            category.image = image.trim();
+
+            if (!image.trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Image cannot be empty."
+                });
+            }
+
+            department.image = image.trim();
         }
 
         if (typeof isActive === "boolean") {
-            category.isActive = isActive;
+            department.isActive = isActive;
         }
 
-        await category.save();
+        await department.save();
 
         return res.status(200).json({
             success: true,
-            message: "Category updated successfully.",
-            category
+            message: "Department updated successfully.",
+            department
         });
 
     } catch (error) {
@@ -192,7 +222,7 @@ const updateCategory = async (req, res) => {
         if (error.name === "CastError") {
             return res.status(400).json({
                 success: false,
-                message: "Invalid category ID."
+                message: "Invalid department ID."
             });
         }
 
@@ -204,49 +234,49 @@ const updateCategory = async (req, res) => {
     }
 };
 
-// @youssef: Soft delete category
-const deleteCategory = async (req, res) => {
+// @youssef: Soft delete department
+const deleteDepartment = async (req, res) => {
     try {
 
-        const { categoryId } = req.params;
+        const { departmentId } = req.params;
 
-        const category = await Category.findById(categoryId);
+        const department = await Department.findById(departmentId);
 
-        if (!category) {
+        if (!department) {
             return res.status(404).json({
                 success: false,
-                message: "Category not found."
+                message: "Department not found."
             });
         }
 
-        if (!category.isActive) {
+        if (!department.isActive) {
             return res.status(409).json({
                 success: false,
-                message: "Category is already inactive."
+                message: "Department is already inactive."
             });
         }
 
         const Product = require("../models/Product");
 
         const productsCount = await Product.countDocuments({
-            categoryID: category._id,
-            active: true
+            departmentID: department._id,
+            isActive: true
         });
 
         if (productsCount > 0) {
             return res.status(409).json({
                 success: false,
-                message: "Cannot delete category because it is assigned to active products."
+                message: "Cannot delete department because it contains active products."
             });
         }
 
-        category.isActive = false;
+        department.isActive = false;
 
-        await category.save();
+        await department.save();
 
         return res.status(200).json({
             success: true,
-            message: "Category deleted successfully."
+            message: "Department deleted successfully."
         });
 
     } catch (error) {
@@ -256,7 +286,7 @@ const deleteCategory = async (req, res) => {
         if (error.name === "CastError") {
             return res.status(400).json({
                 success: false,
-                message: "Invalid category ID."
+                message: "Invalid department ID."
             });
         }
 
@@ -268,12 +298,10 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-
-
 module.exports = {
-    getAllCategories,
-    getCategoryById,
-    createCategory,
-    updateCategory,
-    deleteCategory,
+    getAllDepartments,
+    getDepartmentById,
+    createDepartment,
+    updateDepartment,
+    deleteDepartment
 };
