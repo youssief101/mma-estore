@@ -130,8 +130,117 @@ const createBrand = async (req, res) => {
     }
 };
 
+// @youssef: Update brand
+const updateBrand = async (req, res) => {
+    try {
+
+        const { brandId } = req.params;
+
+        const brand = await Brand.findById(brandId);
+
+        if (!brand) {
+            return res.status(404).json({
+                success: false,
+                message: "Brand not found."
+            });
+        }
+
+        const {
+            name,
+            description,
+            logo,
+            website,
+            isActive
+        } = req.body;
+
+        if (name !== undefined) {
+
+            const trimmedName = name.trim();
+
+            if (!trimmedName) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Brand name cannot be empty."
+                });
+            }
+
+            const duplicateBrand = await Brand.findOne({
+                _id: { $ne: brandId },
+                name: {
+                    $regex: new RegExp(`^${trimmedName}$`, "i")
+                }
+            });
+
+            if (duplicateBrand) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Brand already exists."
+                });
+            }
+
+            brand.name = trimmedName;
+            brand.slug = generateSlug(trimmedName);
+        }
+
+        if (description !== undefined) {
+            brand.description = description.trim();
+        }
+
+        if (logo !== undefined) {
+            brand.logo = logo.trim();
+        }
+
+        if (website !== undefined) {
+
+            const trimmedWebsite = website.trim();
+
+            if (
+                trimmedWebsite &&
+                !/^https?:\/\//i.test(trimmedWebsite)
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Website must start with http:// or https://."
+                });
+            }
+
+            brand.website = trimmedWebsite;
+        }
+
+        if (typeof isActive === "boolean") {
+            brand.isActive = isActive;
+        }
+
+        await brand.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Brand updated successfully.",
+            brand
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid brand ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllBrands,
     getBrandById,
-    createBrand
+    createBrand,
+    updateBrand
 };

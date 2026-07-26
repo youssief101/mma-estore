@@ -5,7 +5,8 @@ const authorize = require("../middlewares/authorize.middleware");
 const {
     getAllBrands,
     getBrandById,
-    createBrand
+    createBrand,
+    updateBrand
 } = require("../controllers/brand.controller");
 
 const router = express.Router();
@@ -13,5 +14,6 @@ const router = express.Router();
 router.get("/", getAllBrands);
 router.get("/:brandId", getBrandById);
 router.post("/", authenticate, authorize("Admin"), createBrand);
+router.put("/:brandId", authenticate, authorize("Admin"), updateBrand);
 
 module.exports = router;
