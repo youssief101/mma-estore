@@ -1,5 +1,5 @@
 const express = require("express");
-const { getProfile, updateProfile, changePassword, getAddresses, addAddress , updateAddress, deleteAddress, getAllUsers, getUserById, updateUserStatus } = require("../controllers/user.controller");
+const { getProfile, updateProfile, changePassword, getAddresses, addAddress , updateAddress, deleteAddress, getAllUsers, getUserById, updateUserStatus, deleteUser } = require("../controllers/user.controller");
 const authenticate = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/authorize.middleware");
 
@@ -18,4 +18,5 @@ router.delete("/addresses/:addressId", authenticate, deleteAddress);
 router.get("/", authenticate, authorize("Admin"), getAllUsers);
 router.get("/:userId", authenticate, authorize("Admin"), getUserById);
 router.patch("/:userId/status", authenticate, authorize("Admin"), updateUserStatus);
+router.delete("/:userId", authenticate, authorize("Admin"), deleteUser);
 module.exports = router;

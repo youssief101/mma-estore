@@ -462,16 +462,13 @@ const updateUserStatus = async (req, res) => {
 
         const { userId } = req.params;
         const { isActive } = req.body;
-
         if (typeof isActive !== "boolean") {
             return res.status(400).json({
                 success: false,
                 message: "isActive must be a boolean value."
             });
         }
-
         const user = await User.findById(userId);
-
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -486,28 +483,66 @@ const updateUserStatus = async (req, res) => {
                 message: "You cannot deactivate your own account."
             });
         }
-
         user.isActive = isActive;
-
         await user.save();
-
         return res.status(200).json({
             success: true,
             message: `User has been ${isActive ? "activated" : "deactivated"} successfully.`,
             user
         });
-
     } catch (error) {
-
         console.error(error);
-
         if (error.name === "CastError") {
             return res.status(400).json({
                 success: false,
                 message: "Invalid user ID."
             });
         }
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+    }
+};
 
+const deleteUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+        // Prevent deleting yourself
+        if (user._id.toString() === req.user._id.toString()) {
+            return res.status(400).json({
+                success: false,
+                message: "You cannot delete your own account."
+            });
+        }
+        if (!user.isActive) {
+            return res.status(400).json({
+                success: false,
+                message: "User is already inactive."
+            });
+        }
+        user.isActive = false;
+        await user.save();
+        return res.status(200).json({
+            success: true,
+            message: "User deleted successfully."
+        });
+
+    } catch (error) {
+        console.error(error);
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID."
+            });
+        }
         return res.status(500).json({
             success: false,
             message: "Internal server error."
@@ -526,5 +561,6 @@ module.exports = {
     deleteAddress,
     getAllUsers,
     getUserById,
-    updateUserStatus
+    updateUserStatus,
+    deleteUser
 };
