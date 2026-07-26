@@ -157,8 +157,154 @@ const createFighter = async (req, res) => {
     }
 };
 
+// @youssef: Update fighter
+const updateFighter = async (req, res) => {
+    try {
+
+        const { fighterId } = req.params;
+
+        const fighter = await Fighter.findById(fighterId);
+
+        if (!fighter) {
+            return res.status(404).json({
+                success: false,
+                message: "Fighter not found."
+            });
+        }
+
+        const {
+            firstName,
+            lastName,
+            nickname,
+            gender,
+            weightClass,
+            ranking,
+            country,
+            image,
+            champion,
+            isActive
+        } = req.body;
+
+        let updatedFirstName = fighter.firstName;
+        let updatedLastName = fighter.lastName;
+
+        if (firstName !== undefined) {
+
+            updatedFirstName = firstName.trim();
+
+            if (!updatedFirstName) {
+                return res.status(400).json({
+                    success: false,
+                    message: "First name cannot be empty."
+                });
+            }
+
+            fighter.firstName = updatedFirstName;
+        }
+
+        if (lastName !== undefined) {
+
+            updatedLastName = lastName.trim();
+
+            if (!updatedLastName) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Last name cannot be empty."
+                });
+            }
+
+            fighter.lastName = updatedLastName;
+        }
+
+        if (
+            firstName !== undefined ||
+            lastName !== undefined
+        ) {
+
+            const duplicateFighter = await Fighter.findOne({
+                _id: { $ne: fighterId },
+                firstName: {
+                    $regex: new RegExp(`^${updatedFirstName}$`, "i")
+                },
+                lastName: {
+                    $regex: new RegExp(`^${updatedLastName}$`, "i")
+                }
+            });
+
+            if (duplicateFighter) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Fighter already exists."
+                });
+            }
+
+            fighter.slug = generateSlug(
+                `${updatedFirstName} ${updatedLastName}`
+            );
+        }
+
+        if (nickname !== undefined) {
+            fighter.nickname = nickname.trim();
+        }
+
+        if (gender !== undefined) {
+            fighter.gender = gender;
+        }
+
+        if (weightClass !== undefined) {
+            fighter.weightClass = weightClass.trim();
+        }
+
+        if (ranking !== undefined) {
+            fighter.ranking = ranking;
+        }
+
+        if (country !== undefined) {
+            fighter.country = country.trim();
+        }
+
+        if (image !== undefined) {
+            fighter.image = image.trim();
+        }
+
+        if (typeof champion === "boolean") {
+            fighter.champion = champion;
+        }
+
+        if (typeof isActive === "boolean") {
+            fighter.isActive = isActive;
+        }
+
+        await fighter.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Fighter updated successfully.",
+            fighter
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid fighter ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllFighters,
     getFighterById,
-    createFighter
+    createFighter,
+    updateFighter
 };
