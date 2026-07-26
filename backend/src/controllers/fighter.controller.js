@@ -302,9 +302,80 @@ const updateFighter = async (req, res) => {
     }
 };
 
+// @youssef: Soft delete fighter
+const deleteFighter = async (req, res) => {
+    try {
+
+        const { fighterId } = req.params;
+
+        const fighter = await Fighter.findById(fighterId);
+
+        if (!fighter) {
+            return res.status(404).json({
+                success: false,
+                message: "Fighter not found."
+            });
+        }
+
+        if (!fighter.isActive) {
+            return res.status(409).json({
+                success: false,
+                message: "Fighter is already inactive."
+            });
+        }
+
+        const Product = require("../models/Product");
+        const Event = require("../models/Event");
+
+        const hasProducts = await Product.exists({
+            fighterID: fighter._id,
+            isActive: true
+        });
+
+        const hasEvents = await Event.exists({
+            fighterID: fighter._id,
+            isActive: true
+        });
+
+        if (hasProducts || hasEvents) {
+            return res.status(409).json({
+                success: false,
+                message: "Cannot delete fighter because it is referenced by active records."
+            });
+        }        
+
+        fighter.isActive = false;
+
+        await fighter.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Fighter deleted successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid fighter ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 module.exports = {
     getAllFighters,
     getFighterById,
     createFighter,
-    updateFighter
+    updateFighter,
+    deleteFighter 
 };
