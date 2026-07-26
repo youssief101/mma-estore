@@ -52,10 +52,17 @@ const fighterSchema = new mongoose.Schema(
             type: Boolean,
             default: false
         },
-        active: {
+        isActive: {
             type: Boolean,
             default: true
-        }
+        },
+        slug: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true
+    },
     },
     {
         timestamps: true,
