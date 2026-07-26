@@ -2,16 +2,16 @@
     _id: ObjectId(),
     productCode: Number, // Indexed
     name: String, // Indexed
-    brandId: ObjectId, // Indexed
+    brandID: ObjectId, // Indexed
     description: String,
     price: Number,
     oldPrice: Number,
     discountPercentage: Number,
     onSale: Boolean, // indexed
-    categoryId: ObjectId, // indexed
-    fighterId: ObjectId, // indexed
-    eventId: ObjectId, // indexed
-    departmentId: ObjectId, // indexed
+    categoryID: ObjectId, // indexed
+    fighterID: ObjectId, // indexed
+    eventID: ObjectId, // indexed
+    departmentID: ObjectId, // indexed
     audience: String, // indexed
     images: [
         {

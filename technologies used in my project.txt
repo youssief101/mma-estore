@@ -1,13 +1,41 @@
-technologies used in my project
-- node.js
-- express
-- mongoose
-- dotenv
-- cors
-- helmet
-- morgan
-- bcrypt
-- jsonwebtoken
-- cookie-parser
-- express-validator multer
-- nodemon
+| Package           | Purpose                         |
+| ----------------- | ------------------------------- |
+| express           | Web server                      |
+| mongoose          | MongoDB ODM                     |
+| dotenv            | Environment variables           |
+| cors              | Allow Angular frontend          |
+| helmet            | Security headers                |
+| morgan            | Request logging                 |
+| bcrypt            | Password hashing                |
+| jsonwebtoken      | JWT Authentication              |
+| cookie-parser     | Parse cookies                   |
+| express-validator | Validate request data           |
+| multer            | Upload product images           |
+| nodemon           | Auto restart during development |
+
+| Folder      | Responsibility                                    |
+| ----------- | ------------------------------------------------- |
+| config      | MongoDB connection and application configuration  |
+| models      | Mongoose schemas and models                       |
+| controllers | Business logic for each API                       |
+| routes      | Express route definitions                         |
+| middlewares | Authentication, authorization, error handling     |
+| validators  | Request validation logic                          |
+| services    | Reusable business services (payment, email, etc.) |
+| utils       | Helper functions                                  |
+| constants   | Enums, roles, status values                       |
+| scripts     | Seed and import scripts                           |
+| uploads     | Uploaded product images                           |
+
+Phase 3
+│
+├── 3.1 Backend Project Initialization
+├── 3.2 Folder Structure
+├── 3.3 Express Server
+├── 3.4 Environment Variables
+├── 3.5 MongoDB Connection
+├── 3.6 Mongoose Models
+├── 3.7 Schema Validation
+├── 3.8 Database Indexes
+├── 3.9 Seed Scripts
+└── 3.10 Test Everything

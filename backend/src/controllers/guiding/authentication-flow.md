@@ -66,7 +66,7 @@ Return User + Token
 
 Client
    │
-   │ Authorization: Bearer eyJhbGciOiJIUzI1Ni...
+   │ Authorization: Bearer token
    ▼
 Authentication Middleware
    │
