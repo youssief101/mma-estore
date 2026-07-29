@@ -49,6 +49,52 @@ const getAllProducts = async (req, res) => {
     });
   }
 };
+// @Nassar: Get product by ID
+const getProductById = async (req, res) => {
+    try {
+
+        const { id } = req.params;
+
+        const product = await Product.findOne({
+            _id: id,
+            active: true
+        })
+            .populate("brandID", "name logo")
+            .populate("categoryID", "name")
+            .populate("departmentID", "name")
+            .populate("fighterID", "firstName lastName nickname")
+            .populate("eventID", "name eventDate");
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found."
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            product
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid product ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 // @Nassar: Create product
 const createProduct = async (req, res) => {
     try {
@@ -213,5 +259,6 @@ const createProduct = async (req, res) => {
 
 module.exports = {
   getAllProducts,
+  getProductById,
   createProduct
 };

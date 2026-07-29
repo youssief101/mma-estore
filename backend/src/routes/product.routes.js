@@ -12,7 +12,8 @@ const {
 } = require("../controllers/product.controller");
 
 router.get("/", getAllProducts);
-
+router.get("/:id", getProductById);
 router.post("/", authenticate, authorize("Admin"), createProduct);
+
 
 module.exports = router;
