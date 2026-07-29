@@ -5,7 +5,18 @@ const cors = require("cors"); // *
 const helmet = require("helmet"); // *
 const morgan = require("morgan"); // *
 
+
+
+
 const connectDB = require("./src/config/database");
+const authRoutes = require("./src/routes/auth.routes");
+const userRoutes = require("./src/routes/user.routes");
+const categoryRoutes = require("./src/routes/category.routes");
+const departmentRoutes = require("./src/routes/department.routes");
+const brandRoutes = require("./src/routes/brand.routes");
+const fighterRoutes = require("./src/routes/fighter.routes");
+const eventRoutes = require("./src/routes/event.routes");
+
 const app = express();
 
 connectDB();
@@ -14,6 +25,14 @@ app.use(cors()); // allowing angular to communicate with express
 app.use(helmet()); // adds security headers automatically
 app.use(morgan("dev")); // logs every request
 app.use(express.json()); // parse incoming json request bodies
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/departments", departmentRoutes);
+app.use("/api/brands", brandRoutes);
+app.use("/api/fighters", fighterRoutes);
+app.use("/api/events", eventRoutes);
+
 
 app.get("/", (req, res)=> {
     res.json({

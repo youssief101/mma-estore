@@ -1,0 +1,28 @@
+Receive Request
+        │
+        ▼
+Read Authorization Header
+        │
+        ▼
+Verify "Bearer TOKEN"
+        │
+        ▼
+Verify JWT Signature
+        │
+        ▼
+Extract User ID
+        │
+        ▼
+Load User From Database
+        │
+        ▼
+Check User Exists
+        │
+        ▼
+Check User Is Active
+        │
+        ▼
+Attach User To req.user
+        │
+        ▼
+next()

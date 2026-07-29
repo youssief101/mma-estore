@@ -1,0 +1,89 @@
+authentication flow
+Client
+    │
+    ▼
+Route
+    │
+    ▼
+Controller
+    │
+    ▼
+User Model
+    │
+    ▼
+MongoDB
+
+register flow
+Receive Request
+      │
+      ▼
+Extract user data
+      │
+      ▼
+Check duplicate username
+      │
+      ▼
+Check duplicate email
+      │
+      ▼
+Hash password
+      │
+      ▼
+Create user
+      │
+      ▼
+Generate JWT
+      │
+      ▼
+Return response
+
+=============================
+=============================
+
+login flow
+Client
+   │
+   ▼
+Email + Password
+   │
+   ▼
+Find User
+   │
+   ▼
+Compare Password
+   │
+   ▼
+Update lastLogin
+   │
+   ▼
+Generate JWT
+   │
+   ▼
+Return User + Token
+
+=============================
+=============================
+
+Client
+   │
+   │ Authorization: Bearer token
+   ▼
+Authentication Middleware
+   │
+   ▼
+Verify JWT
+   │
+   ▼
+Extract user id
+   │
+   ▼
+Load user from MongoDB
+   │
+   ▼
+Attach user to req.user
+   │
+   ▼
+Controller
+   │
+   ▼
+Return current user
