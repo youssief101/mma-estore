@@ -22,7 +22,18 @@ const categorySchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true
-        }
+        },
+        isActive: {
+            type: Boolean,
+            default: true
+        },
+        slug: {
+            type: String,
+            required: [true, "Category slug is required"],
+            unique: true,
+            trim: true,
+            lowercase: true
+        },
     },
     {
         timestamps: true,
@@ -30,16 +41,7 @@ const categorySchema = new mongoose.Schema(
     }
 );
 
+
+
 module.exports = mongoose.model("Category", categorySchema);
 
-/*
-    @youssef: example of the schema structure
-    {
-        "_id": "...",
-        "name": "T-Shirts",
-        "description": "Official UFC T-Shirts",
-        "image": "/uploads/categories/tshirts.png",
-        "createdAt": "...",
-        "updatedAt": "..."
-    }
-*/

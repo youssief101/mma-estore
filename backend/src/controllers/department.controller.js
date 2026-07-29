@@ -1,0 +1,307 @@
+const Department = require("../models/Department");
+const generateSlug = require("../utils/generateSlug");
+
+// @youssef: Get all departments
+const getAllDepartments = async (req, res) => {
+    try {
+
+        const departments = await Department
+            .find({ isActive: true })
+            .sort({ name: 1 });
+
+        return res.status(200).json({
+            success: true,
+            count: departments.length,
+            departments
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
+// @youssef: Get department by ID
+const getDepartmentById = async (req, res) => {
+    try {
+
+        const { departmentId } = req.params;
+
+        const department = await Department.findOne({
+            _id: departmentId,
+            isActive: true
+        });
+
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found."
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            department
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid department ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
+// @youssef: Create department
+const createDepartment = async (req, res) => {
+    try {
+
+        const {
+            name,
+            description,
+            image
+        } = req.body;
+
+        if (!name || !description || !image) {
+            return res.status(400).json({
+                success: false,
+                message: "Name, description and image are required."
+            });
+        }
+
+        const trimmedName = name.trim();
+
+        const existingDepartment = await Department.findOne({
+            name: {
+                $regex: new RegExp(`^${trimmedName}$`, "i")
+            }
+        });
+
+        if (existingDepartment) {
+            return res.status(409).json({
+                success: false,
+                message: "Department already exists."
+            });
+        }
+
+        const slug = generateSlug(trimmedName);
+
+        const department = await Department.create({
+            name: trimmedName,
+            slug,
+            description: description.trim(),
+            image: image.trim()
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Department created successfully.",
+            department
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
+// @youssef: Update department
+const updateDepartment = async (req, res) => {
+    try {
+
+        const { departmentId } = req.params;
+
+        const department = await Department.findById(departmentId);
+
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found."
+            });
+        }
+
+        const {
+            name,
+            description,
+            image,
+            isActive
+        } = req.body;
+
+        if (name !== undefined) {
+
+            const trimmedName = name.trim();
+
+            if (!trimmedName) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Department name cannot be empty."
+                });
+            }
+
+            const duplicateDepartment = await Department.findOne({
+                _id: { $ne: departmentId },
+                name: {
+                    $regex: new RegExp(`^${trimmedName}$`, "i")
+                }
+            });
+
+            if (duplicateDepartment) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Department already exists."
+                });
+            }
+
+            department.name = trimmedName;
+            department.slug = generateSlug(trimmedName);
+        }
+
+        if (description !== undefined) {
+
+            if (!description.trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Description cannot be empty."
+                });
+            }
+
+            department.description = description.trim();
+        }
+
+        if (image !== undefined) {
+
+            if (!image.trim()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Image cannot be empty."
+                });
+            }
+
+            department.image = image.trim();
+        }
+
+        if (typeof isActive === "boolean") {
+            department.isActive = isActive;
+        }
+
+        await department.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Department updated successfully.",
+            department
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid department ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
+// @youssef: Soft delete department
+const deleteDepartment = async (req, res) => {
+    try {
+
+        const { departmentId } = req.params;
+
+        const department = await Department.findById(departmentId);
+
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found."
+            });
+        }
+
+        if (!department.isActive) {
+            return res.status(409).json({
+                success: false,
+                message: "Department is already inactive."
+            });
+        }
+
+        const Product = require("../models/Product");
+
+        const productsCount = await Product.countDocuments({
+            departmentID: department._id,
+            isActive: true
+        });
+
+        if (productsCount > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "Cannot delete department because it contains active products."
+            });
+        }
+
+        department.isActive = false;
+
+        await department.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Department deleted successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid department ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
+module.exports = {
+    getAllDepartments,
+    getDepartmentById,
+    createDepartment,
+    updateDepartment,
+    deleteDepartment
+};
