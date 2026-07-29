@@ -7,6 +7,7 @@ const authorize = require("../middlewares/authorize.middleware");
 
 const {
   getAllProducts,
+  searchProducts,
   getFeaturedProducts,
   getRelatedProducts,
   getProductById,
@@ -16,6 +17,7 @@ const {
 } = require("../controllers/product.controller");
 
 router.get("/", getAllProducts);
+router.get("/search", searchProducts);
 router.get("/featured", getFeaturedProducts);
 router.get("/:id/related", getRelatedProducts);
 router.get("/:id", getProductById);

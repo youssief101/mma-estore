@@ -49,6 +49,48 @@ const getAllProducts = async (req, res) => {
     });
   }
 };
+// @Nassar: Search products
+const searchProducts = async (req, res) => {
+    try {
+
+        const { q } = req.query;
+
+        if (!q || !q.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Search query is required."
+            });
+        }
+
+        const products = await Product.find({
+            active: true,
+            $text: {
+                $search: q.trim()
+            }
+        })
+            .populate("brandID", "name logo")
+            .populate("categoryID", "name")
+            .populate("departmentID", "name")
+            .populate("fighterID", "firstName lastName nickname")
+            .populate("eventID", "name eventDate");
+
+        return res.status(200).json({
+            success: true,
+            count: products.length,
+            products
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 // @Nassar: Get featured products
 const getFeaturedProducts = async (req, res) => {
     try {
@@ -551,6 +593,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   getAllProducts,
+  searchProducts,
   getFeaturedProducts,
   getRelatedProducts,
   getProductById,
