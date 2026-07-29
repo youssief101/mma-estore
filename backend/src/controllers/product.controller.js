@@ -79,6 +79,58 @@ const getFeaturedProducts = async (req, res) => {
 
     }
 };
+// @Nassar: Get related products
+const getRelatedProducts = async (req, res) => {
+    try {
+
+        const { id } = req.params;
+
+        const currentProduct = await Product.findOne({
+            _id: id,
+            active: true
+        });
+
+        if (!currentProduct) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found."
+            });
+        }
+
+        const relatedProducts = await Product.find({
+            _id: { $ne: id },
+            active: true,
+            categoryID: currentProduct.categoryID
+        })
+            .populate("brandID", "name logo")
+            .populate("categoryID", "name")
+            .populate("departmentID", "name")
+            .limit(4);
+
+        return res.status(200).json({
+            success: true,
+            count: relatedProducts.length,
+            products: relatedProducts
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid product ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 // @Nassar: Get product by ID
 const getProductById = async (req, res) => {
   try {
@@ -500,6 +552,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
   getAllProducts,
   getFeaturedProducts,
+  getRelatedProducts,
   getProductById,
   createProduct,
   updateProduct,
