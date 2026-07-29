@@ -8,6 +8,7 @@ const authorize = require("../middlewares/authorize.middleware");
 const {
   getAllProducts,
   searchProducts,
+  filterProducts,
   getFeaturedProducts,
   getRelatedProducts,
   getProductById,
@@ -18,6 +19,7 @@ const {
 
 router.get("/", getAllProducts);
 router.get("/search", searchProducts);
+router.get("/filter", filterProducts);
 router.get("/featured", getFeaturedProducts);
 router.get("/:id/related", getRelatedProducts);
 router.get("/:id", getProductById);
