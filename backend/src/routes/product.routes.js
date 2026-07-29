@@ -9,11 +9,12 @@ const {
   getAllProducts,
   getProductById,
   createProduct,
+  updateProduct,
 } = require("../controllers/product.controller");
 
 router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 router.post("/", authenticate, authorize("Admin"), createProduct);
-
+router.put("/:id", authenticate, authorize("Admin"), updateProduct);
 
 module.exports = router;

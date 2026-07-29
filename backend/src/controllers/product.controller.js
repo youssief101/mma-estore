@@ -256,9 +256,205 @@ const createProduct = async (req, res) => {
 
     }
 };
+// @Nassar: Update product
+const updateProduct = async (req, res) => {
+    try {
+
+        const { id } = req.params;
+
+        const product = await Product.findById(id);
+
+        if (!product || !product.active) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found."
+            });
+        }
+
+        const {
+            productCode,
+            name,
+            brandID,
+            description,
+            price,
+            oldPrice,
+            discountPercentage,
+            onSale,
+            categoryID,
+            fighterID,
+            eventID,
+            departmentID,
+            audience,
+            images,
+            inventory,
+            specifications,
+            display
+        } = req.body;
+
+        if (productCode && productCode !== product.productCode) {
+
+            const existingCode = await Product.findOne({
+                productCode,
+                _id: { $ne: id }
+            });
+
+            if (existingCode) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Product code already exists."
+                });
+            }
+
+            product.productCode = productCode;
+        }
+
+        if (name) {
+
+            const trimmedName = name.trim();
+
+            const existingName = await Product.findOne({
+                name: {
+                    $regex: new RegExp(`^${trimmedName}$`, "i")
+                },
+                _id: { $ne: id }
+            });
+
+            if (existingName) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Product already exists."
+                });
+            }
+
+            product.name = trimmedName;
+            product.slug = generateSlug(trimmedName);
+        }
+
+        if (brandID) {
+            const brand = await Brand.findById(brandID);
+
+            if (!brand) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Brand not found."
+                });
+            }
+
+            product.brandID = brandID;
+        }
+
+        if (categoryID) {
+            const category = await Category.findById(categoryID);
+
+            if (!category) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Category not found."
+                });
+            }
+
+            product.categoryID = categoryID;
+        }
+
+        if (departmentID) {
+            const department = await Department.findById(departmentID);
+
+            if (!department) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Department not found."
+                });
+            }
+
+            product.departmentID = departmentID;
+        }
+
+        if (fighterID) {
+            const fighter = await Fighter.findById(fighterID);
+
+            if (!fighter) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Fighter not found."
+                });
+            }
+
+            product.fighterID = fighterID;
+        }
+
+        if (eventID) {
+            const event = await Event.findById(eventID);
+
+            if (!event) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Event not found."
+                });
+            }
+
+            product.eventID = eventID;
+        }
+
+        if (description !== undefined)
+            product.description = description.trim();
+
+        if (price !== undefined)
+            product.price = price;
+
+        if (oldPrice !== undefined)
+            product.oldPrice = oldPrice;
+
+        if (discountPercentage !== undefined)
+            product.discountPercentage = discountPercentage;
+
+        if (onSale !== undefined)
+            product.onSale = onSale;
+
+        if (audience !== undefined)
+            product.audience = audience;
+
+        if (images !== undefined)
+            product.images = images;
+
+        if (inventory !== undefined)
+            product.inventory = inventory;
+
+        if (specifications !== undefined)
+            product.specifications = specifications;
+
+        if (display !== undefined)
+            product.display = display;
+
+        await product.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Product updated successfully.",
+            product
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid product ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 
 module.exports = {
   getAllProducts,
   getProductById,
-  createProduct
+  createProduct,
+  updateProduct,
 };
