@@ -250,9 +250,74 @@ const updateCartItemQuantity = async (req, res) => {
     }
 };
 
+// @Ali: Remove item from cart
+const removeCartItem = async (req, res) => {
+    try {
+
+        const { productID, size } = req.body;
+
+        if (!productID || !size) {
+            return res.status(400).json({
+                success: false,
+                message: "Product and size are required."
+            });
+        }
+
+        const cart = await Cart.findOne({
+            userID: req.user._id
+        });
+
+        if (!cart) {
+            return res.status(404).json({
+                success: false,
+                message: "Cart not found."
+            });
+        }
+
+        const itemIndex = cart.items.findIndex(
+            item =>
+                item.productID.toString() === productID &&
+                item.size === size
+        );
+
+        if (itemIndex === -1) {
+            return res.status(404).json({
+                success: false,
+                message: "Cart item not found."
+            });
+        }
+
+        cart.items.splice(itemIndex, 1);
+
+        cart.totalPrice = cart.items.reduce(
+            (total, item) => total + (item.quantity * item.unitPrice),
+            0
+        );
+
+        await cart.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Item removed from cart successfully.",
+            cart
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 
 module.exports = {
     getUserCart,
     addProductToCart,
-    updateCartItemQuantity
+    updateCartItemQuantity,
+    removeCartItem
 };
