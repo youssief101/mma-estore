@@ -6,49 +6,57 @@ const Fighter = require("../models/Fighter");
 const Event = require("../models/Event");
 const generateSlug = require("../utils/generateSlug");
 
-// @Nassar: Get all products
+
+// @Nassar: Get all products with pagination
 const getAllProducts = async (req, res) => {
-  try {
-    const page = Math.max(parseInt(req.query.page) || 1, 1);
-    const limit = Math.max(parseInt(req.query.limit) || 10, 1);
+    try {
 
-    const skip = (page - 1) * limit;
+        let { page = 1, limit = 10 } = req.query;
 
-    const totalProducts = await Product.countDocuments({
-      active: true,
-    });
+        page = parseInt(page);
+        limit = parseInt(limit);
 
-    const products = await Product.find({
-      active: true,
-    })
-      .populate("brandID", "name logo")
-      .populate("categoryID", "name")
-      .populate("departmentID", "name")
-      .populate("fighterID", "firstName lastName nickname")
-      .populate("eventID", "name eventDate")
-      .sort({
-        createdAt: -1,
-      })
-      .skip(skip)
-      .limit(limit);
+        if (page < 1) page = 1;
+        if (limit < 1) limit = 10;
 
-    return res.status(200).json({
-      success: true,
-      currentPage: page,
-      totalPages: Math.ceil(totalProducts / limit),
-      totalProducts,
-      count: products.length,
-      products,
-    });
-  } catch (error) {
-    console.error(error);
+        const filter = {
+            active: true
+        };
 
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error.",
-    });
-  }
+        const totalProducts = await Product.countDocuments(filter);
+
+        const products = await Product.find(filter)
+            .populate("brandID", "name logo")
+            .populate("categoryID", "name")
+            .populate("departmentID", "name")
+            .populate("fighterID", "firstName lastName nickname")
+            .populate("eventID", "name eventDate")
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        return res.status(200).json({
+            success: true,
+            page,
+            limit,
+            totalProducts,
+            totalPages: Math.ceil(totalProducts / limit),
+            count: products.length,
+            products
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
 };
+
 // @Nassar: Search products
 const searchProducts = async (req, res) => {
     try {
@@ -179,6 +187,38 @@ const getFeaturedProducts = async (req, res) => {
             .populate("brandID", "name logo")
             .populate("categoryID", "name")
             .populate("departmentID", "name")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            count: products.length,
+            products
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+// @Nassar: Get champion gear products
+const getChampionGearProducts = async (req, res) => {
+    try {
+
+        const products = await Product.find({
+            active: true,
+            "display.championGear": true
+        })
+            .populate("brandID", "name logo")
+            .populate("categoryID", "name")
+            .populate("departmentID", "name")
+            .populate("fighterID", "firstName lastName nickname")
+            .populate("eventID", "name eventDate")
             .sort({ createdAt: -1 });
 
         return res.status(200).json({
@@ -673,6 +713,7 @@ module.exports = {
   searchProducts,
   filterProducts,
   getFeaturedProducts,
+  getChampionGearProducts,
   getRelatedProducts,
   getProductById,
   createProduct,
