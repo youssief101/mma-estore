@@ -49,6 +49,36 @@ const getAllProducts = async (req, res) => {
     });
   }
 };
+// @Nassar: Get featured products
+const getFeaturedProducts = async (req, res) => {
+    try {
+
+        const products = await Product.find({
+            active: true,
+            "display.featured": true
+        })
+            .populate("brandID", "name logo")
+            .populate("categoryID", "name")
+            .populate("departmentID", "name")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            count: products.length,
+            products
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 // @Nassar: Get product by ID
 const getProductById = async (req, res) => {
   try {
@@ -469,6 +499,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   getAllProducts,
+  getFeaturedProducts,
   getProductById,
   createProduct,
   updateProduct,

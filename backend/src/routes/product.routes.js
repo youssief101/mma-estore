@@ -7,6 +7,7 @@ const authorize = require("../middlewares/authorize.middleware");
 
 const {
   getAllProducts,
+  getFeaturedProducts,
   getProductById,
   createProduct,
   updateProduct,
@@ -14,6 +15,7 @@ const {
 } = require("../controllers/product.controller");
 
 router.get("/", getAllProducts);
+router.get("/featured", getFeaturedProducts);
 router.get("/:id", getProductById);
 router.post("/", authenticate, authorize("Admin"), createProduct);
 router.put("/:id", authenticate, authorize("Admin"), updateProduct);
