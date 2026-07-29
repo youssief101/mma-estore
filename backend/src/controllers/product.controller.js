@@ -1,0 +1,217 @@
+const Product = require("../models/Product");
+const Brand = require("../models/Brand");
+const Category = require("../models/Category");
+const Department = require("../models/Department");
+const Fighter = require("../models/Fighter");
+const Event = require("../models/Event");
+const generateSlug = require("../utils/generateSlug");
+
+// @Nassar: Get all products
+const getAllProducts = async (req, res) => {
+  try {
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.max(parseInt(req.query.limit) || 10, 1);
+
+    const skip = (page - 1) * limit;
+
+    const totalProducts = await Product.countDocuments({
+      active: true,
+    });
+
+    const products = await Product.find({
+      active: true,
+    })
+      .populate("brandID", "name logo")
+      .populate("categoryID", "name")
+      .populate("departmentID", "name")
+      .populate("fighterID", "firstName lastName nickname")
+      .populate("eventID", "name eventDate")
+      .sort({
+        createdAt: -1,
+      })
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).json({
+      success: true,
+      currentPage: page,
+      totalPages: Math.ceil(totalProducts / limit),
+      totalProducts,
+      count: products.length,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+// @Nassar: Create product
+const createProduct = async (req, res) => {
+    try {
+
+        const {
+            productCode,
+            name,
+            brandID,
+            description,
+            price,
+            oldPrice,
+            discountPercentage,
+            onSale,
+            categoryID,
+            fighterID,
+            eventID,
+            departmentID,
+            audience,
+            images,
+            inventory,
+            specifications,
+            display
+        } = req.body;
+
+        if (
+            !productCode ||
+            !name ||
+            !brandID ||
+            !description ||
+            price === undefined ||
+            !categoryID ||
+            !departmentID ||
+            !audience ||
+            !images ||
+            !inventory
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing required fields."
+            });
+        }
+
+        const existingCode = await Product.findOne({ productCode });
+
+        if (existingCode) {
+            return res.status(409).json({
+                success: false,
+                message: "Product code already exists."
+            });
+        }
+
+        const trimmedName = name.trim();
+
+        const existingName = await Product.findOne({
+            name: {
+                $regex: new RegExp(`^${trimmedName}$`, "i")
+            }
+        });
+
+        if (existingName) {
+            return res.status(409).json({
+                success: false,
+                message: "Product already exists."
+            });
+        }
+
+        const slug = generateSlug(trimmedName);
+
+        const existingSlug = await Product.findOne({ slug });
+
+        if (existingSlug) {
+            return res.status(409).json({
+                success: false,
+                message: "A product with this slug already exists."
+            });
+        }
+
+        const brand = await Brand.findById(brandID);
+        if (!brand) {
+            return res.status(404).json({
+                success: false,
+                message: "Brand not found."
+            });
+        }
+
+        const category = await Category.findById(categoryID);
+        if (!category) {
+            return res.status(404).json({
+                success: false,
+                message: "Category not found."
+            });
+        }
+
+        const department = await Department.findById(departmentID);
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found."
+            });
+        }
+
+        if (fighterID) {
+            const fighter = await Fighter.findById(fighterID);
+
+            if (!fighter) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Fighter not found."
+                });
+            }
+        }
+
+        if (eventID) {
+            const event = await Event.findById(eventID);
+
+            if (!event) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Event not found."
+                });
+            }
+        }
+
+        const product = await Product.create({
+            productCode,
+            name: trimmedName,
+            slug,
+            brandID,
+            description: description.trim(),
+            price,
+            oldPrice,
+            discountPercentage,
+            onSale,
+            categoryID,
+            fighterID,
+            eventID,
+            departmentID,
+            audience,
+            images,
+            inventory,
+            specifications,
+            display
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Product created successfully.",
+            product
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
+module.exports = {
+  getAllProducts,
+  createProduct
+};
