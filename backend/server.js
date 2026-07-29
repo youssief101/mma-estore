@@ -15,6 +15,7 @@ const categoryRoutes = require("./src/routes/category.routes");
 const departmentRoutes = require("./src/routes/department.routes");
 const brandRoutes = require("./src/routes/brand.routes");
 const fighterRoutes = require("./src/routes/fighter.routes");
+const eventRoutes = require("./src/routes/event.routes");
 
 const app = express();
 
@@ -30,6 +31,8 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/departments", departmentRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/fighters", fighterRoutes);
+app.use("/api/events", eventRoutes);
+
 
 app.get("/", (req, res)=> {
     res.json({
