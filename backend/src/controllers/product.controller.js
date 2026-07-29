@@ -238,6 +238,38 @@ const getChampionGearProducts = async (req, res) => {
 
     }
 };
+// @Nassar: Get new arrival products
+const getNewArrivalProducts = async (req, res) => {
+    try {
+
+        const products = await Product.find({
+            active: true,
+            "display.newArrival": true
+        })
+            .populate("brandID", "name logo")
+            .populate("categoryID", "name")
+            .populate("departmentID", "name")
+            .populate("fighterID", "firstName lastName nickname")
+            .populate("eventID", "name eventDate")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            count: products.length,
+            products
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 // @Nassar: Get related products
 const getRelatedProducts = async (req, res) => {
     try {
@@ -714,6 +746,7 @@ module.exports = {
   filterProducts,
   getFeaturedProducts,
   getChampionGearProducts,
+  getNewArrivalProducts,
   getRelatedProducts,
   getProductById,
   createProduct,

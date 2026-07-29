@@ -11,6 +11,7 @@ const {
   filterProducts,
   getFeaturedProducts,
   getChampionGearProducts,
+  getNewArrivalProducts,
   getRelatedProducts,
   getProductById,
   createProduct,
@@ -23,6 +24,7 @@ router.get("/search", searchProducts);
 router.get("/filter", filterProducts);
 router.get("/featured", getFeaturedProducts);
 router.get("/champion-gear", getChampionGearProducts);
+router.get("/new-arrivals", getNewArrivalProducts);
 router.get("/:id/related", getRelatedProducts);
 router.get("/:id", getProductById);
 router.post("/", authenticate, authorize("Admin"), createProduct);
