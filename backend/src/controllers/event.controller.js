@@ -136,8 +136,100 @@ const createEvent = async (req, res) => {
 
     }
 };
+// @Nassar: Update event
+const updateEvent = async (req, res) => {
+    try {
+
+        const { eventId } = req.params;
+
+        const event = await Event.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({
+                success: false,
+                message: "Event not found."
+            });
+        }
+
+        const {
+            name,
+            eventDate,
+            location,
+            image,
+            description,
+            eventType
+        } = req.body;
+
+        if (name) {
+
+            const trimmedName = name.trim();
+
+            const existingEvent = await Event.findOne({
+                _id: { $ne: eventId },
+                name: {
+                    $regex: new RegExp(`^${trimmedName}$`, "i")
+                }
+            });
+
+            if (existingEvent) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Another event with this name already exists."
+                });
+            }
+
+            event.name = trimmedName;
+        }
+
+        if (eventDate) {
+            event.eventDate = eventDate;
+        }
+
+        if (location) {
+            event.location = location.trim();
+        }
+
+        if (image) {
+            event.image = image.trim();
+        }
+
+        if (description !== undefined) {
+            event.description = description.trim();
+        }
+
+        if (eventType) {
+            event.eventType = eventType;
+        }
+
+        await event.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Event updated successfully.",
+            event
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (error.name === "CastError") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid event ID."
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 module.exports = {
     getAllEvents,
     getEventById,
-    createEvent
+    createEvent,
+    updateEvent
 };
