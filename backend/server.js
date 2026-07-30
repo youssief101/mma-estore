@@ -18,6 +18,7 @@ const fighterRoutes = require("./src/routes/fighter.routes");
 const eventRoutes = require("./src/routes/event.routes");
 const productRoutes = require("./src/routes/product.routes");
 const cartRoutes = require("./src/routes/cart.routes");
+const giftCardRoutes = require("./src/routes/giftCard.routes");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/api/fighters", fighterRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/gift-cards", giftCardRoutes);
 
 
 app.get("/", (req, res)=> {
