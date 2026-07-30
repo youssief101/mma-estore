@@ -188,22 +188,23 @@ const createOrder = async (req, res) => {
 
         });
 
-        // Update inventory
-        for (const item of cart.items) {
+        // Update inventory using bulkWrite()
+        const bulkOperations = cart.items.map(item => ({
+            updateOne: {
+                filter: {
+                    _id: item.productID,
+                    "inventory.variants.size": item.size
+                },
+                update: {
+                    $inc: {
+                        "inventory.variants.$.stock": -item.quantity,
+                        "inventory.totalStock": -item.quantity
+                    }
+                }
+            }
+        }));
 
-            const product = await Product.findById(item.productID);
-
-            const variant = product.inventory.variants.find(
-                v => v.size === item.size
-            );
-
-            variant.stock -= item.quantity;
-
-            product.inventory.totalStock -= item.quantity;
-
-            await product.save();
-
-        }
+        await Product.bulkWrite(bulkOperations);
 
         // Clear cart
         cart.items = [];
@@ -228,7 +229,6 @@ const createOrder = async (req, res) => {
 
     }
 };
-
 module.exports = {
   getUserOrders,
   getOrderById,
