@@ -229,9 +229,47 @@ const createOrder = async (req, res) => {
 
     }
 };
+// @Nassar: Update order status (Admin)
+const updateOrderStatus = async (req, res) => {
+    try {
+
+        const { id } = req.params;
+        const { orderStatus } = req.body;
+
+        const order = await Order.findById(id);
+
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found."
+            });
+        }
+
+        order.orderStatus = orderStatus;
+
+        await order.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Order status updated successfully.",
+            order
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 module.exports = {
   getUserOrders,
   getOrderById,
   findOrder,
   createOrder,
+  updateOrderStatus,
 };
