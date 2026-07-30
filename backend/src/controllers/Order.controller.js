@@ -229,6 +229,7 @@ const createOrder = async (req, res) => {
 
     }
 };
+
 // @Nassar: Update order status (Admin)
 const updateOrderStatus = async (req, res) => {
     try {
@@ -266,10 +267,36 @@ const updateOrderStatus = async (req, res) => {
 
     }
 };
+// @Nassar: Get all orders (Admin)
+const getAllOrders = async (req, res) => {
+    try {
+
+        const orders = await Order.find()
+            .populate("userID", "firstName lastName email")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            count: orders.length,
+            orders
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 module.exports = {
   getUserOrders,
   getOrderById,
   findOrder,
   createOrder,
   updateOrderStatus,
+  getAllOrders,
 };
