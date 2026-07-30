@@ -5,9 +5,6 @@ const cors = require("cors"); // *
 const helmet = require("helmet"); // *
 const morgan = require("morgan"); // *
 
-
-
-
 const connectDB = require("./src/config/database");
 const authRoutes = require("./src/routes/auth.routes");
 const userRoutes = require("./src/routes/user.routes");
@@ -20,7 +17,6 @@ const productRoutes = require("./src/routes/product.routes");
 const orderRoutes = require("./src/routes/order.routes");
 const cartRoutes = require("./src/routes/cart.routes");
 const giftCardRoutes = require("./src/routes/giftCard.routes");
-
 
 const app = express();
 
@@ -42,17 +38,16 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/gift-cards", giftCardRoutes);
 
-
-app.get("/", (req, res)=> {
-    res.json({
-        success: true,
-        message: "Welcome to mma e-store API"
-    });
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Welcome to mma e-store API",
+  });
 });
 
 const PORT = process.env.PORT;
-app.listen(PORT, ()=> {
-    console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 // testing

@@ -4,8 +4,12 @@ const router = express.Router();
 
 const authenticate = require("../middlewares/auth.middleware");
 
-const { getUserOrders } = require("../controllers/Order.controller");
+const {
+  getUserOrders,
+  getOrderById,
+} = require("../controllers/order.controller");
 
 router.get("/my-orders", authenticate, getUserOrders);
+router.get("/:id", authenticate, getOrderById);
 
 module.exports = router;
