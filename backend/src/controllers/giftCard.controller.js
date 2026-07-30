@@ -143,11 +143,97 @@ const createGiftCard = async (req, res) => {
     }
 };
 
+// @Ali: Update gift card
+const updateGiftCard = async (req, res) => {
+    try {
+
+        const { id } = req.params;
+        const {
+            amount,
+            expirationDate,
+            isActive
+        } = req.body;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid gift card ID."
+            });
+        }
+
+        const giftCard = await GiftCard.findById(id);
+
+        if (!giftCard) {
+            return res.status(404).json({
+                success: false,
+                message: "Gift card not found."
+            });
+        }
+
+        if (amount !== undefined) {
+
+            if (amount <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Gift card amount must be greater than zero."
+                });
+            }
+
+            giftCard.amount = amount;
+        }
+
+        if (expirationDate !== undefined) {
+
+            const expiration = new Date(expirationDate);
+
+            if (isNaN(expiration.getTime())) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid expiration date."
+                });
+            }
+
+            if (expiration <= new Date()) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Expiration date must be in the future."
+                });
+            }
+
+            giftCard.expirationDate = expiration;
+        }
+
+        if (isActive !== undefined) {
+            giftCard.isActive = isActive;
+        }
+
+        await giftCard.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Gift card updated successfully.",
+            giftCard
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
+
 
 
 
 module.exports = {
     getAllGiftCards,
     getGiftCardById,
-    createGiftCard
+    createGiftCard,
+    updateGiftCard
 };
