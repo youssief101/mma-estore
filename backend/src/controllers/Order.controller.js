@@ -1,4 +1,6 @@
 const Order = require("../models/Order");
+const Cart = require("../models/Cart");
+const Product = require("../models/Product");
 
 // @Nassar: Get authenticated user's orders
 const getUserOrders = async (req, res) => {
@@ -107,9 +109,129 @@ const findOrder = async (req, res) => {
 
     }
 };
+// @Nassar: Create order
+const createOrder = async (req, res) => {
+    try {
+
+        const {
+            shippingAddress,
+            paymentMethod
+        } = req.body;
+
+        const cart = await Cart.findOne({
+            userID: req.user._id
+        });
+
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Cart is empty."
+            });
+        }
+
+        // Validate stock
+        for (const item of cart.items) {
+
+            const product = await Product.findById(item.productID);
+
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: `${item.productName} no longer exists.`
+                });
+            }
+
+            const variant = product.inventory.variants.find(
+                v => v.size === item.size
+            );
+
+            if (!variant || variant.stock < item.quantity) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Insufficient stock for ${item.productName}.`
+                });
+            }
+
+        }
+
+        const subtotal = cart.totalPrice;
+        const shipping = 0;
+        const total = subtotal + shipping;
+
+        const lastOrder = await Order
+            .findOne()
+            .sort({ orderNumber: -1 });
+
+        const orderNumber = lastOrder
+            ? lastOrder.orderNumber + 1
+            : 1001;
+
+        const order = await Order.create({
+
+            orderNumber,
+
+            userID: req.user._id,
+
+            shippingAddress,
+
+            items: cart.items,
+
+            subtotal,
+
+            shipping,
+
+            total,
+
+            payment: {
+                method: paymentMethod
+            }
+
+        });
+
+        // Update inventory
+        for (const item of cart.items) {
+
+            const product = await Product.findById(item.productID);
+
+            const variant = product.inventory.variants.find(
+                v => v.size === item.size
+            );
+
+            variant.stock -= item.quantity;
+
+            product.inventory.totalStock -= item.quantity;
+
+            await product.save();
+
+        }
+
+        // Clear cart
+        cart.items = [];
+        cart.totalPrice = 0;
+
+        await cart.save();
+
+        return res.status(201).json({
+            success: true,
+            message: "Order created successfully.",
+            order
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 
 module.exports = {
   getUserOrders,
   getOrderById,
   findOrder,
+  createOrder,
 };
