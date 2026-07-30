@@ -20,6 +20,7 @@ const productRoutes = require("./src/routes/product.routes");
 const cartRoutes = require("./src/routes/cart.routes");
 const giftCardRoutes = require("./src/routes/giftCard.routes");
 
+
 const app = express();
 
 connectDB();
