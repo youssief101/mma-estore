@@ -227,6 +227,57 @@ const updateGiftCard = async (req, res) => {
     }
 };
 
+// @Ali: Soft delete gift card
+const softDeleteGiftCard = async (req, res) => {
+    try {
+
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid gift card ID."
+            });
+        }
+
+        const giftCard = await GiftCard.findById(id);
+
+        if (!giftCard) {
+            return res.status(404).json({
+                success: false,
+                message: "Gift card not found."
+            });
+        }
+
+        if (!giftCard.isActive) {
+            return res.status(400).json({
+                success: false,
+                message: "Gift card is already inactive."
+            });
+        }
+
+        giftCard.isActive = false;
+
+        await giftCard.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Gift card deactivated successfully.",
+            giftCard
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
+
 
 
 
@@ -235,5 +286,6 @@ module.exports = {
     getAllGiftCards,
     getGiftCardById,
     createGiftCard,
-    updateGiftCard
+    updateGiftCard,
+    softDeleteGiftCard
 };
