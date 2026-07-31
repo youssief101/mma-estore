@@ -267,6 +267,34 @@ const getBestSellers = async (req, res) => {
     });
   }
 };
+// @Nassar: Get promotional products
+const getPromotions = async (req, res) => {
+  try {
+    const products = await Product.find({
+      active: true,
+      onSale: true,
+    })
+      .populate("brandID", "name")
+      .populate("categoryID", "name")
+      .sort({
+        discountPercentage: -1,
+        createdAt: -1,
+      });
+
+    return res.status(200).json({
+      success: true,
+      count: products.length,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 module.exports = {
   getHeroBanner,
@@ -278,4 +306,5 @@ module.exports = {
   getFeaturedFighters,
   getFeaturedEvents,
   getBestSellers,
+  getPromotions,
 };

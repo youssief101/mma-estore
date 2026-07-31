@@ -12,6 +12,7 @@ const {
   getFeaturedFighters,
   getFeaturedEvents,
   getBestSellers,
+  getPromotions,
 } = require("../controllers/home.controller");
 
 router.get("/banner", getHeroBanner);
@@ -23,4 +24,5 @@ router.get("/upcoming-events", getUpcomingEvents);
 router.get("/featured-fighters", getFeaturedFighters);
 router.get("/featured-events", getFeaturedEvents);
 router.get("/best-sellers", getBestSellers);
+router.get("/promotions", getPromotions);
 module.exports = router;
