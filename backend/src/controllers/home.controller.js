@@ -22,65 +22,83 @@ const getHeroBanner = async (req, res) => {
 };
 // @Nassar: Get featured products
 const getFeaturedProducts = async (req, res) => {
-    try {
+  try {
+    const products = await Product.find({
+      active: true,
+      "display.featured": true,
+    })
+      .populate("brandID", "name")
+      .populate("categoryID", "name")
+      .sort({ createdAt: -1 });
 
-        const products = await Product.find({
-            active: true,
-            "display.featured": true
-        })
-            .populate("brandID", "name")
-            .populate("categoryID", "name")
-            .sort({ createdAt: -1 });
+    return res.status(200).json({
+      success: true,
+      count: products.length,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
 
-        return res.status(200).json({
-            success: true,
-            count: products.length,
-            products
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Internal server error."
-        });
-
-    }
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
 };
 // @Nassar: Get trending products
 const getTrendingProducts = async (req, res) => {
-    try {
+  try {
+    const products = await Product.find({
+      active: true,
+      "display.trending": true,
+    })
+      .populate("brandID", "name")
+      .populate("categoryID", "name")
+      .sort({ createdAt: -1 });
 
-        const products = await Product.find({
-            active: true,
-            "display.trending": true
-        })
-            .populate("brandID", "name")
-            .populate("categoryID", "name")
-            .sort({ createdAt: -1 });
+    return res.status(200).json({
+      success: true,
+      count: products.length,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
 
-        return res.status(200).json({
-            success: true,
-            count: products.length,
-            products
-        });
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
+// @Nassar: Get champion gear products
+const getChampionGear = async (req, res) => {
+  try {
+    const products = await Product.find({
+      active: true,
+      "display.championGear": true,
+    })
+      .populate("brandID", "name")
+      .populate("categoryID", "name")
+      .sort({ createdAt: -1 });
 
-    } catch (error) {
+    return res.status(200).json({
+      success: true,
+      count: products.length,
+      products,
+    });
+  } catch (error) {
+    console.error(error);
 
-        console.error(error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Internal server error."
-        });
-
-    }
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
 };
 
 module.exports = {
   getHeroBanner,
   getFeaturedProducts,
-  getTrendingProducts
+  getTrendingProducts,
+  getChampionGear,
 };
