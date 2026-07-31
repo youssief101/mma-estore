@@ -8,15 +8,36 @@ const {
 
 const authenticate = require("../middlewares/auth.middleware");
 
+const validate = require("../middlewares/validation.middleware");
+
+const {
+    registerValidator,
+    loginValidator
+} = require("../validators/auth.validator");
+
 const router = express.Router();
 
-// Register a new user
-router.post("/register", register);
+// Register
+router.post(
+    "/register",
+    registerValidator,
+    validate,
+    register
+);
 
-// Login existing user
-router.post("/login", login);
+// Login
+router.post(
+    "/login",
+    loginValidator,
+    validate,
+    login
+);
 
-// Get current authenticated user
-router.get("/me", authenticate, getCurrentUser);
+// Current User
+router.get(
+    "/me",
+    authenticate,
+    getCurrentUser
+);
 
 module.exports = router;

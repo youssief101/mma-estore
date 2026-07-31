@@ -51,16 +51,8 @@ const getDepartmentById = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error(error);
-
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid department ID."
-            });
-        }
-
+        
         return res.status(500).json({
             success: false,
             message: "Internal server error."
@@ -78,13 +70,6 @@ const createDepartment = async (req, res) => {
             description,
             image
         } = req.body;
-
-        if (!name || !description || !image) {
-            return res.status(400).json({
-                success: false,
-                message: "Name, description and image are required."
-            });
-        }
 
         const trimmedName = name.trim();
 
@@ -154,13 +139,6 @@ const updateDepartment = async (req, res) => {
 
             const trimmedName = name.trim();
 
-            if (!trimmedName) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Department name cannot be empty."
-                });
-            }
-
             const duplicateDepartment = await Department.findOne({
                 _id: { $ne: departmentId },
                 name: {
@@ -180,26 +158,10 @@ const updateDepartment = async (req, res) => {
         }
 
         if (description !== undefined) {
-
-            if (!description.trim()) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Description cannot be empty."
-                });
-            }
-
             department.description = description.trim();
         }
 
         if (image !== undefined) {
-
-            if (!image.trim()) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Image cannot be empty."
-                });
-            }
-
             department.image = image.trim();
         }
 
