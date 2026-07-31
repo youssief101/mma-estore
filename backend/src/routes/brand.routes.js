@@ -1,6 +1,8 @@
 const express = require("express");
+
 const authenticate = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/authorize.middleware");
+const validate = require("../middlewares/validation.middleware");
 
 const {
     getAllBrands,
@@ -10,12 +12,57 @@ const {
     deleteBrand
 } = require("../controllers/brand.controller");
 
+const {
+    validateGetAllBrands,
+    validateGetBrandById,
+    validateCreateBrand,
+    validateUpdateBrand,
+    validateDeleteBrand
+} = require("../validators/brand.validator");
+
 const router = express.Router();
 
-router.get("/", getAllBrands);
-router.get("/:brandId", getBrandById);
-router.post("/", authenticate, authorize("Admin"), createBrand);
-router.put("/:brandId", authenticate, authorize("Admin"), updateBrand);
-router.delete("/:brandId", authenticate, authorize("Admin"), deleteBrand);
+// Public
+router.get(
+    "/",
+    validateGetAllBrands,
+    validate,
+    getAllBrands
+);
+
+router.get(
+    "/:brandId",
+    validateGetBrandById,
+    validate,
+    getBrandById
+);
+
+// Admin
+router.post(
+    "/",
+    authenticate,
+    authorize("Admin"),
+    validateCreateBrand,
+    validate,
+    createBrand
+);
+
+router.put(
+    "/:brandId",
+    authenticate,
+    authorize("Admin"),
+    validateUpdateBrand,
+    validate,
+    updateBrand
+);
+
+router.delete(
+    "/:brandId",
+    authenticate,
+    authorize("Admin"),
+    validateDeleteBrand,
+    validate,
+    deleteBrand
+);
 
 module.exports = router;
