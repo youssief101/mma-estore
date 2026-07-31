@@ -49,8 +49,38 @@ const getFeaturedProducts = async (req, res) => {
 
     }
 };
+// @Nassar: Get trending products
+const getTrendingProducts = async (req, res) => {
+    try {
+
+        const products = await Product.find({
+            active: true,
+            "display.trending": true
+        })
+            .populate("brandID", "name")
+            .populate("categoryID", "name")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: true,
+            count: products.length,
+            products
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error."
+        });
+
+    }
+};
 
 module.exports = {
   getHeroBanner,
   getFeaturedProducts,
+  getTrendingProducts
 };
