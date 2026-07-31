@@ -1,4 +1,6 @@
 const Product = require("../models/Product");
+const Event = require("../models/Event");
+
 const getHeroBanner = async (req, res) => {
   try {
     return res.status(200).json({
@@ -120,6 +122,31 @@ const getNewArrivals = async (req, res) => {
     });
   }
 };
+// @Nassar: Get upcoming events
+const getUpcomingEvents = async (req, res) => {
+  try {
+    const events = await Event.find({
+      eventDate: {
+        $gte: new Date(),
+      },
+    }).sort({
+      eventDate: 1,
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: events.length,
+      events,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 module.exports = {
   getHeroBanner,
@@ -127,4 +154,5 @@ module.exports = {
   getTrendingProducts,
   getChampionGear,
   getNewArrivals,
+  getUpcomingEvents,
 };
