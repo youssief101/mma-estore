@@ -47,14 +47,6 @@ const getEventById = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid event ID.",
-      });
-    }
-
     return res.status(500).json({
       success: false,
       message: "Internal server error.",
@@ -64,16 +56,15 @@ const getEventById = async (req, res) => {
 // @Nassar: Create event
 const createEvent = async (req, res) => {
   try {
-    const { name, eventDate, location, image, description, eventType } =
-      req.body;
-
-    if (!name || !eventDate || !location || !image || !eventType) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Name, event date, location, image and event type are required.",
-      });
-    }
+    const {
+      name,
+      eventDate,
+      location,
+      image,
+      description,
+      eventType,
+      isActive
+    } = req.body;
 
     const trimmedName = name.trim();
 
@@ -130,7 +121,7 @@ const updateEvent = async (req, res) => {
     const { name, eventDate, location, image, description, eventType } =
       req.body;
 
-    if (name) {
+    if (name !== undefined) {
       const trimmedName = name.trim();
 
       const existingEvent = await Event.findOne({
@@ -150,15 +141,15 @@ const updateEvent = async (req, res) => {
       event.name = trimmedName;
     }
 
-    if (eventDate) {
+    if (eventDate !== undefined) {
       event.eventDate = eventDate;
     }
 
-    if (location) {
+    if (location !== undefined) {
       event.location = location.trim();
     }
 
-    if (image) {
+    if (image !== undefined) {
       event.image = image.trim();
     }
 
@@ -166,7 +157,7 @@ const updateEvent = async (req, res) => {
       event.description = description.trim();
     }
 
-    if (eventType) {
+    if (eventType !== undefined) {
       event.eventType = eventType;
     }
 
@@ -179,19 +170,12 @@ const updateEvent = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid event ID.",
-      });
-    }
-
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error.",
-    });
   }
+
+  return res.status(500).json({
+    success: false,
+    message: "Internal server error.",
+  });
 };
 // @Nassar: Soft delete event
 const deleteEvent = async (req, res) => {
@@ -208,14 +192,16 @@ const deleteEvent = async (req, res) => {
     }
 
     if (!event.isActive) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "Event is already deleted.",
       });
     }
 
     event.isActive = false;
-
+    if (typeof isActive === "boolean") {
+      event.isActive = isActive;
+    }
     await event.save();
 
     return res.status(200).json({
@@ -224,13 +210,6 @@ const deleteEvent = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid event ID.",
-      });
-    }
 
     return res.status(500).json({
       success: false,
