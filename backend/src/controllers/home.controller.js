@@ -295,6 +295,126 @@ const getPromotions = async (req, res) => {
     });
   }
 };
+// @Nassar: Home page aggregation
+const getHomeData = async (req, res) => {
+  try {
+    const [
+      featuredProducts,
+      featuredFighters,
+      featuredEvents,
+      newArrivals,
+      bestSellers,
+      promotions,
+    ] = await Promise.all([
+      Product.find({
+        active: true,
+        "display.featured": true,
+      })
+        .populate("brandID", "name")
+        .populate("categoryID", "name")
+        .limit(8),
+
+      Fighter.find({
+        isActive: true,
+      }).limit(8),
+
+      Event.find({
+        eventDate: {
+          $gte: new Date(),
+        },
+      })
+        .sort({ eventDate: 1 })
+        .limit(5),
+
+      Product.find({
+        active: true,
+        "display.newArrival": true,
+      })
+        .populate("brandID", "name")
+        .populate("categoryID", "name")
+        .sort({ createdAt: -1 })
+        .limit(8),
+
+      Order.aggregate([
+        {
+          $unwind: "$items",
+        },
+        {
+          $group: {
+            _id: "$items.productID",
+            totalSold: {
+              $sum: "$items.quantity",
+            },
+          },
+        },
+        {
+          $sort: {
+            totalSold: -1,
+          },
+        },
+        {
+          $limit: 8,
+        },
+        {
+          $lookup: {
+            from: "products",
+            localField: "_id",
+            foreignField: "_id",
+            as: "product",
+          },
+        },
+        {
+          $unwind: "$product",
+        },
+        {
+          $match: {
+            "product.active": true,
+          },
+        },
+        {
+          $project: {
+            _id: "$product._id",
+            name: "$product.name",
+            slug: "$product.slug",
+            price: "$product.price",
+            images: "$product.images",
+            totalSold: 1,
+          },
+        },
+      ]),
+
+      Product.find({
+        active: true,
+        onSale: true,
+      })
+        .populate("brandID", "name")
+        .populate("categoryID", "name")
+        .sort({
+          discountPercentage: -1,
+        })
+        .limit(8),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        featuredProducts,
+        featuredFighters,
+        featuredEvents,
+        newArrivals,
+        bestSellers,
+        promotions,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 module.exports = {
   getHeroBanner,
@@ -307,4 +427,5 @@ module.exports = {
   getFeaturedEvents,
   getBestSellers,
   getPromotions,
+  getHomeData
 };

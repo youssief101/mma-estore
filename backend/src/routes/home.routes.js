@@ -13,8 +13,10 @@ const {
   getFeaturedEvents,
   getBestSellers,
   getPromotions,
+  getHomeData
 } = require("../controllers/home.controller");
 
+router.get("/", getHomeData);
 router.get("/banner", getHeroBanner);
 router.get("/featured-products", getFeaturedProducts);
 router.get("/trending-products", getTrendingProducts);
