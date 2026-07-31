@@ -169,6 +169,31 @@ const getFeaturedFighters = async (req, res) => {
     });
   }
 };
+// @Nassar: Get featured events
+const getFeaturedEvents = async (req, res) => {
+  try {
+    const events = await Event.find({
+      eventDate: {
+        $gte: new Date(),
+      },
+    })
+      .sort({ eventDate: 1 })
+      .limit(5);
+
+    return res.status(200).json({
+      success: true,
+      count: events.length,
+      events,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 module.exports = {
   getHeroBanner,
@@ -178,4 +203,5 @@ module.exports = {
   getNewArrivals,
   getUpcomingEvents,
   getFeaturedFighters,
+  getFeaturedEvents,
 };

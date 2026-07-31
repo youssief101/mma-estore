@@ -10,6 +10,7 @@ const {
   getNewArrivals,
   getUpcomingEvents,
   getFeaturedFighters,
+  getFeaturedEvents,
 } = require("../controllers/home.controller");
 
 router.get("/banner", getHeroBanner);
@@ -19,5 +20,6 @@ router.get("/champion-gear", getChampionGear);
 router.get("/new-arrivals", getNewArrivals);
 router.get("/upcoming-events", getUpcomingEvents);
 router.get("/featured-fighters", getFeaturedFighters);
+router.get("/featured-events", getFeaturedEvents);
 
 module.exports = router;
