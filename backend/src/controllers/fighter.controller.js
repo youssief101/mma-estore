@@ -58,13 +58,6 @@ const getFighterById = async (req, res) => {
 
         console.error(error);
 
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid fighter ID."
-            });
-        }
-
         return res.status(500).json({
             success: false,
             message: "Internal server error."
@@ -89,19 +82,6 @@ const createFighter = async (req, res) => {
             champion
         } = req.body;
 
-        if (
-            !firstName ||
-            !lastName ||
-            !gender ||
-            !weightClass ||
-            !country ||
-            !image
-        ) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide all required fields."
-            });
-        }
 
         const trimmedFirstName = firstName.trim();
         const trimmedLastName = lastName.trim();
@@ -192,26 +172,12 @@ const updateFighter = async (req, res) => {
 
             updatedFirstName = firstName.trim();
 
-            if (!updatedFirstName) {
-                return res.status(400).json({
-                    success: false,
-                    message: "First name cannot be empty."
-                });
-            }
-
             fighter.firstName = updatedFirstName;
         }
 
         if (lastName !== undefined) {
 
             updatedLastName = lastName.trim();
-
-            if (!updatedLastName) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Last name cannot be empty."
-                });
-            }
 
             fighter.lastName = updatedLastName;
         }
@@ -287,13 +253,6 @@ const updateFighter = async (req, res) => {
 
         console.error(error);
 
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid fighter ID."
-            });
-        }
-
         return res.status(500).json({
             success: false,
             message: "Internal server error."
@@ -356,13 +315,6 @@ const deleteFighter = async (req, res) => {
     } catch (error) {
 
         console.error(error);
-
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid fighter ID."
-            });
-        }
 
         return res.status(500).json({
             success: false,

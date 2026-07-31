@@ -1,6 +1,8 @@
 const express = require("express");
+
 const authenticate = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/authorize.middleware");
+const validate = require("../middlewares/validation.middleware");
 
 const {
     getAllFighters,
@@ -10,12 +12,59 @@ const {
     deleteFighter
 } = require("../controllers/fighter.controller");
 
+const {
+    validateGetAllFighters,
+    validateGetFighterById,
+    validateCreateFighter,
+    validateUpdateFighter,
+    validateDeleteFighter
+} = require("../validators/fighter.validator");
+
 const router = express.Router();
 
-router.get("/", getAllFighters);
-router.get("/:fighterId", getFighterById);
-router.post("/", authenticate, authorize("Admin"), createFighter);
-router.put("/:fighterId", authenticate, authorize("Admin"), updateFighter);
-router.delete("/:fighterId", authenticate, authorize("Admin"), deleteFighter);
+// Public
+
+router.get(
+    "/",
+    validateGetAllFighters,
+    validate,
+    getAllFighters
+);
+
+router.get(
+    "/:fighterId",
+    validateGetFighterById,
+    validate,
+    getFighterById
+);
+
+// Admin
+
+router.post(
+    "/",
+    authenticate,
+    authorize("Admin"),
+    validateCreateFighter,
+    validate,
+    createFighter
+);
+
+router.put(
+    "/:fighterId",
+    authenticate,
+    authorize("Admin"),
+    validateUpdateFighter,
+    validate,
+    updateFighter
+);
+
+router.delete(
+    "/:fighterId",
+    authenticate,
+    authorize("Admin"),
+    validateDeleteFighter,
+    validate,
+    deleteFighter
+);
 
 module.exports = router;
