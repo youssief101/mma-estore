@@ -38,7 +38,8 @@ const OrderStatuses = [
 const PaymentMethods = [
     "Visa",
     "Mastercard",
-    "Gift Card"
+    "Gift Card",
+    "Cash"
 ];
 
 const FighterGenders = [

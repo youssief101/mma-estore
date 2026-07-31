@@ -154,3 +154,4 @@ orderSchema.index({ orderStatus: 1 });
 orderSchema.index({ "payment.status": 1 });
 
 orderSchema.index({ createdAt: -1 });
+module.exports = mongoose.model("Order", orderSchema);
