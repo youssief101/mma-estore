@@ -1,6 +1,7 @@
 const Product = require("../models/Product");
 const Event = require("../models/Event");
 const Fighter = require("../models/Fighter");
+const Order = require("../models/Order");
 
 const getHeroBanner = async (req, res) => {
   try {
@@ -194,6 +195,78 @@ const getFeaturedEvents = async (req, res) => {
     });
   }
 };
+// @Nassar: Get best-selling products
+const getBestSellers = async (req, res) => {
+  try {
+    const bestSellers = await Order.aggregate([
+      {
+        $unwind: "$items",
+      },
+
+      {
+        $group: {
+          _id: "$items.productID",
+          totalSold: {
+            $sum: "$items.quantity",
+          },
+        },
+      },
+
+      {
+        $sort: {
+          totalSold: -1,
+        },
+      },
+
+      {
+        $limit: 10,
+      },
+
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+
+      {
+        $unwind: "$product",
+      },
+
+      {
+        $match: {
+          "product.active": true,
+        },
+      },
+
+      {
+        $project: {
+          _id: "$product._id",
+          name: "$product.name",
+          slug: "$product.slug",
+          price: "$product.price",
+          images: "$product.images",
+          totalSold: 1,
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      count: bestSellers.length,
+      products: bestSellers,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 module.exports = {
   getHeroBanner,
@@ -204,4 +277,5 @@ module.exports = {
   getUpcomingEvents,
   getFeaturedFighters,
   getFeaturedEvents,
+  getBestSellers,
 };
