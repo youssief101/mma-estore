@@ -17,6 +17,7 @@ const productRoutes = require("./src/routes/product.routes");
 const orderRoutes = require("./src/routes/order.routes");
 const cartRoutes = require("./src/routes/cart.routes");
 const giftCardRoutes = require("./src/routes/giftCard.routes");
+const homeRoutes = require("./src/routes/home.routes");
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/gift-cards", giftCardRoutes);
+app.use("/api/home", homeRoutes);
 
 app.get("/", (req, res) => {
   res.json({
