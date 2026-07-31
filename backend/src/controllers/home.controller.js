@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const Event = require("../models/Event");
+const Fighter = require("../models/Fighter");
 
 const getHeroBanner = async (req, res) => {
   try {
@@ -147,6 +148,27 @@ const getUpcomingEvents = async (req, res) => {
     });
   }
 };
+// @Nassar: Get featured fighters
+const getFeaturedFighters = async (req, res) => {
+  try {
+    const fighters = await Fighter.find({
+      isActive: true,
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: fighters.length,
+      fighters,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+};
 
 module.exports = {
   getHeroBanner,
@@ -155,4 +177,5 @@ module.exports = {
   getChampionGear,
   getNewArrivals,
   getUpcomingEvents,
+  getFeaturedFighters,
 };
