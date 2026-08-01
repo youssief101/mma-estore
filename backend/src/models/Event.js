@@ -51,6 +51,10 @@ const eventSchema = new mongoose.Schema(
   },
 );
 
+eventSchema.index({ eventDate: 1 });
+eventSchema.index({ eventType: 1 });
+eventSchema.index({ isActive: 1 });
+
 module.exports = mongoose.model("Event", eventSchema);
 
 // @youssef: example:

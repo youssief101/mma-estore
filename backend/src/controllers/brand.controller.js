@@ -51,16 +51,7 @@ const getBrandById = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error(error);
-
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid brand ID."
-            });
-        }
-
         return res.status(500).json({
             success: false,
             message: "Internal server error."
@@ -79,13 +70,6 @@ const createBrand = async (req, res) => {
             logo,
             website
         } = req.body;
-
-        if (!name) {
-            return res.status(400).json({
-                success: false,
-                message: "Brand name is required."
-            });
-        }
 
         const trimmedName = name.trim();
 
@@ -107,9 +91,9 @@ const createBrand = async (req, res) => {
         const brand = await Brand.create({
             name: trimmedName,
             slug,
-            description: description?.trim() ?? "",
-            logo: logo?.trim() ?? "",
-            website: website?.trim() ?? ""
+            description: description?.trim(),
+            logo: logo?.trim(),
+            website: website?.trim()
         });
 
         return res.status(201).json({
@@ -154,15 +138,7 @@ const updateBrand = async (req, res) => {
         } = req.body;
 
         if (name !== undefined) {
-
             const trimmedName = name.trim();
-
-            if (!trimmedName) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Brand name cannot be empty."
-                });
-            }
 
             const duplicateBrand = await Brand.findOne({
                 _id: { $ne: brandId },
@@ -191,20 +167,7 @@ const updateBrand = async (req, res) => {
         }
 
         if (website !== undefined) {
-
-            const trimmedWebsite = website.trim();
-
-            if (
-                trimmedWebsite &&
-                !/^https?:\/\//i.test(trimmedWebsite)
-            ) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Website must start with http:// or https://."
-                });
-            }
-
-            brand.website = trimmedWebsite;
+            brand.website = website.trim();
         }
 
         if (typeof isActive === "boolean") {
@@ -220,15 +183,7 @@ const updateBrand = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error(error);
-
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid brand ID."
-            });
-        }
 
         return res.status(500).json({
             success: false,
@@ -284,15 +239,7 @@ const deleteBrand = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error(error);
-
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid brand ID."
-            });
-        }
 
         return res.status(500).json({
             success: false,

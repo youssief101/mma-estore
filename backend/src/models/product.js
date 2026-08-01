@@ -131,7 +131,7 @@ const productSchema = new mongoose.Schema(
             trim: true,
             lowercase: true
         },
-        active: {
+        isActive: {
             type: Boolean,
             default: true
         },

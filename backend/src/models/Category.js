@@ -1,6 +1,9 @@
 // @youssef: the category model is for modeling the types of the products in the store
 //          for example t-shirts, shorts, belts, etc ...
 
+// @youssef: the category model is for modeling the types of the products in the store
+//          for example t-shirts, shorts, belts, etc ...
+
 const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema(
@@ -33,7 +36,7 @@ const categorySchema = new mongoose.Schema(
             unique: true,
             trim: true,
             lowercase: true
-        },
+        }
     },
     {
         timestamps: true,
@@ -41,7 +44,13 @@ const categorySchema = new mongoose.Schema(
     }
 );
 
+// Search index
+categorySchema.index({
+    name: "text",
+    description: "text"
+});
 
+// Frequently used lookups
+categorySchema.index({ isActive: 1 });
 
 module.exports = mongoose.model("Category", categorySchema);
-

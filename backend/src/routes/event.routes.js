@@ -1,20 +1,68 @@
 const express = require("express");
-const router = express.Router();
+
 const authenticate = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/authorize.middleware");
+const validate = require("../middlewares/validation.middleware");
 
 const {
-  getAllEvents,
-  getEventById,
-  createEvent,
-  updateEvent,
-  deleteEvent,
+    getAllEvents,
+    getEventById,
+    createEvent,
+    updateEvent,
+    deleteEvent
 } = require("../controllers/event.controller");
 
-router.get("/", getAllEvents);
-router.get("/:eventId", getEventById);
-router.post("/", authenticate, authorize("Admin"), createEvent);
-router.put("/:eventId", authenticate, authorize("Admin"), updateEvent);
-router.delete("/:eventId", authenticate, authorize("Admin"), deleteEvent);
+const {
+    validateGetAllEvents,
+    validateGetEventById,
+    validateCreateEvent,
+    validateUpdateEvent,
+    validateDeleteEvent
+} = require("../validators/event.validator");
+
+const router = express.Router();
+
+// Public
+router.get(
+    "/",
+    validateGetAllEvents,
+    validate,
+    getAllEvents
+);
+
+router.get(
+    "/:eventId",
+    validateGetEventById,
+    validate,
+    getEventById
+);
+
+// Admin
+router.post(
+    "/",
+    authenticate,
+    authorize("Admin"),
+    validateCreateEvent,
+    validate,
+    createEvent
+);
+
+router.put(
+    "/:eventId",
+    authenticate,
+    authorize("Admin"),
+    validateUpdateEvent,
+    validate,
+    updateEvent
+);
+
+router.delete(
+    "/:eventId",
+    authenticate,
+    authorize("Admin"),
+    validateDeleteEvent,
+    validate,
+    deleteEvent
+);
 
 module.exports = router;
