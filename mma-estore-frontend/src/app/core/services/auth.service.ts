@@ -1,12 +1,17 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import {
+  Observable,
+  tap,
+  catchError,
+  of
+} from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 
 import {
   LoginRequest,
- RegisterRequest,
+  RegisterRequest,
   AuthResponse
 } from '../models/auth.models';
 
@@ -90,6 +95,28 @@ export class AuthService {
 
   }
 
+  loadCurrentUser(): Observable<unknown> {
+
+    if (!this.hasToken()) {
+
+      return of(null);
+
+    }
+
+    return this.getCurrentUser().pipe(
+
+      catchError(() => {
+
+        this.logout();
+
+        return of(null);
+
+      })
+
+    );
+
+  }
+
   logout(): void {
 
     localStorage.removeItem(this.TOKEN_KEY);
@@ -115,9 +142,11 @@ export class AuthService {
 
   }
 
-    isLoggedIn(): boolean {
+  isLoggedIn(): boolean {
+
     return !!this.getToken();
-    }
+
+  }
 
   hasToken(): boolean {
 
