@@ -4,17 +4,63 @@ const router = express.Router();
 
 const authenticate = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/authorize.middleware");
+const validate = require("../middlewares/validation.middleware");
 
-const {getAllGiftCards,getGiftCardById,createGiftCard,updateGiftCard,softDeleteGiftCard} = require("../controllers/giftCard.controller");
+const {
+    createGiftCardValidation,
+    updateGiftCardValidation,
+    giftCardIdValidation
+} = require("../validators/giftCard.validator");
 
-router.get("/",authenticate,authorize("Admin"),getAllGiftCards);
+const {
+    getAllGiftCards,
+    getGiftCardById,
+    createGiftCard,
+    updateGiftCard,
+    softDeleteGiftCard
+} = require("../controllers/giftCard.controller");
 
-router.get("/:id",authenticate,authorize("Admin"),getGiftCardById);
+router.get(
+    "/",
+    authenticate,
+    authorize("Admin"),
+    getAllGiftCards
+);
 
-router.post( "/",authenticate,authorize("Admin"),createGiftCard);
+router.get(
+    "/:id",
+    authenticate,
+    authorize("Admin"),
+    giftCardIdValidation,
+    validate,
+    getGiftCardById
+);
 
-router.put("/:id", authenticate, authorize("Admin"), updateGiftCard);
+router.post(
+    "/",
+    authenticate,
+    authorize("Admin"),
+    createGiftCardValidation,
+    validate,
+    createGiftCard
+);
 
-router.delete("/:id", authenticate, authorize("Admin"), softDeleteGiftCard);
+router.put(
+    "/:id",
+    authenticate,
+    authorize("Admin"),
+    updateGiftCardValidation,
+    validate,
+    updateGiftCard
+);
+
+router.delete(
+    "/:id",
+    authenticate,
+    authorize("Admin"),
+    giftCardIdValidation,
+    validate,
+    softDeleteGiftCard
+);
 
 module.exports = router;

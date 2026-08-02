@@ -1,5 +1,4 @@
 const GiftCard = require("../models/GiftCard");
-const mongoose = require("mongoose");
 
 // @Ali: Get all gift cards
 const getAllGiftCards = async (req, res) => {
@@ -34,13 +33,6 @@ const getGiftCardById = async (req, res) => {
 
         const { id } = req.params;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid gift card ID."
-            });
-        }
-
         const giftCard = await GiftCard.findById(id);
 
         if (!giftCard) {
@@ -71,42 +63,14 @@ const getGiftCardById = async (req, res) => {
 // @Ali: Create a new gift card
 const createGiftCard = async (req, res) => {
     try {
-
+        
         const {
             code,
             amount,
             expirationDate
         } = req.body;
 
-        if (!code || amount === undefined || !expirationDate) {
-            return res.status(400).json({
-                success: false,
-                message: "Code, amount and expiration date are required."
-            });
-        }
-
-        if (amount <= 0) {
-            return res.status(400).json({
-                success: false,
-                message: "Gift card amount must be greater than zero."
-            });
-        }
-
         const expiration = new Date(expirationDate);
-
-        if (isNaN(expiration.getTime())) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid expiration date."
-            });
-        }
-
-        if (expiration <= new Date()) {
-            return res.status(400).json({
-                success: false,
-                message: "Expiration date must be in the future."
-            });
-        }
 
         const existingGiftCard = await GiftCard.findOne({
             code: code.toUpperCase().trim()
@@ -154,13 +118,6 @@ const updateGiftCard = async (req, res) => {
             isActive
         } = req.body;
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid gift card ID."
-            });
-        }
-
         const giftCard = await GiftCard.findById(id);
 
         if (!giftCard) {
@@ -172,34 +129,11 @@ const updateGiftCard = async (req, res) => {
 
         if (amount !== undefined) {
 
-            if (amount <= 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Gift card amount must be greater than zero."
-                });
-            }
-
             giftCard.amount = amount;
         }
 
         if (expirationDate !== undefined) {
-
             const expiration = new Date(expirationDate);
-
-            if (isNaN(expiration.getTime())) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid expiration date."
-                });
-            }
-
-            if (expiration <= new Date()) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Expiration date must be in the future."
-                });
-            }
-
             giftCard.expirationDate = expiration;
         }
 
@@ -232,13 +166,6 @@ const softDeleteGiftCard = async (req, res) => {
     try {
 
         const { id } = req.params;
-
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid gift card ID."
-            });
-        }
 
         const giftCard = await GiftCard.findById(id);
 
@@ -277,10 +204,6 @@ const softDeleteGiftCard = async (req, res) => {
 
     }
 };
-
-
-
-
 
 module.exports = {
     getAllGiftCards,
