@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
+
 export class Checkout {
 
 }
