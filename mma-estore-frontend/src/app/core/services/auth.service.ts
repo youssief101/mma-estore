@@ -117,13 +117,13 @@ export class AuthService {
 
   }
 
-  logout(): void {
+    logout(): void {
 
     localStorage.removeItem(this.TOKEN_KEY);
 
     this.currentUserSignal.set(null);
 
-  }
+    }
 
   saveToken(token: string): void {
 
