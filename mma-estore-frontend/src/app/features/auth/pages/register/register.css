@@ -1,0 +1,45 @@
+.register-container{
+
+    max-width:500px;
+
+    margin:70px auto;
+
+    padding:30px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    background:white;
+
+}
+
+h2{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+}
+
+label{
+
+    font-weight:600;
+
+    margin-bottom:6px;
+
+    display:block;
+
+}
+
+.form-control{
+
+    margin-bottom:5px;
+
+}
+
+.text-danger{
+
+    font-size:14px;
+
+}
