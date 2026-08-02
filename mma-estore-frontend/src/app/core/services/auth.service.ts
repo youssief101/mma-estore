@@ -115,6 +115,10 @@ export class AuthService {
 
   }
 
+    isLoggedIn(): boolean {
+    return !!this.getToken();
+    }
+
   hasToken(): boolean {
 
     return !!this.getToken();
