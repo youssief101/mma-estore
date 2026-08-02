@@ -20,7 +20,7 @@ const getAllProducts = async (req, res) => {
         if (limit < 1) limit = 10;
 
         const filter = {
-            active: true
+            isActive: true
         };
 
         const totalProducts = await Product.countDocuments(filter);
@@ -71,7 +71,7 @@ const searchProducts = async (req, res) => {
         }
 
         const products = await Product.find({
-            active: true,
+            isActive: true,
             $text: {
                 $search: q.trim()
             }
@@ -115,7 +115,7 @@ const filterProducts = async (req, res) => {
         } = req.query;
 
         const filter = {
-            active: true
+            isActive: true
         };
 
         if (categoryID)
@@ -181,7 +181,7 @@ const getFeaturedProducts = async (req, res) => {
     try {
 
         const products = await Product.find({
-            active: true,
+            isActive: true,
             "display.featured": true
         })
             .populate("brandID", "name logo")
@@ -211,7 +211,7 @@ const getChampionGearProducts = async (req, res) => {
     try {
 
         const products = await Product.find({
-            active: true,
+            isActive: true,
             "display.championGear": true
         })
             .populate("brandID", "name logo")
@@ -243,7 +243,7 @@ const getNewArrivalProducts = async (req, res) => {
     try {
 
         const products = await Product.find({
-            active: true,
+            isActive: true,
             "display.newArrival": true
         })
             .populate("brandID", "name logo")
@@ -278,7 +278,7 @@ const getRelatedProducts = async (req, res) => {
 
         const currentProduct = await Product.findOne({
             _id: id,
-            active: true
+            isActive: true
         });
 
         if (!currentProduct) {
@@ -290,7 +290,7 @@ const getRelatedProducts = async (req, res) => {
 
         const relatedProducts = await Product.find({
             _id: { $ne: id },
-            active: true,
+            isActive: true,
             categoryID: currentProduct.categoryID
         })
             .populate("brandID", "name logo")
@@ -308,13 +308,6 @@ const getRelatedProducts = async (req, res) => {
 
         console.error(error);
 
-        if (error.name === "CastError") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid product ID."
-            });
-        }
-
         return res.status(500).json({
             success: false,
             message: "Internal server error."
@@ -329,7 +322,7 @@ const getProductById = async (req, res) => {
 
     const product = await Product.findOne({
       _id: id,
-      active: true,
+      isActive: true,
     })
       .populate("brandID", "name logo")
       .populate("categoryID", "name")
@@ -350,13 +343,6 @@ const getProductById = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid product ID.",
-      });
-    }
 
     return res.status(500).json({
       success: false,
@@ -387,24 +373,6 @@ const createProduct = async (req, res) => {
       display,
     } = req.body;
 
-    if (
-      !productCode ||
-      !name ||
-      !brandID ||
-      !description ||
-      price === undefined ||
-      !categoryID ||
-      !departmentID ||
-      !audience ||
-      !images ||
-      !inventory
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Missing required fields.",
-      });
-    }
-
     const existingCode = await Product.findOne({ productCode });
 
     if (existingCode) {
@@ -414,7 +382,7 @@ const createProduct = async (req, res) => {
       });
     }
 
-    const trimmedName = name.trim();
+    const trimmedName = name;
 
     const existingName = await Product.findOne({
       name: {
@@ -491,7 +459,7 @@ const createProduct = async (req, res) => {
       name: trimmedName,
       slug,
       brandID,
-      description: description.trim(),
+      description,
       price,
       oldPrice,
       discountPercentage,
@@ -528,7 +496,7 @@ const updateProduct = async (req, res) => {
 
     const product = await Product.findById(id);
 
-    if (!product || !product.active) {
+    if (!product || !product.isActive) {
       return res.status(404).json({
         success: false,
         message: "Product not found.",
@@ -571,26 +539,40 @@ const updateProduct = async (req, res) => {
       product.productCode = productCode;
     }
 
-    if (name) {
-      const trimmedName = name.trim();
+    if (name !== undefined) {
+      const trimmedName = name;
 
       const existingName = await Product.findOne({
-        name: {
-          $regex: new RegExp(`^${trimmedName}$`, "i"),
-        },
-        _id: { $ne: id },
+          _id: { $ne: id },
+          name: {
+              $regex: new RegExp(`^${trimmedName}$`, "i")
+          }
       });
 
       if (existingName) {
-        return res.status(409).json({
-          success: false,
-          message: "Product already exists.",
-        });
+          return res.status(409).json({
+              success: false,
+              message: "Product already exists."
+          });
+      }
+
+      const slug = generateSlug(trimmedName);
+
+      const existingSlug = await Product.findOne({
+          _id: { $ne: id },
+          slug
+      });
+
+      if (existingSlug) {
+          return res.status(409).json({
+              success: false,
+              message: "A product with this slug already exists."
+          });
       }
 
       product.name = trimmedName;
-      product.slug = generateSlug(trimmedName);
-    }
+      product.slug = slug;
+  }
 
     if (brandID) {
       const brand = await Brand.findById(brandID);
@@ -657,7 +639,8 @@ const updateProduct = async (req, res) => {
       product.eventID = eventID;
     }
 
-    if (description !== undefined) product.description = description.trim();
+    if (description !== undefined)
+      product.description = description;
 
     if (price !== undefined) product.price = price;
 
@@ -688,13 +671,6 @@ const updateProduct = async (req, res) => {
   } catch (error) {
     console.error(error);
 
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid product ID.",
-      });
-    }
-
     return res.status(500).json({
       success: false,
       message: "Internal server error.",
@@ -708,14 +684,14 @@ const deleteProduct = async (req, res) => {
 
     const product = await Product.findById(id);
 
-    if (!product || !product.active) {
+    if (!product || !product.isActive) {
       return res.status(404).json({
         success: false,
         message: "Product not found.",
       });
     }
 
-    product.active = false;
+    product.isActive = false;
 
     await product.save();
 
@@ -725,13 +701,6 @@ const deleteProduct = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid product ID.",
-      });
-    }
 
     return res.status(500).json({
       success: false,
