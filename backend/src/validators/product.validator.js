@@ -1,9 +1,7 @@
 const { body, param, query } = require("express-validator");
 const { Audiences, Sizes } = require("../constants/enums");
 
-// ============================================
-// Public Validators
-// ============================================
+// @youssef: Public Validators
 
 const validateGetAllProducts = [
 
@@ -85,9 +83,9 @@ const validateProductId = [
 
 ];
 
-// ============================================
-// Admin Validators
-// ============================================
+
+// @youssef: Admin Validators
+
 
 const validateCreateProduct = [
 
