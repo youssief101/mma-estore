@@ -25,3 +25,4 @@ export interface CurrentUserResponse {
   success: boolean;
   user: User;
 }
+
