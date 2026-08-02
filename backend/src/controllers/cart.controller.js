@@ -46,16 +46,9 @@ const addProductToCart = async (req, res) => {
             quantity
         } = req.body;
 
-        if (!productID || !size || !quantity) {
-            return res.status(400).json({
-                success: false,
-                message: "Product, size and quantity are required."
-            });
-        }
-
         const product = await Product.findById(productID);
 
-        if (!product || !product.active) {
+        if (!product || !product.isActive) {
             return res.status(404).json({
                 success: false,
                 message: "Product not found."
@@ -157,20 +150,6 @@ const updateCartItemQuantity = async (req, res) => {
 
         const { productID, size, quantity } = req.body;
 
-        if (!productID || !size || quantity === undefined) {
-            return res.status(400).json({
-                success: false,
-                message: "Product, size and quantity are required."
-            });
-        }
-
-        if (quantity < 1) {
-            return res.status(400).json({
-                success: false,
-                message: "Quantity must be at least 1."
-            });
-        }
-
         const cart = await Cart.findOne({
             userID: req.user._id
         });
@@ -197,7 +176,7 @@ const updateCartItemQuantity = async (req, res) => {
 
         const product = await Product.findById(productID);
 
-        if (!product || !product.active) {
+        if (!product || !product.isActive) {
             return res.status(404).json({
                 success: false,
                 message: "Product not found."
@@ -255,13 +234,6 @@ const removeCartItem = async (req, res) => {
     try {
 
         const { productID, size } = req.body;
-
-        if (!productID || !size) {
-            return res.status(400).json({
-                success: false,
-                message: "Product and size are required."
-            });
-        }
 
         const cart = await Cart.findOne({
             userID: req.user._id
