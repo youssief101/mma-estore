@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { SearchBar } from '../search-bar/search-bar';
@@ -20,5 +20,16 @@ export class Header {
   constructor(
     public navigation: NavigationService
   ) {}
+
+  @HostListener('window:resize')
+  onResize(): void {
+
+    if (window.innerWidth > 767) {
+
+      this.navigation.closeDrawer();
+
+    }
+
+  }
 
 }

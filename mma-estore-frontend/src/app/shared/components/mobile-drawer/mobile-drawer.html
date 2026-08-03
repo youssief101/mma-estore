@@ -1,17 +1,28 @@
-<aside
-    class="mobile-drawer"
-    [class.mobile-drawer--open]="open">
+<div
+  class="drawer-overlay"
+  [class.drawer-overlay--visible]="open"
+  (click)="navigation.closeDrawer()"
+></div>
 
-    <div class="mobile-drawer__header">
+<aside class="mobile-drawer" [class.mobile-drawer--open]="open">
+  <div class="mobile-drawer__header">
+    <h2>Menu</h2>
 
-        <h2>Menu</h2>
+    <button
+      type="button"
+      class="drawer-close"
+      aria-label="Close navigation menu"
+      (click)="navigation.closeDrawer()"
+    >
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
 
-    </div>
-
-    <nav class="mobile-drawer__nav">
-
-        <!-- Navigation links will be added later -->
-
-    </nav>
-
+  <nav class="mobile-drawer__nav">
+    @for (category of categories; track category.title) {
+      <a [routerLink]="category.link" routerLinkActive="active" (click)="navigation.closeDrawer()">
+        {{ category.title }}
+      </a>
+    }
+  </nav>
 </aside>

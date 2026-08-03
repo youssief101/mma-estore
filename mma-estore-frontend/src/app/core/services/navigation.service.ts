@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, effect } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +7,27 @@ export class NavigationService {
 
   readonly drawerOpen = signal(false);
 
-  toggleDrawer(): void {
+  constructor() {
 
-    this.drawerOpen.update(value => !value);
+    effect(() => {
+
+      if (this.drawerOpen()) {
+
+        document.body.style.overflow = 'hidden';
+
+      } else {
+
+        document.body.style.overflow = '';
+
+      }
+
+    });
+
+  }
+
+  openDrawer(): void {
+
+    this.drawerOpen.set(true);
 
   }
 
@@ -19,9 +37,9 @@ export class NavigationService {
 
   }
 
-  openDrawer(): void {
+  toggleDrawer(): void {
 
-    this.drawerOpen.set(true);
+    this.drawerOpen.update(value => !value);
 
   }
 
