@@ -1,0 +1,126 @@
+<app-card
+    shadow="lg">
+
+    <div class="summary">
+
+        <h2>
+
+            Order Summary
+
+        </h2>
+
+        <div class="row">
+
+            <span>Subtotal</span>
+
+            <span>
+
+                ${{summary().subtotal}}
+
+            </span>
+
+        </div>
+
+        @if(summary().discount>0){
+
+            <div class="row discount">
+
+                <span>Discount</span>
+
+                <span>
+
+                    -${{summary().discount}}
+
+                </span>
+
+            </div>
+
+        }
+
+        <div class="row">
+
+            <span>Shipping</span>
+
+            <span>
+
+                ${{summary().shipping}}
+
+            </span>
+
+        </div>
+
+        <div class="row">
+
+            <span>Tax</span>
+
+            <span>
+
+                ${{summary().tax}}
+
+            </span>
+
+        </div>
+
+        @if(summary().giftCard){
+
+            <div class="row gift">
+
+                <span>Gift Card</span>
+
+                <span>
+
+                    -${{summary().giftCard}}
+
+                </span>
+
+            </div>
+
+        }
+
+        <hr>
+
+        <div class="total">
+
+            <span>Total</span>
+
+            <strong>
+
+                ${{summary().total}}
+
+            </strong>
+
+        </div>
+
+        <app-button
+
+            variant="primary"
+
+            size="lg"
+
+            [fullWidth]="true"
+
+            [loading]="loading()"
+
+            (buttonClick)="checkout.emit()">
+
+            {{summary().checkoutText || 'Proceed to Checkout'}}
+
+        </app-button>
+
+        <app-button
+
+            variant="outline"
+
+            size="lg"
+
+            [fullWidth]="true"
+
+            (buttonClick)="continueShopping.emit()">
+
+            Continue Shopping
+
+        </app-button>
+
+    </div>
+
+</app-card>
