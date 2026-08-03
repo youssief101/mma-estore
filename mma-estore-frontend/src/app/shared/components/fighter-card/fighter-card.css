@@ -1,0 +1,123 @@
+:host{
+
+    display:block;
+
+}
+
+.fighter-image{
+
+    position:relative;
+
+    background:#111;
+
+    overflow:hidden;
+
+    aspect-ratio:4/5;
+
+}
+
+.fighter-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:.45s;
+
+}
+
+app-card:hover img{
+
+    transform:scale(1.06);
+
+}
+
+.champion{
+
+    position:absolute;
+
+    top:16px;
+
+    left:16px;
+
+    background:linear-gradient(
+        135deg,
+        #FFD700,
+        #C89B00
+    );
+
+    color:black;
+
+    font-weight:700;
+
+    font-size:.75rem;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+}
+
+.fighter-content{
+
+    padding:20px;
+
+    text-align:center;
+
+}
+
+h3{
+
+    margin:0;
+
+    font-size:1.35rem;
+
+    font-weight:700;
+
+    color:var(--color-text);
+
+}
+
+.nickname{
+
+    margin-top:8px;
+
+    color:var(--color-text-muted);
+
+    font-style:italic;
+
+}
+
+.division{
+
+    margin-top:18px;
+
+    font-weight:600;
+
+}
+
+.country{
+
+    margin-top:8px;
+
+    color:var(--color-text-muted);
+
+}
+
+.record{
+
+    margin-top:18px;
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:999px;
+
+    background:var(--color-surface-alt);
+
+    font-weight:700;
+
+}
