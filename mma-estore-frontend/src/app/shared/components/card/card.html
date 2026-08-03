@@ -1,1 +1,35 @@
-<p>card works!</p>
+<div
+
+    class="card"
+
+    [class.hover]="hover()"
+
+    [class.clickable]="clickable()"
+
+    [class.bordered]="bordered()"
+
+    [class.shadow-none]="shadow() === 'none'"
+
+    [class.shadow-sm]="shadow() === 'sm'"
+
+    [class.shadow-md]="shadow() === 'md'"
+
+    [class.shadow-lg]="shadow() === 'lg'"
+
+    [class.padding-none]="padding() === 'none'"
+
+    [class.padding-sm]="padding() === 'sm'"
+
+    [class.padding-md]="padding() === 'md'"
+
+    [class.padding-lg]="padding() === 'lg'">
+
+    <ng-content select="[card-image]"></ng-content>
+
+    <ng-content select="[card-header]"></ng-content>
+
+    <ng-content></ng-content>
+
+    <ng-content select="[card-footer]"></ng-content>
+
+</div>
