@@ -1,0 +1,82 @@
+.app-input{
+
+    width:100%;
+
+    height:48px;
+
+    padding:0 16px;
+
+    border:1px solid var(--color-gray-300);
+
+    border-radius:10px;
+
+    background:var(--color-surface);
+
+    color:var(--color-gray-900);
+
+    font-size:16px;
+
+    font-weight:400;
+
+    outline:none;
+
+    transition:
+        border-color .25s,
+        box-shadow .25s,
+        background .25s;
+
+}
+
+/* Placeholder */
+
+.app-input::placeholder{
+
+    color:var(--color-gray-500);
+
+}
+
+/* Hover */
+
+.app-input:hover{
+
+    border-color:var(--color-gray-400);
+
+}
+
+/* Focus */
+
+.app-input:focus{
+
+    border-color:var(--color-primary);
+
+    box-shadow:0 0 0 4px rgba(213,0,28,.15);
+
+}
+
+/* Disabled */
+
+.app-input:disabled{
+
+    background:var(--color-gray-100);
+
+    color:var(--color-gray-500);
+
+    cursor:not-allowed;
+
+}
+
+/* Readonly */
+
+.app-input[readonly]{
+
+    background:var(--color-gray-50);
+
+}
+
+/* Autofill */
+
+.app-input:-webkit-autofill{
+
+    -webkit-box-shadow:0 0 0 1000px white inset;
+
+}

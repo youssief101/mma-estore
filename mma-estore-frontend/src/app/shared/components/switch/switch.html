@@ -1,0 +1,33 @@
+<label
+
+    class="switch-container"
+
+    [class.disabled]="disabled">
+
+    <button
+
+        type="button"
+
+        class="switch"
+
+        [class.active]="checked"
+
+        [disabled]="disabled"
+
+        (click)="toggle()">
+
+        <span class="switch-thumb"></span>
+
+    </button>
+
+    @if(label()){
+
+        <span class="switch-label">
+
+            {{ label() }}
+
+        </span>
+
+    }
+
+</label>

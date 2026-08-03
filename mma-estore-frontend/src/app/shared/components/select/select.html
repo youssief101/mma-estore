@@ -1,0 +1,39 @@
+<select
+
+    class="app-select"
+
+    [value]="value"
+
+    [disabled]="disabled"
+
+    (change)="updateValue($event)"
+
+    (blur)="markTouched()">
+
+    @if(disabledOption()){
+
+        <option
+
+            value=""
+
+            disabled>
+
+            {{ placeholder() }}
+
+        </option>
+
+    }
+
+    @for(option of options(); track option.value){
+
+        <option
+
+            [value]="option.value">
+
+            {{ option.label }}
+
+        </option>
+
+    }
+
+</select>

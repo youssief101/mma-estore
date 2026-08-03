@@ -1,0 +1,20 @@
+/* One of the biggest time savers.
+These are small reusable helper classes.
+.text-center
+.text-left
+.text-right
+.text-uppercase
+.fw-bold
+.rounded
+.shadow
+.d-flex
+.flex-column
+.justify-between
+.align-center
+.w-100
+.h-100
+.cursor-pointer
+.overflow-hidden
+.text-truncate
+.visually-hidden
+These eliminate repetitive CSS across components. */

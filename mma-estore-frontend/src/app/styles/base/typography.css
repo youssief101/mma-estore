@@ -1,0 +1,16 @@
+/* This file defines the appearance of:
+body
+h1
+h2
+h3
+h4
+h5
+h6
+p
+small
+strong
+a
+label
+input
+button
+No component should set its own font unless it has a special reason. */
