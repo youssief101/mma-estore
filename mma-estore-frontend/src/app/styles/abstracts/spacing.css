@@ -1,6 +1,8 @@
 :root{
 
-    /* Base Spacing Scale */
+    /* ==========================================================
+       Base Spacing Scale
+    ========================================================== */
 
     --space-1:4px;
 
@@ -24,32 +26,45 @@
 
     --space-20:80px;
 
-    /* Section Spacing */
+    --space-24:96px;
 
-    --section-padding:80px;
+    /* ==========================================================
+       Section Spacing
+    ========================================================== */
 
-    --section-padding-small:48px;
+    --section-padding:var(--space-20);
+
+    --section-padding-small:var(--space-12);
 
 }
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
 @media (max-width:991px){
 
     :root{
 
-        --section-padding:64px;
+        --section-padding:var(--space-16);
 
-        --section-padding-small:40px;
+        --section-padding-small:var(--space-10);
 
     }
 
 }
 
+/* ==========================================================
+   Mobile
+========================================================== */
+
 @media (max-width:767px){
 
     :root{
 
-        --section-padding:48px;
+        --section-padding:var(--space-12);
 
-        --section-padding-small:32px;
+        --section-padding-small:var(--space-8);
 
     }
 
