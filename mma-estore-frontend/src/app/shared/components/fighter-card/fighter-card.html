@@ -1,0 +1,79 @@
+<app-card
+
+    shadow="md"
+
+    [hover]="true"
+
+    [clickable]="true"
+
+    (click)="onClick()">
+
+    <div class="fighter-image">
+
+        <img
+
+            [src]="fighter().image"
+
+            [alt]="fighter().firstName + ' ' + fighter().lastName">
+
+        @if(fighter().isChampion){
+
+            <div class="champion">
+
+                CHAMPION
+
+            </div>
+
+        }
+
+    </div>
+
+    <div class="fighter-content">
+
+        <h3>
+
+            {{fighter().firstName}}
+
+            {{fighter().lastName}}
+
+        </h3>
+
+        @if(fighter().nickname){
+
+            <p class="nickname">
+
+                "{{fighter().nickname}}"
+
+            </p>
+
+        }
+
+        <div class="division">
+
+            {{fighter().division}}
+
+        </div>
+
+        <div class="country">
+
+            {{fighter().country}}
+
+        </div>
+
+        <div class="record">
+
+            {{fighter().wins}}
+
+            -
+
+            {{fighter().losses}}
+
+            -
+
+            {{fighter().draws}}
+
+        </div>
+
+    </div>
+
+</app-card>

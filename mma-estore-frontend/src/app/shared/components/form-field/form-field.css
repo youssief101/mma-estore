@@ -1,0 +1,59 @@
+.form-field{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+
+    width:100%;
+
+    margin-bottom:20px;
+
+}
+
+.form-label{
+
+    font-size:14px;
+
+    font-weight:600;
+
+    color:var(--color-gray-900);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:4px;
+
+}
+
+.required{
+
+    color:var(--color-danger);
+
+}
+
+.field-content{
+
+    width:100%;
+
+}
+
+.hint{
+
+    font-size:13px;
+
+    color:var(--color-gray-600);
+
+}
+
+.error-message{
+
+    font-size:13px;
+
+    color:var(--color-danger);
+
+    font-weight:500;
+
+}

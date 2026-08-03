@@ -1,0 +1,21 @@
+<textarea
+
+    class="app-textarea"
+
+    [rows]="rows()"
+
+    [placeholder]="placeholder()"
+
+    [value]="value"
+
+    [disabled]="disabled"
+
+    [readOnly]="readonly()"
+
+    [style.resize]="resize()"
+
+    (input)="updateValue($event)"
+
+    (blur)="markTouched()">
+
+</textarea>

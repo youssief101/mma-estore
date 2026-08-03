@@ -1,0 +1,101 @@
+:host{
+
+    display:block;
+
+}
+
+.gift-image{
+
+    position:relative;
+
+    overflow:hidden;
+
+    aspect-ratio:1.6;
+
+    background:#0f1115;
+
+}
+
+.gift-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:transform .45s ease;
+
+}
+
+app-card:hover img{
+
+    transform:scale(1.05);
+
+}
+
+.sold-out{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:rgba(0,0,0,.65);
+
+    color:white;
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+}
+
+.content{
+
+    padding:1.5rem;
+
+    text-align:center;
+
+}
+
+.value{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+    color:var(--color-primary);
+
+    margin-bottom:.5rem;
+
+}
+
+h3{
+
+    margin-bottom:.75rem;
+
+    color:var(--color-text);
+
+}
+
+p{
+
+    color:var(--color-text-muted);
+
+    margin-bottom:1.5rem;
+
+}
+
+.buy-btn{
+
+    width:100%;
+
+}

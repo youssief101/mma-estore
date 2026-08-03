@@ -1,0 +1,83 @@
+.card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:var(--surface);
+
+    border-radius:var(--radius-lg);
+
+    overflow:hidden;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+.card.hover:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.card.clickable{
+
+    cursor:pointer;
+
+}
+
+.card.bordered{
+
+    border:1px solid var(--border-color);
+
+}
+
+.shadow-none{
+
+    box-shadow:none;
+
+}
+
+.shadow-sm{
+
+    box-shadow:var(--shadow-sm);
+
+}
+
+.shadow-md{
+
+    box-shadow:var(--shadow-md);
+
+}
+
+.shadow-lg{
+
+    box-shadow:var(--shadow-lg);
+
+}
+
+.padding-none{
+
+    padding:0;
+
+}
+
+.padding-sm{
+
+    padding:12px;
+
+}
+
+.padding-md{
+
+    padding:20px;
+
+}
+
+.padding-lg{
+
+    padding:28px;
+
+}

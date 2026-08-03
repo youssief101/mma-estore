@@ -1,23 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
-html,
-body {
-    height: 100%;
-}
+/* Abstracts */
+@import "./app/styles/abstracts/variables.css";
+@import "./app/styles/abstracts/colors.css";
+@import "./app/styles/abstracts/typography.css";
+@import "./app/styles/abstracts/spacing.css";
+@import "./app/styles/abstracts/radius.css";
+@import "./app/styles/abstracts/shadows.css";
+@import "./app/styles/abstracts/transitions.css";
+@import "./app/styles/abstracts/breakpoints.css";
+@import "./app/styles/abstracts/z-index.css";
 
-body {
-    margin: 0;
-    font-family: Roboto, Arial, sans-serif;
-    background: #f5f5f5;
-}
-
-img {
-    max-width: 100%;
-}
-
-a {
-    text-decoration: none;
-}
-
-button {
-    cursor: pointer;
-}
+/* Base */
+@import "./app/styles/base/reset.css";
+@import "./app/styles/base/typography.css";
+@import "./app/styles/base/global.css";
+@import "./app/styles/base/utilities.css";

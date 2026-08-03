@@ -1,0 +1,19 @@
+:host{
+
+    display:block;
+
+    min-height:100vh;
+
+    background:var(--color-background);
+
+}
+
+.store-main{
+
+    min-height:60vh;
+
+    width:100%;
+
+    padding:40px 0;
+
+}

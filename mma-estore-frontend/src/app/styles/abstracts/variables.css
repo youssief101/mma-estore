@@ -1,0 +1,18 @@
+:root{
+
+    --shadow-sm:
+        0 2px 8px rgba(0,0,0,.08);
+
+    --shadow-md:
+        0 8px 20px rgba(0,0,0,.12);
+
+    --shadow-lg:
+        0 12px 32px rgba(0,0,0,.18);
+
+    --transition-fast:.2s;
+
+    --transition-normal:.3s;
+
+    --container-width:1400px;
+
+}

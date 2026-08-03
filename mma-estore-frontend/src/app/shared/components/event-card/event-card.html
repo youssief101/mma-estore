@@ -1,0 +1,74 @@
+<app-card
+
+    shadow="lg"
+
+    [hover]="true"
+
+    [clickable]="true"
+
+    (click)="onClick()">
+
+    <div class="banner">
+
+        <img
+
+            [src]="event().banner"
+
+            [alt]="event().title">
+
+        <div
+
+            class="status"
+
+            [class.live]="event().status === 'Live'"
+            [class.completed]="event().status === 'Completed'">
+
+            {{event().status}}
+
+        </div>
+
+    </div>
+
+    <div class="content">
+
+        <div class="type">
+
+            {{event().eventType}}
+
+        </div>
+
+        <h2>
+
+            {{event().title}}
+
+        </h2>
+
+        <div class="main-event">
+
+            {{event().mainEvent}}
+
+        </div>
+
+        <div class="details">
+
+            <span>
+
+                <i class="bi bi-calendar-event"></i>
+
+                {{event().date}}
+
+            </span>
+
+            <span>
+
+                <i class="bi bi-geo-alt"></i>
+
+                {{event().location}}
+
+            </span>
+
+        </div>
+
+    </div>
+
+</app-card>

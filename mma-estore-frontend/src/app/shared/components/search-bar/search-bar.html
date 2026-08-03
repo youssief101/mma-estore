@@ -1,0 +1,20 @@
+<div class="search-bar">
+
+    <i class="bi bi-search search-icon"></i>
+
+    <input
+        type="text"
+        [(ngModel)]="query"
+        placeholder="Search fighters, apparel, hats, belts..."
+        (keyup.enter)="onSearch()">
+
+    <button
+        type="button"
+        class="search-button"
+        (click)="onSearch()">
+
+        Search
+
+    </button>
+
+</div>

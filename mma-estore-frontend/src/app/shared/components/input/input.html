@@ -1,0 +1,19 @@
+<input
+
+    class="app-input"
+
+    [type]="type()"
+
+    [placeholder]="placeholder()"
+
+    [value]="value"
+
+    [disabled]="disabled"
+
+    [readOnly]="readonly()"
+
+    [autocomplete]="autocomplete()"
+
+    (input)="updateValue($event)"
+
+    (blur)="markTouched()">

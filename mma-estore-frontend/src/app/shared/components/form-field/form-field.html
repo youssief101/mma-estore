@@ -1,0 +1,45 @@
+<div class="form-field">
+
+    @if(label()){
+
+        <label class="form-label">
+
+            {{ label() }}
+
+            @if(required()){
+
+                <span class="required">*</span>
+
+            }
+
+        </label>
+
+    }
+
+    <div class="field-content">
+
+        <ng-content></ng-content>
+
+    </div>
+
+    @if(error()){
+
+        <div class="error-message">
+
+            {{ error() }}
+
+        </div>
+
+    }
+
+    @else if(hint()){
+
+        <div class="hint">
+
+            {{ hint() }}
+
+        </div>
+
+    }
+
+</div>

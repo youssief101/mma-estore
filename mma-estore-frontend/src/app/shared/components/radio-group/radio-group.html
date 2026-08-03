@@ -1,0 +1,44 @@
+<div
+
+    class="radio-group"
+
+    [class.horizontal]="direction() === 'horizontal'">
+
+    @for(option of options(); track option.value){
+
+        <label
+            class="radio-item">
+
+            <input
+
+                type="radio"
+
+                [name]="name()"
+
+                [checked]="value === option.value"
+
+                [disabled]="disabled"
+
+                (change)="select(option.value)">
+
+            <span class="radio-circle">
+
+                @if(value === option.value){
+
+                    <span class="radio-dot"></span>
+
+                }
+
+            </span>
+
+            <span class="radio-label">
+
+                {{ option.label }}
+
+            </span>
+
+        </label>
+
+    }
+
+</div>

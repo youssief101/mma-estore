@@ -1,0 +1,75 @@
+/* This defines the application's overall behavior.
+background color
+text color
+minimum page height
+default container width
+selection color
+scroll behavior
+focus outline
+page transitions */
+
+.container{
+
+    width:100%;
+
+    max-width:1440px;
+
+    margin-inline:auto;
+
+    padding-inline:32px;
+
+}
+
+@media (max-width:1399px){
+
+    .container{
+
+        max-width:1200px;
+
+        padding-inline:28px;
+
+    }
+
+}
+
+@media (max-width:1199px){
+
+    .container{
+
+        max-width:100%;
+
+        padding-inline:24px;
+
+    }
+
+}
+
+@media (max-width:991px){
+
+    .container{
+
+        padding-inline:20px;
+
+    }
+
+}
+
+@media (max-width:767px){
+
+    .container{
+
+        padding-inline:16px;
+
+    }
+
+}
+
+@media (max-width:575px){
+
+    .container{
+
+        padding-inline:12px;
+
+    }
+
+}

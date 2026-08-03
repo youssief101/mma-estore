@@ -1,1 +1,108 @@
-<p>product-card works!</p>
+<app-card
+    shadow="sm"
+    [hover]="true"
+    [clickable]="true">
+
+    <div
+        card-image
+        class="image-wrapper">
+
+        @if(product().discountPercentage){
+
+            <span class="sale-badge">
+
+                -{{product().discountPercentage}}%
+
+            </span>
+
+        }
+
+        @if(product().isNew){
+
+            <span class="new-badge">
+
+                NEW
+
+            </span>
+
+        }
+
+        <img
+
+            [src]="product().image"
+
+            [alt]="product().name">
+
+    </div>
+
+    <div class="content">
+
+        <p class="brand">
+
+            {{product().brand}}
+
+        </p>
+
+        <h3>
+
+            {{product().name}}
+
+        </h3>
+
+        <p class="category">
+
+            {{product().category}}
+
+        </p>
+
+        @if(product().rating){
+
+            <div class="rating">
+
+                ★★★★★
+
+                <span>
+
+                    {{product().rating}}
+
+                </span>
+
+            </div>
+
+        }
+
+        <div class="price">
+
+            @if(product().oldPrice){
+
+                <span class="old-price">
+
+                    ${{product().oldPrice}}
+
+                </span>
+
+            }
+
+            <span class="current-price">
+
+                ${{product().price}}
+
+            </span>
+
+        </div>
+
+        <app-button
+
+            variant="primary"
+
+            width="full"
+
+            (clicked)="addToCart.emit()">
+
+            Add to Cart
+
+        </app-button>
+
+    </div>
+
+</app-card>

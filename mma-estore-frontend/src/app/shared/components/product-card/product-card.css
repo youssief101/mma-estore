@@ -1,0 +1,165 @@
+:host{
+
+    display:block;
+
+}
+
+.image-wrapper{
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:#f8f8f8;
+
+    aspect-ratio:1;
+
+}
+
+.image-wrapper img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:contain;
+
+    transition:.35s;
+
+}
+
+app-card:hover img{
+
+    transform:scale(1.08);
+
+}
+
+.sale-badge{
+
+    position:absolute;
+
+    top:12px;
+
+    left:12px;
+
+    background:var(--color-danger);
+
+    color:white;
+
+    padding:5px 10px;
+
+    border-radius:50px;
+
+    font-size:.75rem;
+
+    font-weight:700;
+
+}
+
+.new-badge{
+
+    position:absolute;
+
+    top:12px;
+
+    right:12px;
+
+    background:var(--color-success);
+
+    color:white;
+
+    padding:5px 10px;
+
+    border-radius:50px;
+
+    font-size:.75rem;
+
+    font-weight:700;
+
+}
+
+.content{
+
+    padding:18px;
+
+}
+
+.brand{
+
+    color:var(--color-text-muted);
+
+    font-size:.8rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+    margin-bottom:8px;
+
+}
+
+h3{
+
+    font-size:1rem;
+
+    min-height:48px;
+
+    margin-bottom:10px;
+
+}
+
+.category{
+
+    color:var(--color-text-muted);
+
+    font-size:.85rem;
+
+    margin-bottom:12px;
+
+}
+
+.rating{
+
+    color:#f5b301;
+
+    margin-bottom:14px;
+
+}
+
+.rating span{
+
+    color:var(--color-text);
+
+    margin-left:6px;
+
+}
+
+.price{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:18px;
+
+}
+
+.old-price{
+
+    text-decoration:line-through;
+
+    color:#999;
+
+}
+
+.current-price{
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+    color:var(--color-primary);
+
+}

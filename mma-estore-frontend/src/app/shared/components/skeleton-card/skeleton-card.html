@@ -1,0 +1,25 @@
+@for(item of [].constructor(count()); track $index){
+
+<div class="skeleton-card">
+
+    <div class="image shimmer"></div>
+
+    <div class="content">
+
+        <div class="title shimmer"></div>
+
+        <div class="subtitle shimmer"></div>
+
+        <div class="price shimmer"></div>
+
+        @if(!compact()){
+
+            <div class="button shimmer"></div>
+
+        }
+
+    </div>
+
+</div>
+
+}

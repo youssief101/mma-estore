@@ -1,0 +1,15 @@
+/* This file removes browser inconsistencies.
+
+It should normalize things like:
+
+margin
+padding
+box sizing
+image sizing
+buttons
+links
+lists
+tables
+form controls
+
+Professional projects always start with a reset. */
