@@ -1,12 +1,28 @@
-.store-navbar{
+:host{
 
-    background: var(--color-primary);
-
-    position: relative;
-
-    z-index: 100;
+    display:block;
 
 }
+
+/* ==========================================================
+   Navigation
+========================================================== */
+
+.store-navbar{
+
+    background:var(--color-primary);
+
+    position:relative;
+
+    z-index:100;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+/* ==========================================================
+   Navigation List
+========================================================== */
 
 .nav-list{
 
@@ -22,47 +38,9 @@
 
     padding:0;
 
-    min-height:36px;
-
-    overflow-x:auto;
-
-    scrollbar-width:none;
+    min-height:40px;
 
     gap:0;
-
-}
-
-.nav-list::-webkit-scrollbar{
-
-    display:none;
-
-}
-
-.nav-list a{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    height:36px;
-
-    padding:0 20px;
-
-    color:var(--color-text-light);
-
-    text-decoration:none;
-
-    font-size:.9rem;
-
-    font-weight:600;
-
-    white-space:nowrap;
-
-    transition:
-        background-color .2s ease,
-        color .2s ease;
 
 }
 
@@ -72,16 +50,41 @@
 
 }
 
-.nav-list a:hover{
+/* ==========================================================
+   Navigation Links
+========================================================== */
 
-    background: var(--color-primary-hover);
+.nav-list a{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    height:40px;
+
+    padding:0 20px;
+
+    color:var(--color-text-light);
+
+    text-decoration:none;
+
+    white-space:nowrap;
+
+    font-size:.9rem;
+
+    font-weight:600;
+
+    transition:
+        background-color .25s ease,
+        color .25s ease;
 
 }
 
+.nav-list a:hover{
 
-.nav-list a:hover::after{
-
-    width:100%;
+    background:var(--color-primary-hover);
 
 }
 
@@ -89,12 +92,82 @@
 
     background:#93070c;
 
-    color:white;
+    color:var(--color-text-light);
 
 }
 
-.nav-list a.active::after{
+/* ==========================================================
+   Laptop
+========================================================== */
 
-    width:100%;
+@media (max-width:1199px){
+
+    .nav-list{
+
+        min-height:38px;
+
+    }
+
+    .nav-list a{
+
+        height:38px;
+
+        padding:0 16px;
+
+        font-size:.88rem;
+
+    }
+
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width:991px){
+
+    .nav-list{
+
+        min-height:36px;
+
+    }
+
+    .nav-list a{
+
+        height:36px;
+
+        padding:0 12px;
+
+        font-size:.84rem;
+
+    }
+
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width:767px){
+
+    .store-navbar{
+
+        display:none;
+
+    }
+
+}
+
+/* ==========================================================
+   Small Mobile
+========================================================== */
+
+@media (max-width:575px){
+
+    .store-navbar{
+
+        display:none;
+
+    }
 
 }
