@@ -1,0 +1,53 @@
+<app-card
+
+    shadow="sm"
+
+    [hover]="true"
+
+    [clickable]="true"
+
+    (click)="onClick()">
+
+    <div
+        card-image
+        class="image-wrapper">
+
+        <img
+
+            [src]="category().image"
+
+            [alt]="category().name">
+
+    </div>
+
+    <div class="content">
+
+        <h3>
+
+            {{ category().name }}
+
+        </h3>
+
+        @if(category().description){
+
+            <p>
+
+                {{ category().description }}
+
+            </p>
+
+        }
+
+        @if(category().productCount){
+
+            <span class="count">
+
+                {{ category().productCount }} Products
+
+            </span>
+
+        }
+
+    </div>
+
+</app-card>
