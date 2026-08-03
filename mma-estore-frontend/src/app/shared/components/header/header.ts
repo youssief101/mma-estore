@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 
 import { RouterModule } from '@angular/router';
 
+import { SearchBar } from '../search-bar/search-bar';
+
 @Component({
 
   selector: 'app-header',
@@ -15,7 +17,8 @@ import { RouterModule } from '@angular/router';
 
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    SearchBar
   ],
 
   templateUrl: './header.html',
