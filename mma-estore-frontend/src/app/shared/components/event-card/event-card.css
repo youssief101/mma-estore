@@ -72,7 +72,7 @@ app-card:hover img{
 
 .content{
 
-    padding:20px;
+    padding:var(--space-5);
 
 }
 

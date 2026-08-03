@@ -1,15 +1,56 @@
 :root{
 
-    --space-xs:4px;
+    /* Base Spacing Scale */
 
-    --space-sm:8px;
+    --space-1:4px;
 
-    --space-md:16px;
+    --space-2:8px;
 
-    --space-lg:24px;
+    --space-3:12px;
 
-    --space-xl:32px;
+    --space-4:16px;
 
-    --space-2xl:48px;
+    --space-5:20px;
+
+    --space-6:24px;
+
+    --space-8:32px;
+
+    --space-10:40px;
+
+    --space-12:48px;
+
+    --space-16:64px;
+
+    --space-20:80px;
+
+    /* Section Spacing */
+
+    --section-padding:80px;
+
+    --section-padding-small:48px;
+
+}
+@media (max-width:991px){
+
+    :root{
+
+        --section-padding:64px;
+
+        --section-padding-small:40px;
+
+    }
+
+}
+
+@media (max-width:767px){
+
+    :root{
+
+        --section-padding:48px;
+
+        --section-padding-small:32px;
+
+    }
 
 }
