@@ -1,44 +1,79 @@
-.store-header{
-
-    background:#ffffff;
-
-    border-bottom:1px solid var(--color-border);
-
-    position:relative;
-
-}
-
-.header-container {
-
-    max-width: 1440px;
-
-    margin: 0 auto;
-
-    padding: 20px 32px;
-
-    display: grid;
-
-    grid-template-columns: auto 1fr;
-
-    gap: 40px;
-
-    align-items: center;
-
-}
-
-.logo img{
-
-    height:54px;
+:host{
 
     display:block;
 
 }
 
-.search-wrapper{
+/* ==========================================================
+   Header
+========================================================== */
 
-    flex:1;
+.store-header{
+
+    background:var(--color-surface);
+
+    border-bottom:1px solid var(--color-border);
+
+    position:relative;
+
+    z-index:100;
 
 }
+
+.header-container{
+
+    max-width:1440px;
+
+    margin:0 auto;
+
+    padding:20px 32px;
+
+    display:grid;
+
+    grid-template-columns:auto 1fr;
+
+    align-items:center;
+
+    gap:40px;
+
+}
+
+/* ==========================================================
+   Logo
+========================================================== */
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+}
+
+.logo img{
+
+    display:block;
+
+    height:54px;
+
+    width:auto;
+
+}
+
+/* ==========================================================
+   Search
+========================================================== */
+
+app-search-bar{
+
+    width:100%;
+
+}
+
+/* ==========================================================
+   Header Actions
+   (Used later)
+========================================================== */
 
 .header-actions{
 
@@ -68,19 +103,19 @@
 
     font-size:.85rem;
 
-    transition:.25s;
-
-}
-
-.header-action i{
-
-    font-size:1.35rem;
+    transition:color .25s ease;
 
 }
 
 .header-action:hover{
 
     color:var(--color-primary);
+
+}
+
+.header-action i{
+
+    font-size:1.35rem;
 
 }
 
@@ -100,7 +135,7 @@
 
     background:var(--color-primary);
 
-    color:white;
+    color:var(--color-text-light);
 
     display:flex;
 
@@ -111,5 +146,99 @@
     font-size:.7rem;
 
     font-weight:700;
+
+}
+
+/* ==========================================================
+   Laptop
+========================================================== */
+
+@media (max-width:1199px){
+
+    .header-container{
+
+        padding:18px 24px;
+
+        gap:32px;
+
+    }
+
+    .logo img{
+
+        height:50px;
+
+    }
+
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width:991px){
+
+    .header-container{
+
+        padding:16px 20px;
+
+        gap:24px;
+
+    }
+
+    .logo img{
+
+        height:46px;
+
+    }
+
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width:767px){
+
+    .header-container{
+
+        padding:14px 16px;
+
+        gap:16px;
+
+        grid-template-columns:1fr;
+
+    }
+
+    .logo{
+
+        justify-content:center;
+
+    }
+
+    .logo img{
+
+        height:40px;
+
+    }
+
+}
+
+/* ==========================================================
+   Small Mobile
+========================================================== */
+
+@media (max-width:575px){
+
+    .header-container{
+
+        padding:12px;
+
+    }
+
+    .logo img{
+
+        height:36px;
+
+    }
 
 }
