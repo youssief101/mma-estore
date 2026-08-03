@@ -4,43 +4,65 @@
 
 }
 
-.top-bar{
+.top-bar {
 
-    background:var(--color-dark);
+    background: var(--color-surface-dark);
 
-    color:var(--color-white);
+    color: white;
 
-    border-bottom:1px solid rgba(255,255,255,.08);
+    font-size: .875rem;
 
 }
 
-.container{
+.top-bar__container{
 
-    max-width:1440px;
+    max-width: 1440px;
 
-    margin:0 auto;
+    margin: 0 auto;
 
-    padding:0 2rem;
+    height: 40px;
 
-    height:42px;
+    padding: 0 32px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+.top-bar__left{
 
     display:flex;
 
     align-items:center;
 
-    justify-content:space-between;
-
 }
 
-.left-links,
-
-.right-links{
+.top-bar__right{
 
     display:flex;
 
     align-items:center;
 
-    gap:2rem;
+    gap:28px;
+
+}
+
+.top-bar a{
+
+    color:white;
+
+    text-decoration:none;
+
+    transition:.25s;
+
+}
+
+.top-bar a:hover{
+
+    color:var(--color-primary);
 
 }
 
@@ -77,6 +99,28 @@ a:hover{
 .cart-link i{
 
     font-size:1rem;
+
+}
+
+.signup-link{
+
+    background:var(--color-primary);
+
+    padding:10px 18px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+}
+
+.signup-link:hover{
+
+    background:#b30000;
+
+    color:white !important;
 
 }
 

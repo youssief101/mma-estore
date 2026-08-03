@@ -82,6 +82,6 @@
 
 .search-button:hover{
 
-    background:var(--color-primary-dark);
+    background:var(--color-primary-hover);
 
 }

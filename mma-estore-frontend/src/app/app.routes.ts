@@ -11,17 +11,33 @@ import { Home } from './features/home/pages/home/home';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 
+
 export const routes: Routes = [
 
   {
+
     path: '',
+
     component: StoreLayout,
 
     children: [
 
       {
-        path: '',
+
+        path: 'home',
+
         component: Home
+
+      },
+
+      {
+
+        path: '',
+
+        redirectTo: 'home',
+
+        pathMatch: 'full'
+
       }
 
     ]
@@ -35,7 +51,9 @@ export const routes: Routes = [
     component: AuthLayout,
 
     canActivateChild: [
+
       guestGuard
+
     ],
 
     children: [
@@ -44,7 +62,13 @@ export const routes: Routes = [
 
         path: 'login',
 
-        component: Login
+        component: Login,
+
+        canActivate: [
+
+          guestGuard
+
+        ]
 
       },
 
@@ -52,7 +76,13 @@ export const routes: Routes = [
 
         path: 'register',
 
-        component: Register
+        component: Register,
+
+        canActivate: [
+
+          guestGuard
+
+        ]
 
       }
 
@@ -64,7 +94,7 @@ export const routes: Routes = [
 
     path: '**',
 
-    redirectTo: ''
+    redirectTo: 'home'
 
   }
 

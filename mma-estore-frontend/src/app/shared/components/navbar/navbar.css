@@ -1,14 +1,10 @@
 .store-navbar{
 
-    background:white;
+    background: var(--color-primary);
 
-    border-top:1px solid var(--color-border);
+    position: relative;
 
-    border-bottom:1px solid var(--color-border);
-
-    position:relative;
-
-    z-index:100;
+    z-index: 100;
 
 }
 
@@ -18,9 +14,7 @@
 
     align-items:center;
 
-    justify-content:flex-start;
-
-    gap:2rem;
+    justify-content:center;
 
     list-style:none;
 
@@ -28,11 +22,13 @@
 
     padding:0;
 
-    min-height:56px;
+    min-height:36px;
 
     overflow-x:auto;
 
     scrollbar-width:none;
+
+    gap:0;
 
 }
 
@@ -44,53 +40,44 @@
 
 .nav-list a{
 
-    position:relative;
-
     display:flex;
 
     align-items:center;
 
-    height:56px;
+    justify-content:center;
+
+    height:36px;
+
+    padding:0 20px;
+
+    color:var(--color-text-light);
 
     text-decoration:none;
 
-    color:var(--color-text);
-
-    font-size:.92rem;
+    font-size:.9rem;
 
     font-weight:600;
 
     white-space:nowrap;
 
-    transition:.25s;
+    transition:
+        background-color .2s ease,
+        color .2s ease;
+
+}
+
+.nav-list li{
+
+    display:flex;
 
 }
 
 .nav-list a:hover{
 
-    color:var(--color-primary);
+    background: var(--color-primary-hover);
 
 }
 
-.nav-list a::after{
-
-    content:"";
-
-    position:absolute;
-
-    bottom:0;
-
-    left:0;
-
-    width:0;
-
-    height:3px;
-
-    background:var(--color-primary);
-
-    transition:.25s;
-
-}
 
 .nav-list a:hover::after{
 
@@ -100,7 +87,9 @@
 
 .nav-list a.active{
 
-    color:var(--color-primary);
+    background:#93070c;
+
+    color:white;
 
 }
 

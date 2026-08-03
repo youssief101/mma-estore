@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 
 import { Card } from '../card/card';
 
-import { Button } from '../button/button';
+
 
 import { CartItemCardModel } from '../../models/cart-item-card.model';
 
@@ -20,8 +20,7 @@ import { CartItemCardModel } from '../../models/cart-item-card.model';
 
     imports:[
         CommonModule,
-        Card,
-        Button
+        Card
     ],
 
     templateUrl:'./cart-item-card.html',

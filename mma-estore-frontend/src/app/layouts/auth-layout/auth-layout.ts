@@ -8,7 +8,6 @@ import { RouterOutlet, RouterLink } from '@angular/router';
   imports: [
     CommonModule,
     RouterOutlet,
-    RouterLink
   ],
   templateUrl: './auth-layout.html',
   styleUrl: './auth-layout.css'
