@@ -1,1 +1,73 @@
-<p>header works!</p>
+<header class="store-header">
+
+    <div class="container">
+
+        <!-- Logo -->
+
+        <a
+            routerLink="/"
+            class="logo">
+
+            <img
+                src="/logos/logo.png"
+                alt="MMA Store">
+
+        </a>
+
+        <!-- Search -->
+
+        <div class="search-wrapper">
+
+            <app-search-bar></app-search-bar>
+
+        </div>
+
+        <!-- Actions -->
+
+        <div class="header-actions">
+
+            <a
+                routerLink="/account"
+                class="header-action">
+
+                <i class="bi bi-person"></i>
+
+                <span>Account</span>
+
+            </a>
+
+            <a
+                routerLink="/wishlist"
+                class="header-action">
+
+                <i class="bi bi-heart"></i>
+
+                <span>Wishlist</span>
+
+            </a>
+
+            <a
+                routerLink="/cart"
+                class="header-action cart">
+
+                <i class="bi bi-cart3"></i>
+
+                <span>Cart</span>
+
+                @if(cartCount){
+
+                    <span class="cart-badge">
+
+                        {{ cartCount }}
+
+                    </span>
+
+                }
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
