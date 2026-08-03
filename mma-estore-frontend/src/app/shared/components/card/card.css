@@ -72,7 +72,7 @@
 
 .padding-md{
 
-    padding:20px;
+    padding:var(--space-5);
 
 }
 

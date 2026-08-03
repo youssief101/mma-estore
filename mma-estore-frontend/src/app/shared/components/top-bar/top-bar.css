@@ -4,31 +4,35 @@
 
 }
 
-.top-bar {
+/* ==========================================================
+   Top Bar
+========================================================== */
 
-    background: var(--color-surface-dark);
+.top-bar{
 
-    color: white;
+    background:var(--color-surface-dark);
 
-    font-size: .875rem;
+    color:var(--color-text-light);
+
+    font-size:.875rem;
 
 }
 
 .top-bar__container{
 
-    max-width: 1440px;
+    max-width:1440px;
 
-    margin: 0 auto;
+    margin:0 auto;
 
-    height: 40px;
+    height:40px;
 
-    padding: 0 32px;
+    padding:0 32px;
 
-    display: flex;
+    display:flex;
 
-    justify-content: space-between;
+    align-items:center;
 
-    align-items: center;
+    justify-content:space-between;
 
 }
 
@@ -50,23 +54,11 @@
 
 }
 
+/* ==========================================================
+   Links
+========================================================== */
+
 .top-bar a{
-
-    color:white;
-
-    text-decoration:none;
-
-    transition:.25s;
-
-}
-
-.top-bar a:hover{
-
-    color:var(--color-primary);
-
-}
-
-a{
 
     display:flex;
 
@@ -83,28 +75,32 @@ a{
     font-weight:500;
 
     transition:
-
         color .25s ease,
-
         opacity .25s ease;
 
 }
 
-a:hover{
+.top-bar a:hover{
 
     color:var(--color-primary);
 
 }
 
-.cart-link i{
+.top-bar i{
 
     font-size:1rem;
 
 }
 
+/* ==========================================================
+   Sign Up Button
+========================================================== */
+
 .signup-link{
 
     background:var(--color-primary);
+
+    color:var(--color-text-light);
 
     padding:10px 18px;
 
@@ -114,33 +110,155 @@ a:hover{
 
     letter-spacing:.5px;
 
+    transition:
+        background .25s ease,
+        color .25s ease;
+
 }
 
 .signup-link:hover{
 
-    background:#b30000;
+    background:var(--color-primary-hover);
 
-    color:white !important;
+    color:var(--color-text-light);
 
 }
 
-@media (max-width:768px){
+/* ==========================================================
+   Laptop
+========================================================== */
 
-    .container{
+@media (max-width:1199px){
 
-        padding:0 1rem;
+    .top-bar{
 
-    }
-
-    .right-links{
-
-        gap:1rem;
+        font-size:.85rem;
 
     }
 
-    a{
+    .top-bar__container{
+
+        padding:0 24px;
+
+    }
+
+    .top-bar__right{
+
+        gap:20px;
+
+    }
+
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width:991px){
+
+    .top-bar{
 
         font-size:.8rem;
+
+    }
+
+    .top-bar__container{
+
+        height:36px;
+
+        padding:0 20px;
+
+    }
+
+    .top-bar__right{
+
+        gap:16px;
+
+    }
+
+    .signup-link{
+
+        padding:8px 14px;
+
+        font-size:.8rem;
+
+    }
+
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width:767px){
+
+    .top-bar__container{
+
+        justify-content:center;
+
+        padding:0 16px;
+
+    }
+
+    .top-bar__right{
+
+        display:none;
+
+    }
+
+    .top-bar__left{
+
+        width:100%;
+
+        display:flex;
+
+        justify-content:center;
+
+    }
+
+    .signup-link{
+
+        background:none;
+
+        padding:0;
+
+        font-size:.8rem;
+
+        letter-spacing:.25px;
+
+    }
+
+    .signup-link:hover{
+
+        background:none;
+
+        color:var(--color-primary);
+
+    }
+
+}
+
+/* ==========================================================
+   Small Mobile
+========================================================== */
+
+@media (max-width:575px){
+
+    .top-bar{
+
+        font-size:.75rem;
+
+    }
+
+    .top-bar__container{
+
+        height:34px;
+
+    }
+
+    .signup-link{
+
+        font-size:.75rem;
 
     }
 
