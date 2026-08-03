@@ -1,0 +1,67 @@
+<app-card
+
+    shadow="lg"
+
+    [hover]="true"
+
+    [clickable]="giftCard().available"
+
+    (click)="onClick()">
+
+    <div class="gift-image">
+
+        <img
+
+            [src]="giftCard().image"
+
+            [alt]="giftCard().name">
+
+        @if(!giftCard().available){
+
+            <div class="sold-out">
+
+                SOLD OUT
+
+            </div>
+
+        }
+
+    </div>
+
+    <div class="content">
+
+        <div class="value">
+
+            ${{giftCard().value}}
+
+        </div>
+
+        <h3>
+
+            {{giftCard().name}}
+
+        </h3>
+
+        @if(giftCard().description){
+
+            <p>
+
+                {{giftCard().description}}
+
+            </p>
+
+        }
+
+        <button
+
+            class="buy-btn"
+
+            [disabled]="!giftCard().available">
+
+            Buy Gift Card
+
+        </button>
+
+    </div>
+
+</app-card>
