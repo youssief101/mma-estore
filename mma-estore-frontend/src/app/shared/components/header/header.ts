@@ -1,34 +1,24 @@
-import {
-  Component,
-  Input
-} from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
-import { RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { SearchBar } from '../search-bar/search-bar';
 
+import { NavigationService } from '../../../core/services/navigation.service';
+
 @Component({
-
   selector: 'app-header',
-
   standalone: true,
-
   imports: [
-    CommonModule,
-    RouterModule,
+    RouterLink,
     SearchBar
   ],
-
   templateUrl: './header.html',
-
   styleUrl: './header.css'
-
 })
 export class Header {
 
-  @Input()
-  cartCount = 0;
+  constructor(
+    public navigation: NavigationService
+  ) {}
 
 }

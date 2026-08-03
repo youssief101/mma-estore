@@ -59,6 +59,45 @@
     width:auto;
 
 }
+/* ==========================================================
+   Hamburger Button
+========================================================== */
+
+.menu-button{
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:44px;
+
+    height:44px;
+
+    border:none;
+
+    background:transparent;
+
+    cursor:pointer;
+
+    color:var(--color-text);
+
+    transition:color .25s ease;
+
+}
+
+.menu-button i{
+
+    font-size:1.8rem;
+
+}
+
+.menu-button:hover{
+
+    color:var(--color-primary);
+
+}
 
 /* ==========================================================
    Search
@@ -196,22 +235,29 @@ app-search-bar{
 /* ==========================================================
    Mobile
 ========================================================== */
-
 @media (max-width:767px){
 
     .header-container{
 
-        padding:14px 16px;
+        grid-template-columns:auto 1fr;
+
+        align-items:center;
 
         gap:16px;
 
-        grid-template-columns:1fr;
+        padding:14px 16px;
+
+    }
+
+    .menu-button{
+
+        display:flex;
 
     }
 
     .logo{
 
-        justify-content:center;
+        justify-content:flex-start;
 
     }
 
@@ -222,7 +268,6 @@ app-search-bar{
     }
 
 }
-
 /* ==========================================================
    Small Mobile
 ========================================================== */
@@ -242,3 +287,4 @@ app-search-bar{
     }
 
 }
+

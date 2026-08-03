@@ -1,0 +1,85 @@
+:host{
+
+    display:block;
+
+}
+
+/* ==========================================================
+   Mobile Drawer
+========================================================== */
+
+.mobile-drawer{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:320px;
+
+    max-width:85vw;
+
+    height:100vh;
+
+    background:var(--color-surface);
+
+    box-shadow:4px 0 18px rgba(0,0,0,.18);
+
+    z-index:1200;
+
+    transform:translate3d(-100%,0,0);
+
+    transition:transform .3s ease;
+
+    overflow-y:auto;
+
+    will-change:transform;
+
+}
+
+.mobile-drawer--open{
+
+    transform:translate3d(0,0,0);
+
+}
+
+/* ==========================================================
+   Header
+========================================================== */
+
+.mobile-drawer__header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:24px;
+
+    border-bottom:1px solid var(--color-border);
+
+}
+
+.mobile-drawer__header h2{
+
+    margin:0;
+
+    font-size:1.25rem;
+
+}
+
+/* ==========================================================
+   Navigation
+========================================================== */
+
+.mobile-drawer__nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    padding:16px 0;
+
+}
