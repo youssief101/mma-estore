@@ -88,11 +88,8 @@ export class Register {
           this.loading = false;
           this.successMessage = 'Account created successfully.';
           setTimeout(() => {
-
             this.router.navigate(['/']);
           }, 1000);
-
-          
         },
 
         error: (err) => {
@@ -101,5 +98,53 @@ export class Register {
           this.errorMessage = err.error?.message ?? 'Registration failed.';
         },
       });
+  }
+  get passwordStrength(): number {
+    const password = this.registerForm.controls.password.value ?? '';
+
+    let score = 0;
+
+    if (password.length >= 8) {
+      score++;
+    }
+
+    if (/[A-Z]/.test(password)) {
+      score++;
+    }
+
+    if (/[a-z]/.test(password)) {
+      score++;
+    }
+
+    if (/\d/.test(password)) {
+      score++;
+    }
+
+    if (/[^A-Za-z0-9]/.test(password)) {
+      score++;
+    }
+
+    return score;
+  }
+
+  get passwordStrengthLabel(): string {
+    switch (this.passwordStrength) {
+      case 0:
+      case 1:
+        return 'Weak';
+
+      case 2:
+      case 3:
+        return 'Medium';
+
+      case 4:
+        return 'Strong';
+
+      case 5:
+        return 'Very Strong';
+
+      default:
+        return '';
+    }
   }
 }

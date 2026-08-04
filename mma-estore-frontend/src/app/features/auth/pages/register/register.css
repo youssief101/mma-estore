@@ -185,3 +185,190 @@
     font-size: 2rem;
   }
 }
+/* ==========================================================
+   Password Strength
+========================================================== */
+
+.password-strength {
+  margin-top: 0.75rem;
+}
+
+.strength-bar {
+  height: 8px;
+
+  border-radius: 999px;
+
+  background: var(--color-surface-alt);
+
+  overflow: hidden;
+}
+
+.strength-fill {
+  display: block;
+
+  height: 100%;
+
+  width: 0;
+
+  transition: width 0.3s ease;
+}
+
+.strength-fill.weak {
+  background: #ef4444;
+}
+
+.strength-fill.medium {
+  background: #f59e0b;
+}
+
+.strength-fill.strong {
+  background: #22c55e;
+}
+
+.strength-label {
+  display: inline-block;
+
+  margin-top: 0.5rem;
+
+  font-size: 0.875rem;
+
+  font-weight: 600;
+}
+
+/* ==========================================================
+   Checklist
+========================================================== */
+
+.password-checklist {
+  margin-top: 0.75rem;
+
+  padding: 0;
+
+  list-style: none;
+
+  display: grid;
+
+  gap: 0.4rem;
+}
+
+.password-checklist li {
+  font-size: 0.875rem;
+
+  color: var(--color-text-muted);
+
+  transition: color 0.25s ease;
+}
+
+.password-checklist li.valid {
+  color: #22c55e;
+
+  font-weight: 500;
+}
+
+.password-checklist li.valid::before {
+  content: '✓ ';
+
+  font-weight: 700;
+}
+/* ==========================================================
+   Social Login
+========================================================== */
+
+.auth-divider {
+  position: relative;
+
+  margin: 2rem 0;
+
+  text-align: center;
+}
+
+.auth-divider::before {
+  content: '';
+
+  position: absolute;
+
+  top: 50%;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 1px;
+
+  background: var(--color-border);
+}
+
+.auth-divider span {
+  position: relative;
+
+  padding: 0 1rem;
+
+  background: white;
+
+  color: var(--color-text-muted);
+
+  font-size: 0.9rem;
+}
+
+/* ==========================================================
+   Social Buttons
+========================================================== */
+
+.social-auth {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 0.75rem;
+}
+
+.social-btn {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  height: 52px;
+
+  border: 1px solid var(--color-border);
+
+  border-radius: 12px;
+
+  background: white;
+
+  color: var(--color-text);
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.social-btn:hover {
+  border-color: var(--color-primary);
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.social-btn i {
+  font-size: 1.1rem;
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 767px) {
+  .social-auth {
+    grid-template-columns: 1fr;
+  }
+}

@@ -49,6 +49,46 @@
             <label class="form-label"> Password </label>
 
             <app-password-input formControlName="password"> </app-password-input>
+            @if (registerForm.controls.password.value) {
+              <div class="password-strength">
+                <div class="strength-bar">
+                  <span
+                    class="strength-fill"
+                    [style.width.%]="passwordStrength * 20"
+                    [class.weak]="passwordStrength <= 2"
+                    [class.medium]="passwordStrength === 3"
+                    [class.strong]="passwordStrength >= 4"
+                  >
+                  </span>
+                </div>
+
+                <span class="strength-label">
+                  {{ passwordStrengthLabel }}
+                </span>
+              </div>
+
+              <ul class="password-checklist">
+                <li [class.valid]="(registerForm.controls.password.value ?? '').length >= 8">
+                  Minimum 8 characters
+                </li>
+
+                <li [class.valid]="/[A-Z]/.test(registerForm.controls.password.value ?? '')">
+                  Uppercase letter
+                </li>
+
+                <li [class.valid]="/[a-z]/.test(registerForm.controls.password.value ?? '')">
+                  Lowercase letter
+                </li>
+
+                <li [class.valid]="/\d/.test(registerForm.controls.password.value ?? '')">
+                  Number
+                </li>
+
+                <li [class.valid]="/[^A-Za-z0-9]/.test(registerForm.controls.password.value ?? '')">
+                  Special character
+                </li>
+              </ul>
+            }
           </section>
 
           <section class="form-section">
@@ -94,6 +134,29 @@
             </app-button>
           </div>
         </form>
+        <div class="auth-divider">
+          <span>or continue with</span>
+        </div>
+
+        <div class="social-auth">
+          <button type="button" class="social-btn">
+            <i class="bi bi-google"></i>
+
+            <span>Google</span>
+          </button>
+
+          <button type="button" class="social-btn">
+            <i class="bi bi-facebook"></i>
+
+            <span>Facebook</span>
+          </button>
+
+          <button type="button" class="social-btn">
+            <i class="bi bi-apple"></i>
+
+            <span>Apple</span>
+          </button>
+        </div>
 
         <footer class="auth-footer">
           Already have an account?
