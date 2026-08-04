@@ -18,7 +18,10 @@ export interface AuthResponse {
   accessToken: string;
   refreshToken?: string;
   expiresIn?: number;
-  user?: User;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
 }
 
 export interface CurrentUserResponse {

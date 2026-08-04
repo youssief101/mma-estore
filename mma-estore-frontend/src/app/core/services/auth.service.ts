@@ -1,5 +1,4 @@
 import { Injectable, inject, signal } from '@angular/core';
-
 import { HttpClient } from '@angular/common/http';
 
 import { Observable, tap } from 'rxjs';
@@ -8,13 +7,14 @@ import {
   LoginRequest,
   RegisterRequest,
   AuthResponse,
+  RefreshTokenRequest,
   CurrentUserResponse
 } from '../models/auth.models';
 
 import { User } from '../models/user.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
 
@@ -22,11 +22,16 @@ export class AuthService {
 
   private apiUrl = 'https://localhost:5001/api/auth';
 
-  private _currentUser = signal<User | null>(null);
+  private currentUserSignal =
+    signal<User | null>(null);
 
-  currentUser = this._currentUser.asReadonly();
+  currentUser() {
+    return this.currentUserSignal();
+  }
 
-  login(payload: LoginRequest): Observable<AuthResponse> {
+  login(
+    payload: LoginRequest
+  ): Observable<AuthResponse> {
 
     return this.http
       .post<AuthResponse>(
@@ -34,7 +39,7 @@ export class AuthService {
         payload
       )
       .pipe(
-        tap((response) => {
+        tap(response => {
 
           localStorage.setItem(
             'accessToken',
@@ -46,14 +51,6 @@ export class AuthService {
             localStorage.setItem(
               'refreshToken',
               response.refreshToken
-            );
-
-          }
-
-          if (response.user) {
-
-            this._currentUser.set(
-              response.user
             );
 
           }
@@ -74,33 +71,36 @@ export class AuthService {
 
   }
 
-  logout(): void {
+  refreshToken(): Observable<AuthResponse> {
 
-    localStorage.removeItem(
-      'accessToken'
-    );
+    const refreshToken =
+      localStorage.getItem('refreshToken');
 
-    localStorage.removeItem(
-      'refreshToken'
-    );
-
-    this._currentUser.set(
-      null
-    );
-
-  }
-
-  isAuthenticated(): boolean {
-
-    return !!localStorage.getItem(
-      'accessToken'
+    return this.http.post<AuthResponse>(
+      `${this.apiUrl}/refresh-token`,
+      {
+        refreshToken
+      } as RefreshTokenRequest
     );
 
   }
 
-  isLoggedIn(): boolean {
+  loadCurrentUser():
+    Observable<CurrentUserResponse> {
 
-    return this.isAuthenticated();
+    return this.http
+      .get<CurrentUserResponse>(
+        `${this.apiUrl}/me`
+      )
+      .pipe(
+        tap(response => {
+
+          this.currentUserSignal.set(
+            response.user
+          );
+
+        })
+      );
 
   }
 
@@ -112,21 +112,29 @@ export class AuthService {
 
   }
 
-  loadCurrentUser(): Observable<CurrentUserResponse> {
+  isLoggedIn(): boolean {
 
-    return this.http
-      .get<CurrentUserResponse>(
-        `${this.apiUrl}/me`
-      )
-      .pipe(
-        tap((response) => {
+    return !!this.getToken();
 
-          this._currentUser.set(
-            response.user
-          );
+  }
 
-        })
-      );
+  isAuthenticated(): boolean {
+
+    return this.isLoggedIn();
+
+  }
+
+  logout(): void {
+
+    localStorage.removeItem(
+      'accessToken'
+    );
+
+    localStorage.removeItem(
+      'refreshToken'
+    );
+
+    this.currentUserSignal.set(null);
 
   }
 
