@@ -1,0 +1,170 @@
+:host {
+  display: inline-block;
+  width: fit-content;
+}
+
+/* ==========================================================
+   Quantity Selector
+========================================================== */
+
+.quantity-selector {
+  display: inline-flex;
+  align-items: center;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface);
+  overflow: hidden;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.quantity-selector:focus-within {
+  border-color: var(--color-primary);
+
+  box-shadow: 0 0 0 4px rgba(197, 30, 58, 0.15);
+}
+
+/* ==========================================================
+   Buttons
+========================================================== */
+
+.quantity-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
+  border: none;
+  background: transparent;
+
+  color: var(--color-text);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.15s ease;
+}
+
+.quantity-btn:hover:not(:disabled) {
+  background: var(--color-surface-alt);
+
+  color: var(--color-primary);
+}
+
+.quantity-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.quantity-btn:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+}
+
+.quantity-btn i {
+  font-size: 1rem;
+}
+
+/* ==========================================================
+   Input
+========================================================== */
+
+.quantity-input {
+  width: 72px;
+  height: 48px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: var(--color-text);
+
+  text-align: center;
+
+  font-size: var(--fs-body);
+  font-weight: 600;
+
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-inner-spin-button,
+.quantity-input::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width: 991px) {
+
+  .quantity-btn {
+    width: 46px;
+    height: 46px;
+  }
+
+  .quantity-input {
+    width: 64px;
+  }
+
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 767px) {
+
+  :host {
+    width: 100%;
+  }
+
+  .quantity-selector {
+    width: 100%;
+  }
+
+  .quantity-btn {
+    width: 52px;
+    height: 52px;
+  }
+
+  .quantity-input {
+    flex: 1;
+
+    width: auto;
+    height: 52px;
+
+    font-size: var(--fs-body-lg);
+  }
+
+}
+
+/* ==========================================================
+   Small Mobile
+========================================================== */
+
+@media (max-width: 480px) {
+
+  .quantity-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .quantity-input {
+    height: 50px;
+
+    font-size: var(--fs-body);
+  }
+
+}
