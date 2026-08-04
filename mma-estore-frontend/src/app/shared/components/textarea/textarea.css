@@ -1,66 +1,133 @@
-.app-textarea{
+:host {
+  display: block;
 
-    width:100%;
-
-    min-height:120px;
-
-    padding:14px 16px;
-
-    border:1px solid var(--color-gray-300);
-
-    border-radius:10px;
-
-    background:var(--color-surface);
-
-    color:var(--color-gray-900);
-
-    font-size:16px;
-
-    font-family:inherit;
-
-    line-height:1.6;
-
-    outline:none;
-
-    transition:
-        border-color .25s,
-        box-shadow .25s,
-        background .25s;
-
+  width: 100%;
 }
 
-.app-textarea::placeholder{
+.app-textarea {
+  width: 100%;
 
-    color:var(--color-gray-500);
+  min-height: 120px;
 
+  padding: var(--space-4);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface);
+
+  color: var(--color-text);
+
+  font-size: var(--fs-body);
+
+  font-family: inherit;
+
+  font-weight: 400;
+
+  line-height: 1.6;
+
+  outline: none;
+
+  resize: vertical;
+
+  appearance: none;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
-.app-textarea:hover{
+/* ==========================================================
+   Placeholder
+========================================================== */
 
-    border-color:var(--color-gray-400);
-
+.app-textarea::placeholder {
+  color: var(--color-text-muted);
 }
 
-.app-textarea:focus{
+/* ==========================================================
+   Hover
+========================================================== */
 
-    border-color:var(--color-primary);
-
-    box-shadow:0 0 0 4px rgba(213,0,28,.15);
-
+.app-textarea:hover:not(:disabled):not([readonly]) {
+  border-color: var(--color-border-dark);
 }
 
-.app-textarea:disabled{
+/* ==========================================================
+   Focus
+========================================================== */
 
-    background:var(--color-gray-100);
+.app-textarea:focus {
+  border-color: var(--color-primary);
 
-    color:var(--color-gray-500);
-
-    cursor:not-allowed;
-
+  box-shadow: 0 0 0 4px rgba(197, 30, 58, 0.15);
 }
 
-.app-textarea[readonly]{
+/* ==========================================================
+   Disabled
+========================================================== */
 
-    background:var(--color-gray-50);
+.app-textarea:disabled {
+  background: var(--color-surface-alt);
 
+  color: var(--color-text-muted);
+
+  cursor: not-allowed;
+
+  opacity: 0.8;
+}
+
+/* ==========================================================
+   Readonly
+========================================================== */
+
+.app-textarea[readonly] {
+  background: var(--color-surface-alt);
+}
+
+/* ==========================================================
+   Scrollbar
+========================================================== */
+
+.app-textarea {
+  scrollbar-width: thin;
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width: 991px) {
+  .app-textarea {
+    min-height: 110px;
+
+    font-size: var(--fs-body);
+  }
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 767px) {
+  .app-textarea {
+    min-height: 100px;
+
+    padding: var(--space-3);
+
+    font-size: var(--fs-body-sm);
+  }
+}
+
+/* ==========================================================
+   Small Mobile
+========================================================== */
+
+@media (max-width: 480px) {
+  .app-textarea {
+    min-height: 90px;
+  }
 }
