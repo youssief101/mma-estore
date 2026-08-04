@@ -1,0 +1,81 @@
+/* ==========================================================
+   Form Label
+========================================================== */
+
+.form-label {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: var(--space-1);
+
+  margin-bottom: var(--space-2);
+
+  color: var(--color-text);
+
+  font-size: var(--fs-body);
+
+  font-weight: 600;
+
+  line-height: 1.4;
+}
+
+/* ==========================================================
+   Required
+========================================================== */
+
+.form-required {
+  color: var(--color-primary);
+
+  font-weight: 700;
+}
+
+/* ==========================================================
+   Optional
+========================================================== */
+
+.form-optional {
+  color: var(--color-text-muted);
+
+  font-size: var(--fs-body-sm);
+
+  font-weight: 400;
+}
+
+/* ==========================================================
+   Helper Text
+========================================================== */
+
+.form-helper {
+  display: block;
+
+  margin-top: var(--space-2);
+
+  color: var(--color-text-muted);
+
+  font-size: var(--fs-body-sm);
+
+  line-height: 1.5;
+}
+
+/* ==========================================================
+   Disabled Helper
+========================================================== */
+
+.form-helper.disabled {
+  opacity: 0.6;
+}
+
+/* ==========================================================
+   Responsive
+========================================================== */
+
+@media (max-width: 767px) {
+  .form-label {
+    font-size: var(--fs-body-sm);
+  }
+
+  .form-helper {
+    font-size: var(--fs-caption);
+  }
+}

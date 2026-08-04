@@ -1,0 +1,99 @@
+/* ==========================================================
+   Form Grid
+========================================================== */
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(12, 1fr);
+
+  gap: var(--space-5);
+
+  width: 100%;
+}
+
+/* ==========================================================
+   Default Columns
+========================================================== */
+
+.col-12 {
+  grid-column: span 12;
+}
+
+.col-10 {
+  grid-column: span 10;
+}
+
+.col-9 {
+  grid-column: span 9;
+}
+
+.col-8 {
+  grid-column: span 8;
+}
+
+.col-7 {
+  grid-column: span 7;
+}
+
+.col-6 {
+  grid-column: span 6;
+}
+
+.col-5 {
+  grid-column: span 5;
+}
+
+.col-4 {
+  grid-column: span 4;
+}
+
+.col-3 {
+  grid-column: span 3;
+}
+
+.col-2 {
+  grid-column: span 2;
+}
+
+.col-1 {
+  grid-column: span 1;
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width: 991px) {
+  .form-grid {
+    gap: var(--space-4);
+  }
+
+  .col-md-12 {
+    grid-column: span 12;
+  }
+
+  .col-md-6 {
+    grid-column: span 6;
+  }
+
+  .col-md-4 {
+    grid-column: span 4;
+  }
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 767px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+
+    gap: var(--space-3);
+  }
+
+  .form-grid > * {
+    grid-column: 1 / -1 !important;
+  }
+}
