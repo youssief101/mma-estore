@@ -98,7 +98,27 @@ export class Register {
         error: (err) => {
           this.loading = false;
 
-          this.errorMessage = err.error?.message ?? 'Registration failed.';
+          const status = err.status;
+
+          if (status === 409) {
+            this.errorMessage = 'An account with this email already exists.';
+
+            return;
+          }
+
+          if (status === 400) {
+            this.errorMessage = 'Please check the information you entered.';
+
+            return;
+          }
+
+          if (status === 0) {
+            this.errorMessage = 'Unable to reach the server. Check your connection.';
+
+            return;
+          }
+
+          this.errorMessage = err.error?.message ?? 'Registration failed. Please try again.';
         },
       });
   }
@@ -150,5 +170,16 @@ export class Register {
         return '';
     }
   }
-}
+  constructor() {
+    this.registerForm.valueChanges.subscribe(() => {
+      this.errorMessage = '';
+    });
+  }
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
 
+    password: ['', [Validators.required]],
+
+    rememberMe: [false],
+  });
+}

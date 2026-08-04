@@ -1,3 +1,27 @@
+:host {
+  display: block;
+}
+
+/* ==========================================================
+   Form Row
+========================================================== */
+
+.form-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 1rem;
+
+  margin-top: 1rem;
+}
+
+/* ==========================================================
+   Links
+========================================================== */
+
 .form-link {
   color: var(--color-primary);
 
@@ -10,17 +34,112 @@
   text-decoration: underline;
 }
 
-.form-row {
-  align-items: center;
+/* ==========================================================
+   Remember Me
+========================================================== */
+
+.remember-section {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.35rem;
 }
 
-@media (max-width: 767px) {
-  .form-row {
-    align-items: flex-start;
-  }
+.remember-helper {
+  font-size: 0.82rem;
+
+  color: var(--color-text-muted);
 }
+
 /* ==========================================================
-   Social Login
+   Device Trust
+========================================================== */
+
+.device-trust-note {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.75rem;
+
+  margin-top: 1rem;
+
+  padding: 1rem 1.25rem;
+
+  border-radius: 14px;
+
+  background: rgba(34, 197, 94, 0.08);
+
+  color: #16a34a;
+
+  font-size: 0.9rem;
+
+  font-weight: 500;
+}
+
+.device-trust-note i {
+  font-size: 1.1rem;
+}
+
+/* ==========================================================
+   Error Alert
+========================================================== */
+
+.auth-alert-error {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.75rem;
+
+  margin-top: 1rem;
+
+  padding: 1rem 1.25rem;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(220, 38, 38, 0.2);
+
+  background: rgba(220, 38, 38, 0.08);
+
+  color: #dc2626;
+
+  font-size: 0.95rem;
+
+  font-weight: 500;
+}
+
+.auth-alert-error i {
+  font-size: 1.1rem;
+}
+
+/* ==========================================================
+   Success Alert
+========================================================== */
+
+.auth-alert-success {
+  margin-top: 1rem;
+
+  padding: 1rem;
+
+  border-radius: 12px;
+
+  border: 1px solid #22c55e;
+
+  background: rgba(34, 197, 94, 0.12);
+
+  color: #16a34a;
+
+  font-size: 0.95rem;
+
+  font-weight: 600;
+
+  text-align: center;
+}
+
+/* ==========================================================
+   Divider
 ========================================================== */
 
 .auth-divider {
@@ -52,7 +171,7 @@
 
   padding: 0 1rem;
 
-  background: white;
+  background: var(--color-surface);
 
   color: var(--color-text-muted);
 
@@ -60,7 +179,7 @@
 }
 
 /* ==========================================================
-   Social Buttons
+   Social Login
 ========================================================== */
 
 .social-auth {
@@ -86,7 +205,7 @@
 
   border-radius: 12px;
 
-  background: white;
+  background: var(--color-surface);
 
   color: var(--color-text);
 
@@ -120,28 +239,16 @@
   .social-auth {
     grid-template-columns: 1fr;
   }
-}
-/* ==========================================================
-   Success Alert
-========================================================== */
 
-.auth-alert-success {
-  padding: 1rem;
+  .form-row {
+    flex-direction: column;
 
-  margin-bottom: 1rem;
-
-  border-radius: 12px;
-
-  border: 1px solid #22c55e;
-
-  background: rgba(34, 197, 94, 0.12);
-
-  color: #16a34a;
-
-  font-size: 0.95rem;
-
-  font-weight: 600;
-
-  text-align: center;
+    align-items: flex-start;
+  }
 }
 
+@media (max-width: 576px) {
+  .device-trust-note {
+    align-items: flex-start;
+  }
+}

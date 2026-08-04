@@ -49,21 +49,39 @@
             }
           </section>
 
-          <!-- Remember + Forgot Password -->
+          <!-- Device Trust Notice -->
+
+          <div class="device-trust-note">
+            <i class="bi bi-shield-check"></i>
+
+            <span> We only recommend remembering your account on a personal device. </span>
+          </div>
+
+          <!-- Remember Me + Forgot Password -->
 
           <section class="form-row">
-            <app-checkbox label="Remember me"> </app-checkbox>
+            <div class="remember-section">
+              <app-checkbox label="Remember me" formControlName="rememberMe"> </app-checkbox>
+
+              <small class="remember-helper"> Stay signed in on this device. </small>
+            </div>
 
             <a routerLink="/forgot-password" class="form-link"> Forgot Password? </a>
           </section>
 
-          <!-- Server Error -->
+          <!-- Error -->
 
           @if (errorMessage) {
             <div class="auth-alert-error">
-              {{ errorMessage }}
+              <i class="bi bi-exclamation-triangle-fill"></i>
+
+              <span>
+                {{ errorMessage }}
+              </span>
             </div>
           }
+
+          <!-- Success -->
 
           @if (successMessage) {
             <div class="auth-alert-success">
@@ -87,8 +105,11 @@
             </app-button>
           </div>
         </form>
+
+        <!-- Social Login -->
+
         <div class="auth-divider">
-          <span>or continue with</span>
+          <span> or continue with </span>
         </div>
 
         <div class="social-auth">
@@ -110,8 +131,6 @@
             <span>Apple</span>
           </button>
         </div>
-
-        <!-- Footer -->
 
         <footer class="auth-footer">
           Don't have an account?

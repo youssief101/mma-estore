@@ -79,8 +79,33 @@ export class Login {
         error: (err) => {
           this.loading = false;
 
-          this.errorMessage = err.error?.message ?? 'Login failed.';
+          const status = err.status;
+
+          if (status === 401) {
+            this.errorMessage = 'Incorrect email or password.';
+
+            return;
+          }
+
+          if (status === 403) {
+            this.errorMessage = 'Your account is currently unavailable.';
+
+            return;
+          }
+
+          if (status === 0) {
+            this.errorMessage = 'Unable to reach the server. Check your connection.';
+
+            return;
+          }
+
+          this.errorMessage = err.error?.message ?? 'Something went wrong. Please try again.';
         },
       });
+  }
+  constructor() {
+    this.loginForm.valueChanges.subscribe(() => {
+      this.errorMessage = '';
+    });
   }
 }
