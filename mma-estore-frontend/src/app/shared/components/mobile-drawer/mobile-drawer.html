@@ -5,8 +5,16 @@
 ></div>
 
 <aside class="mobile-drawer" [class.mobile-drawer--open]="open">
-  <div class="mobile-drawer__header">
-    <h2>Menu</h2>
+  <!-- Logo Section -->
+  <div class="drawer-logo-section">
+    <a
+      routerLink="/"
+      class="drawer-logo"
+      (click)="navigation.closeDrawer()"
+      aria-label="Go to homepage"
+    >
+      <img src="logos/logo.png" alt="MMA E-Store" />
+    </a>
 
     <button
       type="button"
@@ -18,11 +26,44 @@
     </button>
   </div>
 
+  <!-- Navigation -->
   <nav class="mobile-drawer__nav">
     @for (category of categories; track category.title) {
-      <a [routerLink]="category.link" routerLinkActive="active" (click)="navigation.closeDrawer()">
-        {{ category.title }}
+      <a
+        [routerLink]="category.link"
+        routerLinkActive="active"
+        (click)="navigation.closeDrawer()"
+        class="nav-item"
+      >
+        <span class="nav-item__text">{{ category.title }}</span>
+        <i class="bi bi-chevron-right nav-item__arrow"></i>
       </a>
     }
   </nav>
+
+  <!-- Quick Actions -->
+  <div class="drawer-actions">
+    <a routerLink="/account" class="action-btn" (click)="navigation.closeDrawer()">
+      <i class="bi bi-person"></i>
+      <span>Account</span>
+    </a>
+    <a routerLink="/cart" class="action-btn" (click)="navigation.closeDrawer()">
+      <i class="bi bi-cart3"></i>
+      <span>Cart</span>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <div class="drawer-footer">
+    <div class="drawer-footer__contact">
+      <p><i class="bi bi-telephone"></i> +1 234 567 890</p>
+      <p><i class="bi bi-envelope"></i> support@mma.com</p>
+    </div>
+    <div class="drawer-footer__social">
+      <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+      <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+      <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+      <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+    </div>
+  </div>
 </aside>
