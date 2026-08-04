@@ -1,10 +1,11 @@
 :host {
   display: block;
-
   width: 100%;
 }
 
 .app-textarea {
+  box-sizing: border-box;
+
   width: 100%;
 
   min-height: 120px;
@@ -29,9 +30,11 @@
 
   outline: none;
 
-  resize: vertical;
-
   appearance: none;
+
+  scrollbar-width: thin;
+
+  scrollbar-color: var(--color-border-dark) transparent;
 
   transition:
     border-color 0.25s ease,
@@ -86,14 +89,8 @@
 
 .app-textarea[readonly] {
   background: var(--color-surface-alt);
-}
 
-/* ==========================================================
-   Scrollbar
-========================================================== */
-
-.app-textarea {
-  scrollbar-width: thin;
+  cursor: default;
 }
 
 /* ==========================================================
