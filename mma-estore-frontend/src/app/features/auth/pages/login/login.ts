@@ -1,10 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
@@ -26,13 +22,12 @@ import { Button } from '../../../../shared/components/button/button';
     Input,
     PasswordInput,
     Checkbox,
-    Button
+    Button,
   ],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrl: './login.css',
 })
 export class Login {
-
   private fb = inject(FormBuilder);
 
   private authService = inject(AuthService);
@@ -40,70 +35,49 @@ export class Login {
   private router = inject(Router);
 
   loading = false;
+  successMessage = '';
 
   errorMessage = '';
 
   loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
 
-    email: [
-      '',
-      [
-        Validators.required,
-        Validators.email
-      ]
-    ],
-
-    password: [
-      '',
-      [
-        Validators.required
-      ]
-    ]
-
+    password: ['', [Validators.required]],
   });
 
   onSubmit(): void {
-
     if (this.loginForm.invalid) {
-
       this.loginForm.markAllAsTouched();
 
       return;
-
     }
 
     this.loading = true;
 
     this.errorMessage = '';
 
-    this.authService.login({
+    this.authService
+      .login({
+        email: this.loginForm.value.email!,
 
-      email: this.loginForm.value.email!,
+        password: this.loginForm.value.password!,
+      })
+      .subscribe({
+        next: () => {
+          this.loading = false;
 
-      password: this.loginForm.value.password!
+          this.successMessage = 'Login successful.';
 
-    }).subscribe({
+          setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 500);
+        },
 
-      next: () => {
+        error: (err) => {
+          this.loading = false;
 
-        this.loading = false;
-
-        this.router.navigate(['/']);
-
-      },
-
-      error: (err) => {
-
-        this.loading = false;
-
-        this.errorMessage =
-          err.error?.message ??
-          'Login failed.';
-
-      }
-
-    });
-
+          this.errorMessage = err.error?.message ?? 'Login failed.';
+        },
+      });
   }
-
 }

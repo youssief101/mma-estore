@@ -10,6 +10,7 @@
 
         <form
           class="form-container auth-form"
+          [class.auth-loading]="loading"
           [formGroup]="loginForm"
           (ngSubmit)="onSubmit()"
           autocomplete="off"
@@ -59,17 +60,27 @@
           <!-- Server Error -->
 
           @if (errorMessage) {
-            <div class="form-error">
+            <div class="auth-alert-error">
               {{ errorMessage }}
+            </div>
+          }
+
+          @if (successMessage) {
+            <div class="auth-alert-success">
+              {{ successMessage }}
             </div>
           }
 
           <!-- Submit -->
 
           <div class="form-actions">
-            <app-button type="submit" [disabled]="loading">
+            <app-button type="submit" [disabled]="loading || loginForm.invalid">
               @if (loading) {
-                Signing In...
+                <span class="auth-button-loading">
+                  <span class="auth-spinner"></span>
+
+                  Please wait...
+                </span>
               } @else {
                 Sign In
               }

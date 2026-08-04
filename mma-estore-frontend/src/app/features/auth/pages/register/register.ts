@@ -27,6 +27,7 @@ export class Register {
   loading = false;
 
   errorMessage = '';
+  successMessage = '';
 
   registerForm = this.fb.group({
     username: [
@@ -85,8 +86,13 @@ export class Register {
       .subscribe({
         next: () => {
           this.loading = false;
+          this.successMessage = 'Account created successfully.';
+          setTimeout(() => {
 
-          this.router.navigate(['/']);
+            this.router.navigate(['/']);
+          }, 1000);
+
+          
         },
 
         error: (err) => {

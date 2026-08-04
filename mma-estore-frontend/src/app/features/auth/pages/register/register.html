@@ -12,6 +12,7 @@
 
         <form
           class="form-container auth-form"
+          [class.auth-loading]="loading"
           [formGroup]="registerForm"
           (ngSubmit)="onSubmit()"
           autocomplete="off"
@@ -68,16 +69,25 @@
           </div>
 
           @if (errorMessage) {
-            <div class="auth-error">
+            <div class="auth-alert-error">
               {{ errorMessage }}
             </div>
           }
 
-          <div class="form-actions">
-            <app-button type="submit" [disabled]="loading">
-              @if (loading) {
-                Creating Account...
+          @if (successMessage) {
+            <div class="auth-alert-success">
+              {{ successMessage }}
+            </div>
+          }
 
+          <div class="form-actions">
+            <app-button type="submit" [disabled]="loading || registerForm.invalid">
+              @if (loading) {
+                <span class="auth-button-loading">
+                  <span class="auth-spinner"></span>
+
+                  Creating Account...
+                </span>
               } @else {
                 Create Account
               }
