@@ -1,118 +1,44 @@
-:host{
-
-    display:block;
-
-}
-
-/* ==========================================================
-   Header
-========================================================== */
-
 .store-header{
 
-    background:var(--color-surface);
+    background:#ffffff;
 
     border-bottom:1px solid var(--color-border);
 
     position:relative;
 
-    z-index:100;
-
 }
 
-.header-container{
+.header-container {
 
-    max-width:1440px;
+    max-width: 1440px;
 
-    margin:0 auto;
+    margin: 0 auto;
 
-    padding:20px 32px;
+    padding: 20px 32px;
 
-    display:grid;
+    display: grid;
 
-    grid-template-columns:auto 1fr;
+    grid-template-columns: auto 1fr;
 
-    align-items:center;
+    gap: 40px;
 
-    gap:40px;
-
-}
-
-/* ==========================================================
-   Logo
-========================================================== */
-
-.logo{
-
-    display:flex;
-
-    align-items:center;
+    align-items: center;
 
 }
 
 .logo img{
 
-    display:block;
-
     height:54px;
 
-    width:auto;
-
-}
-/* ==========================================================
-   Hamburger Button
-========================================================== */
-
-.menu-button{
-
-    display:none;
-
-    align-items:center;
-
-    justify-content:center;
-
-    width:44px;
-
-    height:44px;
-
-    border:none;
-
-    background:transparent;
-
-    cursor:pointer;
-
-    color:var(--color-text);
-
-    transition:color .25s ease;
+    display:block;
 
 }
 
-.menu-button i{
+.search-wrapper{
 
-    font-size:1.8rem;
-
-}
-
-.menu-button:hover{
-
-    color:var(--color-primary);
+    flex:1;
 
 }
-
-/* ==========================================================
-   Search
-========================================================== */
-
-app-search-bar{
-
-    width:100%;
-
-}
-
-/* ==========================================================
-   Header Actions
-   (Used later)
-========================================================== */
 
 .header-actions{
 
@@ -142,19 +68,19 @@ app-search-bar{
 
     font-size:.85rem;
 
-    transition:color .25s ease;
-
-}
-
-.header-action:hover{
-
-    color:var(--color-primary);
+    transition:.25s;
 
 }
 
 .header-action i{
 
     font-size:1.35rem;
+
+}
+
+.header-action:hover{
+
+    color:var(--color-primary);
 
 }
 
@@ -174,7 +100,7 @@ app-search-bar{
 
     background:var(--color-primary);
 
-    color:var(--color-text-light);
+    color:white;
 
     display:flex;
 
@@ -187,104 +113,3 @@ app-search-bar{
     font-weight:700;
 
 }
-
-/* ==========================================================
-   Laptop
-========================================================== */
-
-@media (max-width:1199px){
-
-    .header-container{
-
-        padding:18px 24px;
-
-        gap:32px;
-
-    }
-
-    .logo img{
-
-        height:50px;
-
-    }
-
-}
-
-/* ==========================================================
-   Tablet
-========================================================== */
-
-@media (max-width:991px){
-
-    .header-container{
-
-        padding:16px 20px;
-
-        gap:24px;
-
-    }
-
-    .logo img{
-
-        height:46px;
-
-    }
-
-}
-
-/* ==========================================================
-   Mobile
-========================================================== */
-@media (max-width:767px){
-
-    .header-container{
-
-        grid-template-columns:auto 1fr;
-
-        align-items:center;
-
-        gap:16px;
-
-        padding:14px 16px;
-
-    }
-
-    .menu-button{
-
-        display:flex;
-
-    }
-
-    .logo{
-
-        justify-content:flex-start;
-
-    }
-
-    .logo img{
-
-        height:40px;
-
-    }
-
-}
-/* ==========================================================
-   Small Mobile
-========================================================== */
-
-@media (max-width:575px){
-
-    .header-container{
-
-        padding:12px;
-
-    }
-
-    .logo img{
-
-        height:36px;
-
-    }
-
-}
-

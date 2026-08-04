@@ -1,35 +1,34 @@
-import { Component, HostListener } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {
+  Component,
+  Input
+} from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+
+import { RouterModule } from '@angular/router';
 
 import { SearchBar } from '../search-bar/search-bar';
 
-import { NavigationService } from '../../../core/services/navigation.service';
-
 @Component({
+
   selector: 'app-header',
+
   standalone: true,
+
   imports: [
-    RouterLink,
+    CommonModule,
+    RouterModule,
     SearchBar
   ],
+
   templateUrl: './header.html',
+
   styleUrl: './header.css'
+
 })
 export class Header {
 
-  constructor(
-    public navigation: NavigationService
-  ) {}
-
-  @HostListener('window:resize')
-  onResize(): void {
-
-    if (window.innerWidth > 767) {
-
-      this.navigation.closeDrawer();
-
-    }
-
-  }
+  @Input()
+  cartCount = 0;
 
 }

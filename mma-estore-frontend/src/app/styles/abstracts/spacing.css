@@ -1,71 +1,15 @@
 :root{
 
-    /* ==========================================================
-       Base Spacing Scale
-    ========================================================== */
+    --space-xs:4px;
 
-    --space-1:4px;
+    --space-sm:8px;
 
-    --space-2:8px;
+    --space-md:16px;
 
-    --space-3:12px;
+    --space-lg:24px;
 
-    --space-4:16px;
+    --space-xl:32px;
 
-    --space-5:20px;
-
-    --space-6:24px;
-
-    --space-8:32px;
-
-    --space-10:40px;
-
-    --space-12:48px;
-
-    --space-16:64px;
-
-    --space-20:80px;
-
-    --space-24:96px;
-
-    /* ==========================================================
-       Section Spacing
-    ========================================================== */
-
-    --section-padding:var(--space-20);
-
-    --section-padding-small:var(--space-12);
-
-}
-
-/* ==========================================================
-   Tablet
-========================================================== */
-
-@media (max-width:991px){
-
-    :root{
-
-        --section-padding:var(--space-16);
-
-        --section-padding-small:var(--space-10);
-
-    }
-
-}
-
-/* ==========================================================
-   Mobile
-========================================================== */
-
-@media (max-width:767px){
-
-    :root{
-
-        --section-padding:var(--space-12);
-
-        --section-padding-small:var(--space-8);
-
-    }
+    --space-2xl:48px;
 
 }
