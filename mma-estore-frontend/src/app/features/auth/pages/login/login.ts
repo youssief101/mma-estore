@@ -36,6 +36,7 @@ export class Login {
 
   loading = false;
   successMessage = '';
+  redirecting = false;
 
   errorMessage = '';
 
@@ -66,11 +67,13 @@ export class Login {
         next: () => {
           this.loading = false;
 
-          this.successMessage = 'Login successful.';
+          this.redirecting = true;
+
+          this.successMessage = 'Login successful. Redirecting...';
 
           setTimeout(() => {
             this.router.navigate(['/']);
-          }, 500);
+          }, 1500);
         },
 
         error: (err) => {

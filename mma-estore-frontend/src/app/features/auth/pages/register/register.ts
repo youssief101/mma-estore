@@ -25,9 +25,9 @@ export class Register {
   private router = inject(Router);
 
   loading = false;
-
-  errorMessage = '';
+  redirecting = false;
   successMessage = '';
+  errorMessage = '';
 
   registerForm = this.fb.group({
     username: [
@@ -86,12 +86,15 @@ export class Register {
       .subscribe({
         next: () => {
           this.loading = false;
-          this.successMessage = 'Account created successfully.';
-          setTimeout(() => {
-            this.router.navigate(['/']);
-          }, 1000);
-        },
 
+          this.redirecting = true;
+
+          this.successMessage = 'Account created successfully. Redirecting to login...';
+
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        },
         error: (err) => {
           this.loading = false;
 
@@ -148,3 +151,4 @@ export class Register {
     }
   }
 }
+

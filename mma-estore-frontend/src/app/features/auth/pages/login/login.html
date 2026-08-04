@@ -10,7 +10,7 @@
 
         <form
           class="form-container auth-form"
-          [class.auth-loading]="loading"
+          [class.auth-loading]="loading || redirecting"
           [formGroup]="loginForm"
           (ngSubmit)="onSubmit()"
           autocomplete="off"
@@ -74,7 +74,7 @@
           <!-- Submit -->
 
           <div class="form-actions">
-            <app-button type="submit" [disabled]="loading || loginForm.invalid">
+            <app-button type="submit" [disabled]="loading || redirecting">
               @if (loading) {
                 <span class="auth-button-loading">
                   <span class="auth-spinner"></span>
