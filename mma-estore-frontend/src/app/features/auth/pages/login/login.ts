@@ -35,18 +35,48 @@ export class Login {
   private router = inject(Router);
 
   loading = false;
-  successMessage = '';
+
   redirecting = false;
 
+  successMessage = '';
+
   errorMessage = '';
+
+  failedAttempts = 0;
+
+  accountLocked = false;
+
+  lockoutSeconds = 0;
+
+  securityMessage = '';
+
+  suspiciousLogin = false;
+
+  requireMfa = false;
+
+  emailNotVerified = false;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
 
     password: ['', [Validators.required]],
+
+    rememberMe: [false],
+
+    mfaCode: [''],
   });
 
+  constructor() {
+    this.loginForm.valueChanges.subscribe(() => {
+      this.errorMessage = '';
+    });
+  }
+
   onSubmit(): void {
+    if (this.accountLocked) {
+      return;
+    }
+
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
 
@@ -82,6 +112,8 @@ export class Login {
           const status = err.status;
 
           if (status === 401) {
+            this.handleFailedLogin();
+
             this.errorMessage = 'Incorrect email or password.';
 
             return;
@@ -89,6 +121,22 @@ export class Login {
 
           if (status === 403) {
             this.errorMessage = 'Your account is currently unavailable.';
+
+            return;
+          }
+
+          if (status === 412) {
+            this.emailNotVerified = true;
+
+            this.errorMessage = 'Email address not verified.';
+
+            return;
+          }
+
+          if (status === 428) {
+            this.requireMfa = true;
+
+            this.errorMessage = 'Two-factor authentication required.';
 
             return;
           }
@@ -103,9 +151,42 @@ export class Login {
         },
       });
   }
-  constructor() {
-    this.loginForm.valueChanges.subscribe(() => {
-      this.errorMessage = '';
-    });
+
+  resendVerification(): void {
+    this.successMessage = 'Verification email sent.';
+  }
+
+  private handleFailedLogin(): void {
+    this.failedAttempts++;
+
+    if (this.failedAttempts >= 3) {
+      this.securityMessage = 'Multiple failed login attempts detected.';
+    }
+
+    if (this.failedAttempts >= 5) {
+      this.startLockout();
+    }
+  }
+
+  private startLockout(): void {
+    this.accountLocked = true;
+
+    this.lockoutSeconds = 30;
+
+    this.securityMessage = 'Too many failed login attempts.';
+
+    const timer = setInterval(() => {
+      this.lockoutSeconds--;
+
+      if (this.lockoutSeconds <= 0) {
+        clearInterval(timer);
+
+        this.accountLocked = false;
+
+        this.failedAttempts = 0;
+
+        this.securityMessage = '';
+      }
+    }, 1000);
   }
 }

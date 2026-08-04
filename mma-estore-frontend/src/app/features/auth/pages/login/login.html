@@ -8,6 +8,52 @@
           <p class="auth-subtitle">Sign in to continue shopping.</p>
         </header>
 
+        @if (accountLocked) {
+          <div class="auth-lockout">
+            <strong> Account Temporarily Locked </strong>
+
+            <p>
+              Too many failed login attempts. Try again in
+              {{ lockoutSeconds }}
+              seconds.
+            </p>
+          </div>
+        }
+
+        @if (securityMessage && !accountLocked) {
+          <div class="auth-security-alert">
+            <i class="bi bi-shield-exclamation"></i>
+
+            <span>
+              {{ securityMessage }}
+            </span>
+          </div>
+        }
+
+        @if (suspiciousLogin) {
+          <div class="auth-security-alert">
+            <i class="bi bi-shield-lock"></i>
+
+            <span> Unusual login activity detected. Please verify your identity. </span>
+          </div>
+        }
+
+        @if (emailNotVerified) {
+          <div class="auth-verification-alert">
+            <i class="bi bi-envelope-check"></i>
+
+            <div>
+              <strong> Email Verification Required </strong>
+
+              <p>Your account has not been verified yet.</p>
+
+              <button type="button" class="verification-link" (click)="resendVerification()">
+                Resend Verification Email
+              </button>
+            </div>
+          </div>
+        }
+
         <form
           class="form-container auth-form"
           [class.auth-loading]="loading || redirecting"
@@ -21,7 +67,7 @@
           <section class="form-section">
             <label class="form-label"> Email Address </label>
 
-            <app-input type="email" placeholder="Enter your email" formControlName="email">
+            <app-input type="email" formControlName="email" placeholder="Enter your email">
             </app-input>
 
             @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
@@ -49,7 +95,19 @@
             }
           </section>
 
-          <!-- Device Trust Notice -->
+          <!-- MFA -->
+
+          @if (requireMfa) {
+            <section class="form-section">
+              <label class="form-label"> Verification Code </label>
+
+              <app-input formControlName="mfaCode" placeholder="Enter 6-digit code"> </app-input>
+
+              <small class="auth-helper"> Enter the code from your authenticator app. </small>
+            </section>
+          }
+
+          <!-- Device Trust -->
 
           <div class="device-trust-note">
             <i class="bi bi-shield-check"></i>
@@ -57,11 +115,11 @@
             <span> We only recommend remembering your account on a personal device. </span>
           </div>
 
-          <!-- Remember Me + Forgot Password -->
+          <!-- Remember Me -->
 
           <section class="form-row">
             <div class="remember-section">
-              <app-checkbox label="Remember me" formControlName="rememberMe"> </app-checkbox>
+              <app-checkbox formControlName="rememberMe" label="Remember me"> </app-checkbox>
 
               <small class="remember-helper"> Stay signed in on this device. </small>
             </div>
@@ -92,13 +150,15 @@
           <!-- Submit -->
 
           <div class="form-actions">
-            <app-button type="submit" [disabled]="loading || redirecting">
+            <app-button type="submit" [disabled]="loading || redirecting || accountLocked">
               @if (loading) {
                 <span class="auth-button-loading">
                   <span class="auth-spinner"></span>
 
                   Please wait...
                 </span>
+              } @else if (redirecting) {
+                Redirecting...
               } @else {
                 Sign In
               }
