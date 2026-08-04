@@ -1,156 +1,132 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {
-  Observable,
-  tap,
-  catchError,
-  of
-} from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
 
-import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+
+import { Observable, tap } from 'rxjs';
 
 import {
   LoginRequest,
   RegisterRequest,
-  AuthResponse
+  AuthResponse,
+  CurrentUserResponse
 } from '../models/auth.models';
 
 import { User } from '../models/user.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
 
-  private readonly apiUrl = `${environment.apiUrl}/auth`;
+  private http = inject(HttpClient);
 
-  private readonly TOKEN_KEY = 'mma_token';
+  private apiUrl = 'https://localhost:5001/api/auth';
 
-  private readonly currentUserSignal =
-    signal<User | null>(null);
+  private _currentUser = signal<User | null>(null);
 
-  readonly currentUser =
-    this.currentUserSignal.asReadonly();
+  currentUser = this._currentUser.asReadonly();
 
-  readonly isAuthenticated =
-    computed(() => this.currentUser() !== null);
+  login(payload: LoginRequest): Observable<AuthResponse> {
 
-  constructor(
-    private http: HttpClient
-  ) {}
+    return this.http
+      .post<AuthResponse>(
+        `${this.apiUrl}/login`,
+        payload
+      )
+      .pipe(
+        tap((response) => {
 
-  register(data: RegisterRequest): Observable<AuthResponse> {
+          localStorage.setItem(
+            'accessToken',
+            response.accessToken
+          );
+
+          if (response.refreshToken) {
+
+            localStorage.setItem(
+              'refreshToken',
+              response.refreshToken
+            );
+
+          }
+
+          if (response.user) {
+
+            this._currentUser.set(
+              response.user
+            );
+
+          }
+
+        })
+      );
+
+  }
+
+  register(
+    payload: RegisterRequest
+  ): Observable<AuthResponse> {
 
     return this.http.post<AuthResponse>(
       `${this.apiUrl}/register`,
-      data
-    ).pipe(
-      tap(response => {
-
-        this.saveToken(response.token);
-
-        this.currentUserSignal.set(response.user);
-
-      })
+      payload
     );
 
   }
 
-  login(data: LoginRequest): Observable<AuthResponse> {
+  logout(): void {
 
-    return this.http.post<AuthResponse>(
-      `${this.apiUrl}/login`,
-      data
-    ).pipe(
-      tap(response => {
+    localStorage.removeItem(
+      'accessToken'
+    );
 
-        this.saveToken(response.token);
+    localStorage.removeItem(
+      'refreshToken'
+    );
 
-        this.currentUserSignal.set(response.user);
-
-      })
+    this._currentUser.set(
+      null
     );
 
   }
 
-  getCurrentUser(): Observable<{
-    success: boolean;
-    user: User;
-  }> {
+  isAuthenticated(): boolean {
 
-    return this.http.get<{
-      success: boolean;
-      user: User;
-    }>(
-      `${this.apiUrl}/me`
-    ).pipe(
-      tap(response => {
-
-        this.currentUserSignal.set(
-          response.user
-        );
-
-      })
-    );
-
-  }
-
-  loadCurrentUser(): Observable<unknown> {
-
-    if (!this.hasToken()) {
-
-      return of(null);
-
-    }
-
-    return this.getCurrentUser().pipe(
-
-      catchError(() => {
-
-        this.logout();
-
-        return of(null);
-
-      })
-
-    );
-
-  }
-
-    logout(): void {
-
-    localStorage.removeItem(this.TOKEN_KEY);
-
-    this.currentUserSignal.set(null);
-
-    }
-
-  saveToken(token: string): void {
-
-    localStorage.setItem(
-      this.TOKEN_KEY,
-      token
-    );
-
-  }
-
-  getToken(): string | null {
-
-    return localStorage.getItem(
-      this.TOKEN_KEY
+    return !!localStorage.getItem(
+      'accessToken'
     );
 
   }
 
   isLoggedIn(): boolean {
 
-    return !!this.getToken();
+    return this.isAuthenticated();
 
   }
 
-  hasToken(): boolean {
+  getToken(): string | null {
 
-    return !!this.getToken();
+    return localStorage.getItem(
+      'accessToken'
+    );
+
+  }
+
+  loadCurrentUser(): Observable<CurrentUserResponse> {
+
+    return this.http
+      .get<CurrentUserResponse>(
+        `${this.apiUrl}/me`
+      )
+      .pipe(
+        tap((response) => {
+
+          this._currentUser.set(
+            response.user
+          );
+
+        })
+      );
 
   }
 

@@ -15,14 +15,13 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  success: boolean;
-  message: string;
-  token: string;
-  user: User;
+  accessToken: string;
+  refreshToken?: string;
+  expiresIn?: number;
+  user?: User;
 }
 
 export interface CurrentUserResponse {
   success: boolean;
   user: User;
 }
-
