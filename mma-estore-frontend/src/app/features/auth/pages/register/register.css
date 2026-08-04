@@ -1,45 +1,187 @@
-.register-container{
-
-    max-width:500px;
-
-    margin:0;
-
-    padding:30px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    background:white;
-
+:host {
+  display: block;
 }
 
-h2{
+/* ==========================================================
+   Page
+========================================================== */
 
-    text-align:center;
+.auth-page {
+  min-height: 100vh;
 
-    margin-bottom:25px;
+  display: flex;
 
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 3rem 1.5rem;
+
+  background:
+    radial-gradient(circle at top, rgba(197, 30, 58, 0.08), transparent 40%),
+    var(--color-surface-alt);
 }
 
-label{
+/* ==========================================================
+   Wrapper
+========================================================== */
 
-    font-weight:600;
+.auth-wrapper {
+  width: 100%;
 
-    margin-bottom:6px;
-
-    display:block;
-
+  max-width: 720px;
 }
 
-.form-control{
+/* ==========================================================
+   Card
+========================================================== */
 
-    margin-bottom:5px;
+.auth-card {
+  padding: 3rem;
 
+  border-radius: 24px;
 }
 
-.text-danger{
+/* ==========================================================
+   Header
+========================================================== */
 
-    font-size:14px;
+.auth-header {
+  text-align: center;
 
+  margin-bottom: 2.5rem;
+}
+
+.auth-title {
+  margin: 0;
+
+  font-size: clamp(2rem, 4vw, 3rem);
+
+  font-weight: 800;
+
+  line-height: 1.1;
+
+  color: var(--color-text);
+}
+
+.auth-subtitle {
+  margin-top: 0.75rem;
+
+  font-size: 1rem;
+
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================
+   Grid
+========================================================== */
+
+.form-grid.form-grid-2 {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 1rem;
+}
+
+/* ==========================================================
+   Sections
+========================================================== */
+
+.form-section {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+
+  margin-bottom: 0.5rem;
+
+  font-size: 0.9rem;
+
+  font-weight: 600;
+}
+
+/* ==========================================================
+   Errors
+========================================================== */
+
+.form-error {
+  margin-top: 0.5rem;
+
+  font-size: 0.875rem;
+
+  color: #dc2626;
+}
+
+/* ==========================================================
+   Actions
+========================================================== */
+
+.form-actions {
+  margin-top: 2rem;
+}
+
+.form-actions app-button {
+  display: block;
+
+  width: 100%;
+}
+
+/* ==========================================================
+   Footer
+========================================================== */
+
+.auth-footer {
+  margin-top: 2rem;
+
+  text-align: center;
+
+  font-size: 0.95rem;
+
+  color: var(--color-text-muted);
+}
+
+.auth-footer a {
+  color: var(--color-primary);
+
+  text-decoration: none;
+
+  font-weight: 700;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width: 768px) {
+  .auth-card {
+    padding: 2rem;
+  }
+
+  .form-grid.form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 576px) {
+  .auth-page {
+    padding: 1rem;
+  }
+
+  .auth-card {
+    padding: 1.5rem;
+  }
+
+  .auth-title {
+    font-size: 2rem;
+  }
 }

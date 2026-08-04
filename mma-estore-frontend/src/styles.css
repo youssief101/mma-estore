@@ -33,3 +33,11 @@
 @import "./app/styles/layout/form-labels.css";
 @import "./app/styles/layout/form-validation.css";
 @import "./app/styles/layout/form-accessibility.css";
+
+/* ==========================================================
+   Pages
+========================================================== */
+
+@import "./app/styles/pages/auth-layout.css";
+@import "./app/styles/pages/auth-card.css";
+@import "./app/styles/pages/auth-forms.css";

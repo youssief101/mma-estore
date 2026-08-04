@@ -5,16 +5,28 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
+
+import { Card } from '../../../../shared/components/card/card';
+import { Input } from '../../../../shared/components/input/input';
+import { PasswordInput } from '../../../../shared/components/password-input/password-input';
+import { Checkbox } from '../../../../shared/components/checkbox/checkbox';
+import { Button } from '../../../../shared/components/button/button';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink,
+    Card,
+    Input,
+    PasswordInput,
+    Checkbox,
+    Button
   ],
   templateUrl: './login.html',
   styleUrl: './login.css'

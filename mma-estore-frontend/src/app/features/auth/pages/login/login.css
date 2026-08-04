@@ -1,23 +1,21 @@
-.login-container{
+.form-link {
+  color: var(--color-primary);
 
-    max-width:450px;
+  text-decoration: none;
 
-    margin:0;
-
-    padding:30px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    background:white;
-
+  font-weight: 600;
 }
 
-h2{
+.form-link:hover {
+  text-decoration: underline;
+}
 
-    text-align:center;
+.form-row {
+  align-items: center;
+}
 
-    margin-bottom:25px;
-
+@media (max-width: 767px) {
+  .form-row {
+    align-items: flex-start;
+  }
 }

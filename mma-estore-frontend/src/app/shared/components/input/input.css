@@ -133,3 +133,21 @@
     padding: 0 var(--space-3);
   }
 }
+.input {
+  height: 56px;
+
+  border-radius: 14px;
+
+  font-size: 15px;
+
+  transition:
+    border-color .25s,
+    box-shadow .25s,
+    transform .25s;
+}
+
+.input:focus {
+  border-color: var(--color-primary);
+
+  box-shadow: 0 0 0 4px rgba(197,30,58,.15);
+}
