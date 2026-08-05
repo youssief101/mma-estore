@@ -1,108 +1,39 @@
-<app-card
-    shadow="sm"
-    [hover]="true"
-    [clickable]="true">
+<app-card shadow="sm" [hover]="true" [clickable]="true">
+  <div card-image class="image-wrapper">
+    @if (product().discountPercentage > 0) {
+      <span class="sale-badge"> -{{ product().discountPercentage }}% </span>
+    }
 
-    <div
-        card-image
-        class="image-wrapper">
+    <img
+      [routerLink]="['/products', product()._id]"
+      [src]="product().images?.[0]?.url"
+      [alt]="product().name"
+    />
+  </div>
 
-        @if(product().discountPercentage){
+  <div class="content">
+    <p class="brand">
+      {{ product().brandID?.name }}
+    </p>
 
-            <span class="sale-badge">
+    <h3 [routerLink]="['/products', product()._id]">
+      {{ product().name }}
+    </h3>
 
-                -{{product().discountPercentage}}%
+    <p class="category">
+      {{ product().categoryID?.name }}
+    </p>
 
-            </span>
+    <div class="price">
+      @if (product().oldPrice) {
+        <span class="old-price"> ${{ product().oldPrice }} </span>
+      }
 
-        }
-
-        @if(product().isNew){
-
-            <span class="new-badge">
-
-                NEW
-
-            </span>
-
-        }
-
-        <img
-
-            [src]="product().image"
-
-            [alt]="product().name">
-
+      <span class="current-price"> ${{ product().price }} </span>
     </div>
 
-    <div class="content">
-
-        <p class="brand">
-
-            {{product().brand}}
-
-        </p>
-
-        <h3>
-
-            {{product().name}}
-
-        </h3>
-
-        <p class="category">
-
-            {{product().category}}
-
-        </p>
-
-        @if(product().rating){
-
-            <div class="rating">
-
-                ★★★★★
-
-                <span>
-
-                    {{product().rating}}
-
-                </span>
-
-            </div>
-
-        }
-
-        <div class="price">
-
-            @if(product().oldPrice){
-
-                <span class="old-price">
-
-                    ${{product().oldPrice}}
-
-                </span>
-
-            }
-
-            <span class="current-price">
-
-                ${{product().price}}
-
-            </span>
-
-        </div>
-
-        <app-button
-
-            variant="primary"
-
-            width="full"
-
-            (clicked)="addToCart.emit()">
-
-            Add to Cart
-
-        </app-button>
-
-    </div>
-
+    <app-button variant="primary" width="full" (clicked)="addToCart.emit(product())">
+      Add to Cart
+    </app-button>
+  </div>
 </app-card>

@@ -1,49 +1,32 @@
-import {
-    Component,
-    input,
-    output
-} from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
-import {
-    CommonModule
-} from '@angular/common';
+import { CommonModule } from '@angular/common';
 
-import {
-    Card
-} from '../card/card';
+import { Card } from '../card/card';
 
-import {
-    Button
-} from '../button/button';
+import { Button } from '../button/button';
 
-import {
-    ProductCardModel
-} from '../../../core/models/product-card.model';
+import { Product } from '../../../../models/product.model';
+import { RouterModule } from '@angular/router';
 
 @Component({
+  selector: 'app-product-card',
 
-    selector:'app-product-card',
+  standalone: true,
 
-    standalone:true,
+ imports: [
+  CommonModule,
+  Card,
+  Button,
+  RouterModule
+],
 
-    imports:[
-        CommonModule,
-        Card,
-        Button
-    ],
+  templateUrl: './product-card.html',
 
-    templateUrl:'./product-card.html',
-
-    styleUrl:'./product-card.css'
-
+  styleUrl: './product-card.css',
 })
+export class ProductCard {
+  readonly product = input.required<Product>();
 
-export class ProductCard{
-
-    readonly product =
-        input.required<ProductCardModel>();
-
-    readonly addToCart =
-        output<void>();
-
+  readonly addToCart = output<Product>();
 }

@@ -47,30 +47,30 @@ export class Profile implements OnInit {
   }
 
   loadProfile(): void {
-  this.loading = true;
+    this.loading = true;
 
-  this.userService.getProfile().subscribe({
-    next: (response) => {
-      console.log('PROFILE RESPONSE', response);
+    this.userService.getProfile().subscribe({
+      next: (response) => {
+        console.log(response);
 
-      this.profileForm.patchValue({
-        username: response.user?.username ?? '',
-        firstName: response.user?.firstName ?? '',
-        lastName: response.user?.lastName ?? '',
-        email: response.user?.email ?? '',
-        phone: response.user?.phone ?? '',
-      });
+        this.profileForm.patchValue({
+          username: response.user?.username ?? '',
+          firstName: response.user?.firstName ?? '',
+          lastName: response.user?.lastName ?? '',
+          email: response.user?.email ?? '',
+          phone: response.user?.phone ?? '',
+        });
 
-      this.loading = false;
-    },
+        this.loading = false;
+      },
 
-    error: (error) => {
-      console.error('PROFILE ERROR', error);
+      error: (error) => {
+        console.error(error);
 
-      this.loading = false;
-    },
-  });
-}
+        this.loading = false;
+      },
+    });
+  }
 
   updateProfile(): void {
     if (this.profileForm.invalid) {
