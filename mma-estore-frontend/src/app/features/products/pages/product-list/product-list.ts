@@ -1,5 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
+
+import { FormsModule } from '@angular/forms';
 
 import { ProductService } from '../../../../../services/product.service';
 
@@ -9,41 +12,38 @@ import { ProductCard } from '../../../../shared/components/product-card/product-
 
 @Component({
   selector: 'app-product-list',
+
   standalone: true,
-  imports: [CommonModule, ProductCard],
+
+  imports: [CommonModule, FormsModule, ProductCard],
+
   templateUrl: './product-list.html',
+
   styleUrl: './product-list.css',
 })
 export class ProductList implements OnInit {
   private productService = inject(ProductService);
 
-  products: any[] = [];
+  products: Product[] = [];
 
   loading = true;
+
+  searchTerm = '';
+
+  selectedAudience = '';
 
   ngOnInit(): void {
     this.loadProducts();
   }
 
   loadProducts(): void {
+    this.loading = true;
+
     this.productService.getAllProducts(1, 12).subscribe({
       next: (response) => {
-        this.products = response.products.map((product: any) => ({
-          ...product,
-
-          image:
-            product.images?.find((img: any) => img.isPrimary)?.url ||
-            product.images?.[0]?.url ||
-            '/products/placeholder.jpg',
-
-          brand: product.brandID?.name || 'Unknown Brand',
-
-          category: product.categoryID?.name || 'Uncategorized',
-        }));
+        this.products = response.products;
 
         this.loading = false;
-
-        console.log(response);
       },
 
       error: (error) => {
@@ -54,7 +54,63 @@ export class ProductList implements OnInit {
     });
   }
 
-  onAddToCart(product: any): void {
+  searchProducts(): void {
+    if (!this.searchTerm.trim()) {
+      this.loadProducts();
+
+      return;
+    }
+
+    this.loading = true;
+
+    this.productService.searchProducts(this.searchTerm).subscribe({
+      next: (response) => {
+        this.products = response.products;
+
+        this.loading = false;
+      },
+
+      error: (error) => {
+        console.error(error);
+
+        this.loading = false;
+      },
+    });
+  }
+
+  filterProducts(): void {
+    const filters: any = {};
+
+    if (this.selectedAudience) {
+      filters.audience = this.selectedAudience;
+    }
+
+    this.loading = true;
+
+    this.productService.filterProducts(filters).subscribe({
+      next: (response) => {
+        this.products = response.products;
+
+        this.loading = false;
+      },
+
+      error: (error) => {
+        console.error(error);
+
+        this.loading = false;
+      },
+    });
+  }
+
+  clearFilters(): void {
+    this.searchTerm = '';
+
+    this.selectedAudience = '';
+
+    this.loadProducts();
+  }
+
+  onAddToCart(product: Product): void {
     console.log('Add to cart:', product);
   }
 }
