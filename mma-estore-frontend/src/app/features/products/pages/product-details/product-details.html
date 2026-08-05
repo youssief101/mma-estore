@@ -1,132 +1,110 @@
 @if (loading) {
-
   <p>Loading product...</p>
-
 }
 
 @if (!loading && product) {
-
   <div class="product-page">
-
     <div class="image-section">
+      @if (product.discountPercentage > 0) {
+        <div class="discount-badge">-{{ product.discountPercentage }}%</div>
+      }
 
-      <img
-        [src]="product.images[0]?.url"
-        [alt]="product.name">
-
+      <img [src]="product.images[0]?.url" [alt]="product.name" />
     </div>
 
     <div class="info-section">
-
       <p class="brand">
-
         {{ product.brandID.name }}
-
       </p>
 
       <h1>
-
         {{ product.name }}
-
       </h1>
 
       <p class="category">
-
         {{ product.categoryID.name }}
-
       </p>
 
       <div class="price-section">
-
-        @if(product.oldPrice){
-
-          <span class="old-price">
-
-            ${{ product.oldPrice }}
-
-          </span>
-
+        @if (product.oldPrice) {
+          <span class="old-price"> ${{ product.oldPrice }} </span>
         }
 
-        <span class="price">
-
-          ${{ product.price }}
-
-        </span>
-
+        <span class="price"> ${{ product.price }} </span>
       </div>
 
       <p class="description">
-
         {{ product.description }}
-
       </p>
 
       <div class="details">
-
         <p>
-
           <strong>Audience:</strong>
-
           {{ product.audience }}
-
         </p>
 
         <p>
-
-          <strong>Stock:</strong>
-
-          {{ product.inventory.totalStock }}
-
-        </p>
-
-        <p>
-
           <strong>Department:</strong>
-
           {{ product.departmentID.name }}
-
         </p>
 
+        @if (product.fighterID) {
+          <p>
+            <strong>Fighter:</strong>
+            {{ product.fighterID.firstName }}
+            {{ product.fighterID.lastName }}
+          </p>
+        }
+
+        @if (product.eventID) {
+          <p>
+            <strong>Event:</strong>
+            {{ product.eventID.name }}
+          </p>
+        }
+
+        <p>
+          <strong>Stock:</strong>
+          {{ product.inventory.totalStock }}
+        </p>
       </div>
 
-      <button class="add-cart-btn">
+      @if (product.inventory.variants.length) {
+        <div class="sizes">
+          <h3>Size</h3>
 
-        Add To Cart
+          <div class="size-options">
+            @for (variant of product.inventory.variants; track variant.size) {
+              <button
+                type="button"
+                class="size-btn"
+                [class.active]="selectedSize === variant.size"
+                (click)="selectedSize = variant.size"
+              >
+                {{ variant.size }}
+              </button>
+            }
+          </div>
+        </div>
+      }
 
-      </button>
-
+      <button class="add-cart-btn">Add To Cart</button>
     </div>
-
   </div>
 
   <section class="specifications">
-
     <h2>Specifications</h2>
 
-    @for (
-      spec of product.specifications;
-      track spec.key
-    ) {
-
+    @for (spec of product.specifications; track spec.key) {
       <div class="spec-row">
-
         <strong>
-
           {{ spec.key }}
-
         </strong>
 
         <span>
-
           {{ spec.value }}
-
         </span>
-
       </div>
-
     }
-
   </section>
-
 }
