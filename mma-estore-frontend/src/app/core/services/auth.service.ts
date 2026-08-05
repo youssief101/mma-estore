@@ -1,16 +1,8 @@
-import {
-  Injectable,
-  inject,
-  signal,
-  computed,
-} from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import {
-  Observable,
-  tap,
-} from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 import {
   LoginRequest,
@@ -25,6 +17,7 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
+
   private http = inject(HttpClient);
 
   private apiUrl =
@@ -33,33 +26,14 @@ export class AuthService {
   private currentUserSignal =
     signal<User | null>(null);
 
-  private initializedSignal =
-    signal(false);
-
-  readonly currentUser =
-    computed(() =>
-      this.currentUserSignal(),
-    );
-
-  readonly isAuthenticated =
-    computed(() =>
-      !!this.currentUserSignal(),
-    );
-
-  readonly isAdmin =
-    computed(() =>
-      this.currentUserSignal()?.role ===
-      'Admin',
-    );
-
-  readonly isInitialized =
-    computed(() =>
-      this.initializedSignal(),
-    );
+  currentUser(): User | null {
+    return this.currentUserSignal();
+  }
 
   login(
     payload: LoginRequest,
   ): Observable<AuthResponse> {
+
     return this.http
       .post<AuthResponse>(
         `${this.apiUrl}/login`,
@@ -67,6 +41,7 @@ export class AuthService {
       )
       .pipe(
         tap((response) => {
+
           localStorage.setItem(
             'accessToken',
             response.token,
@@ -75,6 +50,7 @@ export class AuthService {
           this.currentUserSignal.set(
             response.user,
           );
+
         }),
       );
   }
@@ -82,6 +58,7 @@ export class AuthService {
   register(
     payload: RegisterRequest,
   ): Observable<AuthResponse> {
+
     return this.http
       .post<AuthResponse>(
         `${this.apiUrl}/register`,
@@ -89,6 +66,7 @@ export class AuthService {
       )
       .pipe(
         tap((response) => {
+
           localStorage.setItem(
             'accessToken',
             response.token,
@@ -97,75 +75,78 @@ export class AuthService {
           this.currentUserSignal.set(
             response.user,
           );
+
         }),
       );
   }
 
   loadCurrentUser():
     Observable<CurrentUserResponse> {
+
     return this.http
       .get<CurrentUserResponse>(
         `${this.apiUrl}/me`,
       )
       .pipe(
-        tap({
-          next: (response) => {
-            this.currentUserSignal.set(
-              response.user,
-            );
+        tap((response) => {
 
-            this.initializedSignal.set(
-              true,
-            );
-          },
-          error: () => {
-            this.currentUserSignal.set(
-              null,
-            );
+          this.currentUserSignal.set(
+            response.user,
+          );
 
-            this.initializedSignal.set(
-              true,
-            );
-          },
         }),
       );
   }
 
   getToken(): string | null {
+
     return localStorage.getItem(
       'accessToken',
     );
+
   }
 
   isLoggedIn(): boolean {
+
     return !!this.getToken();
+
+  }
+
+  isAuthenticated(): boolean {
+
+    return this.isLoggedIn();
+
   }
 
   hasRole(role: string): boolean {
-    const user =
-      this.currentUserSignal();
+
+    const user = this.currentUser();
 
     return user?.role === role;
+
   }
 
   hasAnyRole(
     roles: string[],
   ): boolean {
-    const user =
-      this.currentUserSignal();
+
+    const user = this.currentUser();
 
     if (!user) {
       return false;
     }
 
-    return roles.includes(user.role);
+    return roles.includes(
+      user.role,
+    );
+
   }
 
   hasPermission(
     permission: string,
   ): boolean {
-    const user =
-      this.currentUserSignal();
+
+    const user = this.currentUser();
 
     if (!user) {
       return false;
@@ -174,24 +155,30 @@ export class AuthService {
     return user.permissions.includes(
       permission,
     );
+
   }
 
   hasAllPermissions(
     permissions: string[],
   ): boolean {
-    const user =
-      this.currentUserSignal();
+
+    const user = this.currentUser();
 
     if (!user) {
       return false;
     }
 
-    return permissions.every((p) =>
-      user.permissions.includes(p),
+    return permissions.every(
+      permission =>
+        user.permissions.includes(
+          permission,
+        ),
     );
+
   }
 
-  logout(): void {
+  clearSession(): void {
+
     localStorage.removeItem(
       'accessToken',
     );
@@ -199,5 +186,12 @@ export class AuthService {
     this.currentUserSignal.set(
       null,
     );
+
+  }
+
+  logout(): void {
+
+    this.clearSession();
+
   }
 }
