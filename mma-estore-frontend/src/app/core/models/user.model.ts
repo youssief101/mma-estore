@@ -3,15 +3,21 @@ export interface User {
 
   username: string;
 
-  email: string;
-
   firstName: string;
 
   lastName: string;
+
+  email: string;
 
   phone?: string;
 
   role: string;
 
-  permissions: string[];
+  permissions?: string[];
+
+  addresses?: unknown[];
+
+  createdAt?: string;
+
+  updatedAt?: string;
 }

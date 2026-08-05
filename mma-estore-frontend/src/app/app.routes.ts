@@ -15,6 +15,7 @@ import { adminGuard } from './core/guards/admin.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 import { permissionGuard } from './core/guards/permission.guard';
+import { Profile } from './features/profile/pages/profile/profile';
 
 export const routes: Routes = [
   {
@@ -28,13 +29,15 @@ export const routes: Routes = [
       },
 
       {
+        path: 'profile',
+        component: Profile,
+        canActivate: [authGuard],
+      },
+
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
-      },
-      {
-        path: 'unauthorized',
-        component: Unauthorized,
       },
 
       /*

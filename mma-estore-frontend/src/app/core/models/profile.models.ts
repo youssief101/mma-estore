@@ -1,3 +1,5 @@
+import { User } from './user.model';
+
 export interface Address {
   _id: string;
 
@@ -25,7 +27,7 @@ export interface Address {
 export interface ProfileResponse {
   success: boolean;
 
-  user: any;
+  user: User;
 }
 
 export interface UpdateProfileRequest {

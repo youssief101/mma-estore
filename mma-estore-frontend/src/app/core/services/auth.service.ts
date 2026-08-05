@@ -94,7 +94,9 @@ export class AuthService {
       return false;
     }
 
-    return user.permissions?.includes(permission) ?? false;
+    const permissions = user.permissions ?? [];
+
+    return permissions.includes(permission);
   }
 
   hasAllPermissions(permissions: string[]): boolean {
@@ -108,9 +110,10 @@ export class AuthService {
 
     return permissions.every((permission) => userPermissions.includes(permission));
   }
+
   updateCurrentUser(user: User): void {
-  this.currentUserSignal.set(user);
-}
+    this.currentUserSignal.set(user);
+  }
 
   clearSession(): void {
     localStorage.removeItem('accessToken');
