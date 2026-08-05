@@ -7,135 +7,149 @@ import {
   LoginRequest,
   RegisterRequest,
   AuthResponse,
-  RefreshTokenRequest,
-  CurrentUserResponse
+  CurrentUserResponse,
 } from '../models/auth.models';
 
 import { User } from '../models/user.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private http = inject(HttpClient);
 
-  private apiUrl = 'https://localhost:5001/api/auth';
+  private apiUrl = 'http://localhost:3000/api/auth';
 
-  private currentUserSignal =
-    signal<User | null>(null);
+  private currentUserSignal = signal<User | null>(null);
 
-  currentUser() {
+  currentUser(): User | null {
     return this.currentUserSignal();
   }
 
-  login(
-    payload: LoginRequest
-  ): Observable<AuthResponse> {
-
+  login(payload: LoginRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(
         `${this.apiUrl}/login`,
-        payload
+        payload,
       )
       .pipe(
-        tap(response => {
-
+        tap((response) => {
           localStorage.setItem(
             'accessToken',
-            response.accessToken
+            response.token,
           );
 
-          if (response.refreshToken) {
-
-            localStorage.setItem(
-              'refreshToken',
-              response.refreshToken
-            );
-
-          }
-
-        })
+          this.currentUserSignal.set(
+            response.user,
+          );
+        }),
       );
-
   }
 
   register(
-    payload: RegisterRequest
+    payload: RegisterRequest,
   ): Observable<AuthResponse> {
-
-    return this.http.post<AuthResponse>(
-      `${this.apiUrl}/register`,
-      payload
-    );
-
-  }
-
-  refreshToken(): Observable<AuthResponse> {
-
-    const refreshToken =
-      localStorage.getItem('refreshToken');
-
-    return this.http.post<AuthResponse>(
-      `${this.apiUrl}/refresh-token`,
-      {
-        refreshToken
-      } as RefreshTokenRequest
-    );
-
-  }
-
-  loadCurrentUser():
-    Observable<CurrentUserResponse> {
-
     return this.http
-      .get<CurrentUserResponse>(
-        `${this.apiUrl}/me`
+      .post<AuthResponse>(
+        `${this.apiUrl}/register`,
+        payload,
       )
       .pipe(
-        tap(response => {
-
-          this.currentUserSignal.set(
-            response.user
+        tap((response) => {
+          localStorage.setItem(
+            'accessToken',
+            response.token,
           );
 
-        })
+          this.currentUserSignal.set(
+            response.user,
+          );
+        }),
       );
+  }
 
+  loadCurrentUser(): Observable<CurrentUserResponse> {
+    return this.http
+      .get<CurrentUserResponse>(
+        `${this.apiUrl}/me`,
+      )
+      .pipe(
+        tap((response) => {
+          this.currentUserSignal.set(
+            response.user,
+          );
+        }),
+      );
   }
 
   getToken(): string | null {
-
     return localStorage.getItem(
-      'accessToken'
+      'accessToken',
     );
-
   }
 
   isLoggedIn(): boolean {
-
     return !!this.getToken();
-
   }
 
   isAuthenticated(): boolean {
-
     return this.isLoggedIn();
+  }
 
+  hasRole(role: string): boolean {
+    const user = this.currentUser();
+
+    if (!user) {
+      return false;
+    }
+
+    return user.role === role;
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    const user = this.currentUser();
+
+    if (!user) {
+      return false;
+    }
+
+    return roles.includes(user.role);
+  }
+
+  hasPermission(permission: string): boolean {
+    const user = this.currentUser();
+
+    if (!user) {
+      return false;
+    }
+
+    return user.permissions.includes(
+      permission,
+    );
+  }
+
+  hasAllPermissions(
+    permissions: string[],
+  ): boolean {
+    const user = this.currentUser();
+
+    if (!user) {
+      return false;
+    }
+
+    return permissions.every(
+      (permission) =>
+        user.permissions.includes(
+          permission,
+        ),
+    );
   }
 
   logout(): void {
-
     localStorage.removeItem(
-      'accessToken'
-    );
-
-    localStorage.removeItem(
-      'refreshToken'
+      'accessToken',
     );
 
     this.currentUserSignal.set(null);
-
   }
-
 }
