@@ -17,181 +17,105 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
-
   private http = inject(HttpClient);
 
-  private apiUrl =
-    'http://localhost:3000/api/auth';
+  private apiUrl = 'http://localhost:3000/api/auth';
 
-  private currentUserSignal =
-    signal<User | null>(null);
+  private currentUserSignal = signal<User | null>(null);
 
   currentUser(): User | null {
     return this.currentUserSignal();
   }
 
-  login(
-    payload: LoginRequest,
-  ): Observable<AuthResponse> {
+  login(payload: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, payload).pipe(
+      tap((response) => {
+        localStorage.setItem('accessToken', response.token);
 
-    return this.http
-      .post<AuthResponse>(
-        `${this.apiUrl}/login`,
-        payload,
-      )
-      .pipe(
-        tap((response) => {
-
-          localStorage.setItem(
-            'accessToken',
-            response.token,
-          );
-
-          this.currentUserSignal.set(
-            response.user,
-          );
-
-        }),
-      );
+        this.currentUserSignal.set(response.user);
+      }),
+    );
   }
 
-  register(
-    payload: RegisterRequest,
-  ): Observable<AuthResponse> {
+  register(payload: RegisterRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, payload).pipe(
+      tap((response) => {
+        localStorage.setItem('accessToken', response.token);
 
-    return this.http
-      .post<AuthResponse>(
-        `${this.apiUrl}/register`,
-        payload,
-      )
-      .pipe(
-        tap((response) => {
-
-          localStorage.setItem(
-            'accessToken',
-            response.token,
-          );
-
-          this.currentUserSignal.set(
-            response.user,
-          );
-
-        }),
-      );
+        this.currentUserSignal.set(response.user);
+      }),
+    );
   }
 
-  loadCurrentUser():
-    Observable<CurrentUserResponse> {
-
-    return this.http
-      .get<CurrentUserResponse>(
-        `${this.apiUrl}/me`,
-      )
-      .pipe(
-        tap((response) => {
-
-          this.currentUserSignal.set(
-            response.user,
-          );
-
-        }),
-      );
+  loadCurrentUser(): Observable<CurrentUserResponse> {
+    return this.http.get<CurrentUserResponse>(`${this.apiUrl}/me`).pipe(
+      tap((response) => {
+        this.currentUserSignal.set(response.user);
+      }),
+    );
   }
 
   getToken(): string | null {
-
-    return localStorage.getItem(
-      'accessToken',
-    );
-
+    return localStorage.getItem('accessToken');
   }
 
   isLoggedIn(): boolean {
-
     return !!this.getToken();
-
   }
 
   isAuthenticated(): boolean {
-
     return this.isLoggedIn();
-
   }
 
   hasRole(role: string): boolean {
-
-    const user = this.currentUser();
-
-    return user?.role === role;
-
-  }
-
-  hasAnyRole(
-    roles: string[],
-  ): boolean {
-
     const user = this.currentUser();
 
     if (!user) {
       return false;
     }
 
-    return roles.includes(
-      user.role,
-    );
-
+    return user.role === role;
   }
 
-  hasPermission(
-    permission: string,
-  ): boolean {
-
+  hasAnyRole(roles: string[]): boolean {
     const user = this.currentUser();
 
     if (!user) {
       return false;
     }
 
-    return user.permissions.includes(
-      permission,
-    );
-
+    return roles.includes(user.role);
   }
 
-  hasAllPermissions(
-    permissions: string[],
-  ): boolean {
-
+  hasPermission(permission: string): boolean {
     const user = this.currentUser();
 
     if (!user) {
       return false;
     }
 
-    return permissions.every(
-      permission =>
-        user.permissions.includes(
-          permission,
-        ),
-    );
+    return user.permissions?.includes(permission) ?? false;
+  }
 
+  hasAllPermissions(permissions: string[]): boolean {
+    const user = this.currentUser();
+
+    if (!user) {
+      return false;
+    }
+
+    const userPermissions = user.permissions ?? [];
+
+    return permissions.every((permission) => userPermissions.includes(permission));
   }
 
   clearSession(): void {
+    localStorage.removeItem('accessToken');
 
-    localStorage.removeItem(
-      'accessToken',
-    );
-
-    this.currentUserSignal.set(
-      null,
-    );
-
+    this.currentUserSignal.set(null);
   }
 
   logout(): void {
-
     this.clearSession();
-
   }
 }

@@ -12,15 +12,11 @@ export const permissionGuard: CanActivateFn = (route: ActivatedRouteSnapshot) =>
   const permissions = route.data['permissions'] as string[];
 
   if (!authService.isLoggedIn()) {
-    router.navigate(['/login']);
-
-    return false;
+    return router.createUrlTree(['/login']);
   }
 
   if (!authService.hasAllPermissions(permissions)) {
-    router.navigate(['/unauthorized']);
-
-    return false;
+    return router.createUrlTree(['/unauthorized']);
   }
 
   return true;
