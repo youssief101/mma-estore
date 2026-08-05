@@ -20,7 +20,7 @@ export class AuthService {
 
   private http = inject(HttpClient);
 
-  private apiUrl = 'https://localhost:5001/api/auth';
+  private apiUrl = 'https://localhost:3000/api/auth';
 
   private currentUserSignal =
     signal<User | null>(null);
