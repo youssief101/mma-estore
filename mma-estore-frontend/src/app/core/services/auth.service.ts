@@ -108,6 +108,9 @@ export class AuthService {
 
     return permissions.every((permission) => userPermissions.includes(permission));
   }
+  updateCurrentUser(user: User): void {
+  this.currentUserSignal.set(user);
+}
 
   clearSession(): void {
     localStorage.removeItem('accessToken');
