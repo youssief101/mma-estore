@@ -22,6 +22,8 @@ export class AuthService {
 
   private currentUserSignal = signal<User | null>(null);
 
+  private isAuthenticatedSignal = signal(false);
+
   currentUser(): User | null {
     return this.currentUserSignal();
   }
@@ -41,6 +43,10 @@ export class AuthService {
 
           this.currentUserSignal.set(
             response.user,
+          );
+
+          this.isAuthenticatedSignal.set(
+            true,
           );
         }),
       );
@@ -64,6 +70,10 @@ export class AuthService {
           this.currentUserSignal.set(
             response.user,
           );
+
+          this.isAuthenticatedSignal.set(
+            true,
+          );
         }),
       );
   }
@@ -78,8 +88,35 @@ export class AuthService {
           this.currentUserSignal.set(
             response.user,
           );
+
+          this.isAuthenticatedSignal.set(
+            true,
+          );
         }),
       );
+  }
+
+  restoreSession(): void {
+    const token =
+      localStorage.getItem(
+        'accessToken',
+      );
+
+    if (!token) {
+      this.logout();
+
+      return;
+    }
+
+    this.isAuthenticatedSignal.set(
+      true,
+    );
+
+    this.loadCurrentUser().subscribe({
+      error: () => {
+        this.logout();
+      },
+    });
   }
 
   getToken(): string | null {
@@ -93,7 +130,7 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.isLoggedIn();
+    return this.isAuthenticatedSignal();
   }
 
   hasRole(role: string): boolean {
@@ -106,17 +143,23 @@ export class AuthService {
     return user.role === role;
   }
 
-  hasAnyRole(roles: string[]): boolean {
+  hasAnyRole(
+    roles: string[],
+  ): boolean {
     const user = this.currentUser();
 
     if (!user) {
       return false;
     }
 
-    return roles.includes(user.role);
+    return roles.includes(
+      user.role,
+    );
   }
 
-  hasPermission(permission: string): boolean {
+  hasPermission(
+    permission: string,
+  ): boolean {
     const user = this.currentUser();
 
     if (!user) {
@@ -150,6 +193,12 @@ export class AuthService {
       'accessToken',
     );
 
-    this.currentUserSignal.set(null);
+    this.currentUserSignal.set(
+      null,
+    );
+
+    this.isAuthenticatedSignal.set(
+      false,
+    );
   }
 }

@@ -1,51 +1,21 @@
 <div class="top-bar">
+  <div class="top-bar-left">
+     <span class="top-bar-promo" (click)="openRegister.emit()">SIGN UP & SAVE 10%</span>
+  </div>
 
-    <div class="top-bar__container">
+  <div class="top-bar-right">
+    <a routerLink="/gift-cards">Gift Cards</a>
 
-        <!-- Left -->
+    <a routerLink="/orders">Find Your Order</a>
 
-        <div class="top-bar__left">
+    <a routerLink="/help">Help</a>
 
-            <a
-                routerLink="/register"
-                class="signup-link">
+    <a routerLink="/account">My Account</a>
 
-                SIGN UP &amp; SAVE 10%
+    <a routerLink="/cart" class="cart-link">
+      <i class="bi bi-cart3"></i>
 
-            </a>
-
-        </div>
-
-        <!-- Right -->
-
-        <div class="top-bar__right">
-
-            <a routerLink="/gift-cards">
-                Gift Cards
-            </a>
-
-            <a routerLink="/orders">
-                Find Your Order
-            </a>
-
-            <a routerLink="/help">
-                Help
-            </a>
-
-            <a routerLink="/account">
-                My Account
-            </a>
-
-            <a routerLink="/cart">
-
-                <i class="bi bi-cart3"></i>
-
-                Cart
-
-            </a>
-
-        </div>
-
-    </div>
-
+      <span>Cart</span>
+    </a>
+  </div>
 </div>
