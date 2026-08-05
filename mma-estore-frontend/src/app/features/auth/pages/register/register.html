@@ -1,169 +1,113 @@
-<div class="auth-page">
-  <div class="auth-wrapper">
-    <app-card>
-      <div class="auth-card">
-        <header class="auth-header">
-          <div class="auth-logo">MMA E-STORE</div>
+@if (isOpen) {
+  <div class="modal-overlay" (click)="onClose()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
 
-          <h1 class="auth-title">Create Account</h1>
+      <!-- Close Button -->
+      <button type="button" class="modal-close" (click)="onClose()">
+        <i class="bi bi-x-lg"></i>
+      </button>
 
-          <p class="auth-subtitle">Join the MMA community today and start shopping.</p>
-        </header>
-
-        <form
-          class="form-container auth-form"
-           [class.auth-loading]="loading || redirecting"
-          [formGroup]="registerForm"
-          (ngSubmit)="onSubmit()"
-          autocomplete="off"
-          novalidate
-        >
-          <div class="form-grid form-grid-2">
-            <section class="form-section">
-              <label class="form-label"> First Name </label>
-
-              <app-input formControlName="firstName" placeholder="First name"> </app-input>
-            </section>
-
-            <section class="form-section">
-              <label class="form-label"> Last Name </label>
-
-              <app-input formControlName="lastName" placeholder="Last name"> </app-input>
-            </section>
+      @if (!showSuccess) {
+        <!-- UFC Store Style Header -->
+        <div class="modal-ufc-header">
+          <div class="modal-logo">
+            <img src="logos/logo.png" alt="MMA E-Store" />
           </div>
 
-          <section class="form-section">
-            <label class="form-label"> Username </label>
+          <h2>Save 10% Instantly</h2>
+          <p class="modal-subtitle">*Offer valid for new customers only</p>
 
-            <app-input formControlName="username" placeholder="Choose a username"> </app-input>
-          </section>
-
-          <section class="form-section">
-            <label class="form-label"> Email Address </label>
-
-            <app-input type="email" formControlName="email" placeholder="Enter your email">
-            </app-input>
-          </section>
-
-          <section class="form-section">
-            <label class="form-label"> Password </label>
-
-            <app-password-input formControlName="password"> </app-password-input>
-            @if (registerForm.controls.password.value) {
-              <div class="password-strength">
-                <div class="strength-bar">
-                  <span
-                    class="strength-fill"
-                    [style.width.%]="passwordStrength * 20"
-                    [class.weak]="passwordStrength <= 2"
-                    [class.medium]="passwordStrength === 3"
-                    [class.strong]="passwordStrength >= 4"
-                  >
-                  </span>
-                </div>
-
-                <span class="strength-label">
-                  {{ passwordStrengthLabel }}
-                </span>
+          <div class="benefits-grid">
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <i class="bi bi-gem"></i>
               </div>
+              <span>Exclusive Offers</span>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <i class="bi bi-tag-fill"></i>
+              </div>
+              <span>Instant 10% Off*</span>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <i class="bi bi-bell-fill"></i>
+              </div>
+              <span>New Gear Alerts</span>
+            </div>
+          </div>
+        </div>
 
-              <ul class="password-checklist">
-                <li [class.valid]="(registerForm.controls.password.value ?? '').length >= 8">
-                  Minimum 8 characters
-                </li>
+        <!-- Form (Same as before) -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="modal-form">
 
-                <li [class.valid]="/[A-Z]/.test(registerForm.controls.password.value ?? '')">
-                  Uppercase letter
-                </li>
+          <div class="form-row">
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="firstName"
+                placeholder="First Name"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="lastName"
+                placeholder="Last Name"
+              />
+            </div>
+          </div>
 
-                <li [class.valid]="/[a-z]/.test(registerForm.controls.password.value ?? '')">
-                  Lowercase letter
-                </li>
+          <div class="form-group">
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="Email Address"
+            />
+          </div>
 
-                <li [class.valid]="/\d/.test(registerForm.controls.password.value ?? '')">
-                  Number
-                </li>
-
-                <li [class.valid]="/[^A-Za-z0-9]/.test(registerForm.controls.password.value ?? '')">
-                  Special character
-                </li>
-              </ul>
-            }
-          </section>
-
-          <section class="form-section">
-            <label class="form-label"> Phone Number </label>
-
-            <app-input type="tel" formControlName="phone" placeholder="Optional phone number">
-            </app-input>
-          </section>
-
-          <div class="auth-terms">
-            By creating an account, you agree to our
-
-            <a routerLink="/terms"> Terms of Service </a>
-
-            and
-
-            <a routerLink="/privacy"> Privacy Policy </a>
+          <div class="form-group">
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="Password"
+            />
           </div>
 
           @if (errorMessage) {
-            <div class="auth-alert-error">
-              {{ errorMessage }}
-            </div>
+            <div class="modal-error">{{ errorMessage }}</div>
           }
 
-          @if (successMessage) {
-            <div class="auth-alert-success">
-              {{ successMessage }}
-            </div>
-          }
+          <button
+            type="submit"
+            class="modal-submit"
+            [disabled]="loading"
+          >
+            @if (loading) {
+              <span class="loading-spinner"></span>
+              Creating...
+            } @else {
+              Create Account
+            }
+          </button>
 
-          <div class="form-actions">
-            <app-button type="submit" [disabled]="loading || redirecting || registerForm.invalid">
-              @if (loading) {
-                <span class="auth-button-loading">
-                  <span class="auth-spinner"></span>
-
-                  Creating Account...
-                </span>
-              } @else {
-                Create Account
-              }
-            </app-button>
-          </div>
+          <p class="modal-login">
+            Already have an account?
+            <a (click)="goToLogin()">Sign In</a>
+          </p>
         </form>
-        <div class="auth-divider">
-          <span>or continue with</span>
-        </div>
-
-        <div class="social-auth">
-          <button type="button" class="social-btn">
-            <i class="bi bi-google"></i>
-
-            <span>Google</span>
-          </button>
-
-          <button type="button" class="social-btn">
-            <i class="bi bi-facebook"></i>
-
-            <span>Facebook</span>
-          </button>
-
-          <button type="button" class="social-btn">
-            <i class="bi bi-apple"></i>
-
-            <span>Apple</span>
+      } @else {
+        <!-- Success Message -->
+        <div class="modal-success">
+          <h2>Thanks for Signing Up.</h2>
+          <p>Your 10% off coupon will be auto applied during checkout</p>
+          <button class="modal-submit" (click)="onClose()">
+            Continue Shopping
           </button>
         </div>
+      }
 
-        <footer class="auth-footer">
-          Already have an account?
-
-          <a routerLink="/login"> Sign In </a>
-        </footer>
-      </div>
-    </app-card>
+    </div>
   </div>
-</div>
+}

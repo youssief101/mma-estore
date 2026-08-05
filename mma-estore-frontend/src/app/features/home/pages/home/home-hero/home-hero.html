@@ -1,0 +1,31 @@
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            {{ title }}
+        </h1>
+
+        <p>
+            {{ subtitle }}
+        </p>
+
+        <a
+            class="hero-button"
+            [routerLink]="link">
+
+            {{ buttonText }}
+
+        </a>
+
+    </div>
+
+    <div class="hero-image">
+
+        <img
+            [src]="image"
+            [alt]="title">
+
+    </div>
+
+</section>

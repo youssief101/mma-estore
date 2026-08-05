@@ -1,0 +1,21 @@
+.unauthorized-page {
+  min-height: 100vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
+}
+
+.unauthorized-page h1 {
+  font-size: 6rem;
+
+  margin: 0;
+
+  color: var(--color-primary);
+}

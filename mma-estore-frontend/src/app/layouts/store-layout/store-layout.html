@@ -1,19 +1,19 @@
-<app-announcement-bar></app-announcement-bar>
-
-<app-top-bar></app-top-bar>
+<app-top-bar (openRegister)="navigation.openRegisterModal()"></app-top-bar>
 
 <app-header></app-header>
 
-<app-mobile-drawer
-    [open]="navigation.drawerOpen()">
-</app-mobile-drawer>
+<app-mobile-drawer [open]="navigation.drawerOpen()"> </app-mobile-drawer>
 
 <app-navbar></app-navbar>
 
 <main class="store-content">
-
-    <router-outlet></router-outlet>
-
+  <router-outlet></router-outlet>
 </main>
 
 <app-footer></app-footer>
+
+<app-register-modal
+  [isOpen]="navigation.registerModalOpen()"
+  (closeModal)="navigation.closeRegisterModal()"
+>
+</app-register-modal>

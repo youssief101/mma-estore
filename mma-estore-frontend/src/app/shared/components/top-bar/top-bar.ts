@@ -1,26 +1,13 @@
-import { Component } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
+import { Component, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-
   selector: 'app-top-bar',
-
   standalone: true,
-
-  imports: [
-    CommonModule,
-    RouterLink
-  ],
-
+  imports: [RouterLink],
   templateUrl: './top-bar.html',
-
-  styleUrl: './top-bar.css'
-
+  styleUrl: './top-bar.css',
 })
-
 export class TopBar {
-
+  @Output() openRegister = new EventEmitter<void>();
 }

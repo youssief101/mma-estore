@@ -18,7 +18,7 @@ import {
 
 import {
     ProductCardModel
-} from '../../models/product-card.model';
+} from '../../../core/models/product-card.model';
 
 @Component({
 

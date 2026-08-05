@@ -1,0 +1,159 @@
+.featured-fighters{
+
+    margin:80px 0;
+}
+
+.section-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:35px;
+}
+
+.section-header h2{
+
+    font-size:2rem;
+
+    font-weight:700;
+}
+
+.section-header a{
+
+    color:#d20a11;
+
+    font-weight:700;
+
+    text-decoration:none;
+}
+
+.fighter-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    transition:.35s;
+
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+
+    cursor:pointer;
+}
+
+.fighter-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 20px 45px rgba(0,0,0,.18);
+}
+
+.fighter-image-wrapper{
+
+    position:relative;
+
+    height:360px;
+
+    background:#f5f5f5;
+
+    overflow:hidden;
+}
+
+.fighter-image{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    object-position:top;
+
+    display:block;
+
+    transition:.4s;
+}
+
+.fighter-card:hover .fighter-image{
+
+    transform:scale(1.05);
+}
+
+.champion-badge{
+
+    position:absolute;
+
+    top:15px;
+
+    left:15px;
+
+    background:#d20a11;
+
+    color:#fff;
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    font-size:.8rem;
+
+    font-weight:700;
+}
+
+.fighter-info{
+
+    padding:22px;
+}
+
+.fighter-info h3{
+
+    margin:0;
+
+    font-size:1.3rem;
+}
+
+.fighter-info p{
+
+    margin:10px 0;
+
+    color:#666;
+}
+
+.fighter-info small{
+
+    color:#999;
+
+    display:block;
+
+    margin-bottom:18px;
+}
+
+.fighter-info button{
+
+    width:100%;
+
+    border:none;
+
+    background:#111;
+
+    color:white;
+
+    padding:14px;
+
+    border-radius:10px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.fighter-info button:hover{
+
+    background:#d20a11;
+}

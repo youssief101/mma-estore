@@ -12,7 +12,7 @@ import {
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 
-import { SelectOption } from '../../models/select-option.model';
+import { SelectOption } from '../../../core/models/select-option.model';
 
 @Component({
   selector: 'app-select',

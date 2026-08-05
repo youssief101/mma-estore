@@ -68,13 +68,13 @@
   border: none;
   background: var(--color-primary);
   color: var(--color-text-light);
-  padding: 14px 28px;          /* ← رجّعنا الـ padding */
+  padding: 14px 28px;          
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.25s ease;
   line-height: 1;
-  align-self: stretch;         /* ← NEW — يملى ارتفاع الـ bar */
+  align-self: stretch;         
 }
 
 .search-button:hover {
