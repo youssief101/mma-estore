@@ -5,10 +5,6 @@
 @if (!loading && product) {
   <div class="product-page">
     <div class="image-section">
-      @if (product.discountPercentage > 0) {
-        <div class="discount-badge">-{{ product.discountPercentage }}%</div>
-      }
-
       <img [src]="product.images[0]?.url" [alt]="product.name" />
     </div>
 
@@ -44,44 +40,24 @@
         </p>
 
         <p>
-          <strong>Department:</strong>
-          {{ product.departmentID.name }}
-        </p>
-
-        @if (product.fighterID) {
-          <p>
-            <strong>Fighter:</strong>
-            {{ product.fighterID.firstName }}
-            {{ product.fighterID.lastName }}
-          </p>
-        }
-
-        @if (product.eventID) {
-          <p>
-            <strong>Event:</strong>
-            {{ product.eventID.name }}
-          </p>
-        }
-
-        <p>
           <strong>Stock:</strong>
           {{ product.inventory.totalStock }}
+        </p>
+
+        <p>
+          <strong>Department:</strong>
+          {{ product.departmentID.name }}
         </p>
       </div>
 
       @if (product.inventory.variants.length) {
         <div class="sizes">
-          <h3>Size</h3>
+          <h3>Select Size</h3>
 
-          <div class="size-options">
-            @for (variant of product.inventory.variants; track variant.size) {
-              <button
-                type="button"
-                class="size-btn"
-                [class.active]="selectedSize === variant.size"
-                (click)="selectedSize = variant.size"
-              >
-                {{ variant.size }}
+          <div class="size-buttons">
+            @for (size of product.inventory.variants; track size.size) {
+              <button type="button" (click)="selectedSize = size.size">
+                {{ size.size }}
               </button>
             }
           </div>
@@ -107,4 +83,17 @@
       </div>
     }
   </section>
+
+  @if (relatedProducts.length > 0) {
+    <section class="related-products">
+      <h2>Related Products</h2>
+
+      <div class="products-grid">
+        @for (relatedProduct of relatedProducts; track relatedProduct._id) {
+          <app-product-card [product]="relatedProduct" (addToCart)="onAddToCart($event)">
+          </app-product-card>
+        }
+      </div>
+    </section>
+  }
 }

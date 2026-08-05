@@ -8,12 +8,14 @@ import { ProductService } from '../../../../../services/product.service';
 
 import { Product } from '../../../../../models/product.model';
 
+import { ProductCard } from '../../../../shared/components/product-card/product-card';
+
 @Component({
   selector: 'app-product-details',
 
   standalone: true,
 
-  imports: [CommonModule],
+  imports: [CommonModule, ProductCard],
 
   templateUrl: './product-details.html',
 
@@ -25,6 +27,8 @@ export class ProductDetails implements OnInit {
   private productService = inject(ProductService);
 
   product: Product | null = null;
+
+  relatedProducts: Product[] = [];
 
   loading = true;
 
@@ -47,6 +51,8 @@ export class ProductDetails implements OnInit {
           this.selectedSize = this.product.inventory.variants[0].size;
         }
 
+        this.loadRelatedProducts(id);
+
         this.loading = false;
       },
 
@@ -56,5 +62,21 @@ export class ProductDetails implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  loadRelatedProducts(id: string): void {
+    this.productService.getRelatedProducts(id).subscribe({
+      next: (response) => {
+        this.relatedProducts = response.products;
+      },
+
+      error: (error) => {
+        console.error('Related products error:', error);
+      },
+    });
+  }
+
+  onAddToCart(product: Product): void {
+    console.log('Add related product:', product);
   }
 }
