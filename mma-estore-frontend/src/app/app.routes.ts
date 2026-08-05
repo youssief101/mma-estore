@@ -16,6 +16,7 @@ import { roleGuard } from './core/guards/role.guard';
 
 import { permissionGuard } from './core/guards/permission.guard';
 import { Profile } from './features/profile/pages/profile/profile';
+import { TestApiComponent } from '../app/pages/test-api/test-api';
 
 export const routes: Routes = [
   {
@@ -100,9 +101,14 @@ export const routes: Routes = [
       },
     ],
   },
-
+  
+  {
+    path: 'test-api',
+    component: TestApiComponent
+  },
   {
     path: '**',
     redirectTo: 'home',
-  },
+  }
+
 ];

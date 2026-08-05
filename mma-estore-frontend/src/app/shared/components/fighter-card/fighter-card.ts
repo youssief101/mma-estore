@@ -14,7 +14,7 @@ import {
 
 import {
     FighterCardModel
-} from '../../models/fighter-card.model';
+} from '../../../core/models/fighter-card.model';
 
 @Component({
 

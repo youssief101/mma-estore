@@ -14,7 +14,7 @@ import {
 
 import {
     GiftCardModel
-} from '../../models/gift-card.model';
+} from '../../../core/models/gift-card.model';
 
 @Component({
 

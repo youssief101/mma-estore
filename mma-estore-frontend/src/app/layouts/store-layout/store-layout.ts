@@ -17,7 +17,6 @@ import { NavigationService } from '../../core/services/navigation.service';
   imports: [
     RouterOutlet,
     TopBar,
-    AnnouncementBar,
     Header,
     MobileDrawer,
     Navbar,

@@ -10,7 +10,7 @@ import { Card } from '../card/card';
 
 import { Button } from '../button/button';
 
-import { OrderSummaryCardModel } from '../../models/order-summary-card.model';
+import { OrderSummaryCardModel } from '../../../core/models/order-summary-card.model';
 
 @Component({
 

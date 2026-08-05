@@ -14,7 +14,7 @@ import {
 
 import {
     EventCardModel
-} from '../../models/event-card.model';
+} from '../../../core/models/event-card.model';
 
 @Component({
 
