@@ -59,6 +59,15 @@ export interface Product {
 export interface ProductResponse {
   success: boolean;
   product: Product;
+  rating: {
+    type: Number,
+    default: 0
+},
+
+reviewCount: {
+    type: Number,
+    default: 0
+},
 }
 
 export interface ProductListResponse {

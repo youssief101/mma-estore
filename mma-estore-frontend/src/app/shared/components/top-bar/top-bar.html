@@ -1,6 +1,6 @@
 <div class="top-bar">
   <div class="top-bar-left">
-     <span class="top-bar-promo" (click)="openRegister.emit()">SIGN UP & SAVE 10%</span>
+    <span *ngIf="showPromo" class="top-bar-promo" (click)="openRegister.emit()">SIGN UP & SAVE 10%</span>
   </div>
 
   <div class="top-bar-right">

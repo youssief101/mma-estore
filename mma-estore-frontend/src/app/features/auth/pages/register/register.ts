@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../../core/services/auth.service';
+import { TopBarService } from '../../../../core/services/top-bar.service';
 
 @Component({
   selector: 'app-register-modal',
@@ -16,6 +17,7 @@ export class RegisterModal {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private topBarService = inject(TopBarService);
 
   @Input() isOpen = false;
   @Output() closeModal = new EventEmitter<void>();
@@ -53,6 +55,7 @@ export class RegisterModal {
         next: () => {
           this.loading = false;
           this.showSuccess = true;
+          this.topBarService.hidePromo();
         },
         error: (err) => {
           this.loading = false;
