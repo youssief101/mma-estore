@@ -1,6 +1,39 @@
-.page-section { padding: 4rem 2rem; max-width: 800px; margin: 0 auto; }
-.page-section h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 2rem; color: #111; text-align: center; }
-.faq-list { display: flex; flex-direction: column; gap: 1.5rem; }
-.faq-item { padding: 1.5rem; background: #f8f8f8; border-radius: 12px; }
-.faq-item h3 { font-size: 1.125rem; font-weight: 700; margin: 0 0 0.5rem; color: #111; }
-.faq-item p { font-size: 0.9375rem; color: #555; line-height: 1.6; margin: 0; }
+.page-section {
+  padding: 4rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.page-section h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  color: #111;
+  text-align: center;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.faq-item {
+  padding: 1.5rem;
+  background: #f8f8f8;
+  border-radius: 12px;
+}
+
+.faq-item h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: #111;
+}
+
+.faq-item p {
+  font-size: 0.9375rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
