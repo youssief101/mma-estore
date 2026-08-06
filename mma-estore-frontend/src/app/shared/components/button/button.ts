@@ -1,6 +1,7 @@
 import {
   Component,
-  input
+  input,
+  output
 } from '@angular/core';
 
 @Component({
@@ -43,4 +44,12 @@ export class Button {
 
   readonly rounded = input(false);
 
+
+  readonly clicked = output<void>();
+
+  onClick(): void {
+    if (!this.disabled() && !this.loading()) {
+      this.clicked.emit();
+    }
+  }
 }

@@ -1,0 +1,126 @@
+.featured-products {
+    margin: 90px 0;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.section-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.section-header a {
+    color: #d20a11;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+/* Swiper Container Spacing */
+swiper-container {
+    padding: 10px 0 50px; /* Space for pagination dots */
+}
+
+.product-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: .35s;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    cursor: pointer;
+    height: 100%; /* Ensure all cards are same height in slide */
+    margin-bottom: 10px;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+}
+
+.image-wrapper {
+    position: relative;
+    height: 320px;
+    background: #f7f7f7;
+    overflow: hidden;
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: .4s;
+}
+
+.product-card:hover img {
+    transform: scale(1.05);
+}
+
+.sale-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #d20a11;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: .8rem;
+}
+
+.product-info {
+    padding: 22px;
+}
+
+.brand {
+    color: #777;
+    font-weight: 600;
+}
+
+.product-info h3 {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    min-height: 54px;
+}
+
+.fighter {
+    color: #999;
+    margin-bottom: 14px;
+}
+
+.price {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.new-price {
+    color: #d20a11;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.product-info button {
+    width: 100%;
+    border: none;
+    background: #111;
+    color: white;
+    padding: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: .3s;
+}
+
+.product-info button:hover {
+    background: #d20a11;
+}

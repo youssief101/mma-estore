@@ -1,34 +1,25 @@
 <button
-
     [type]="type()"
-
     [disabled]="disabled() || loading()"
-
     class="app-button"
-
     [class.primary]="variant() === 'primary'"
     [class.secondary]="variant() === 'secondary'"
     [class.outline]="variant() === 'outline'"
     [class.danger]="variant() === 'danger'"
     [class.ghost]="variant() === 'ghost'"
     [class.link]="variant() === 'link'"
-
     [class.xs]="size() === 'xs'"
     [class.sm]="size() === 'sm'"
     [class.md]="size() === 'md'"
     [class.lg]="size() === 'lg'"
     [class.xl]="size() === 'xl'"
-
     [class.full-width]="fullWidth()"
-
-    [class.rounded]="rounded()">
+    [class.rounded]="rounded()"
+    (click)="onClick()">  
 
     @if (loading()) {
-
         <span class="spinner"></span>
-
     }
 
     <ng-content></ng-content>
-
 </button>

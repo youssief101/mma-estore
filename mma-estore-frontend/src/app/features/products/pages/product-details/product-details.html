@@ -3,12 +3,19 @@
 }
 
 @if (!loading && product) {
+
   <div class="product-page">
+
     <div class="image-section">
-      <img [src]="product.images[0]?.url" [alt]="product.name" />
+
+      <img
+        [src]="getImageUrl(product.images?.[0]?.url)"
+        [alt]="product.name">
+
     </div>
 
     <div class="info-section">
+
       <p class="brand">
         {{ product.brandID.name }}
       </p>
@@ -22,11 +29,17 @@
       </p>
 
       <div class="price-section">
+
         @if (product.oldPrice) {
-          <span class="old-price"> ${{ product.oldPrice }} </span>
+          <span class="old-price">
+            ${{ product.oldPrice }}
+          </span>
         }
 
-        <span class="price"> ${{ product.price }} </span>
+        <span class="price">
+          ${{ product.price }}
+        </span>
+
       </div>
 
       <p class="description">
@@ -34,6 +47,7 @@
       </p>
 
       <div class="details">
+
         <p>
           <strong>Audience:</strong>
           {{ product.audience }}
@@ -48,31 +62,61 @@
           <strong>Department:</strong>
           {{ product.departmentID.name }}
         </p>
+
       </div>
 
-      @if (product.inventory.variants.length) {
+      @if (product.inventory.variants.length > 0) {
+
         <div class="sizes">
+
           <h3>Select Size</h3>
 
           <div class="size-buttons">
-            @for (size of product.inventory.variants; track size.size) {
-              <button type="button" (click)="selectedSize = size.size">
+
+            @for (
+              size of product.inventory.variants;
+              track size.size
+            ) {
+
+              <button
+                type="button"
+                (click)="selectedSize = size.size">
+
                 {{ size.size }}
+
               </button>
+
             }
+
           </div>
+
         </div>
+
       }
 
-      <button class="add-cart-btn">Add To Cart</button>
+      <button
+        class="add-cart-btn"
+        (click)="addToCart()">
+
+        Add To Cart
+
+      </button>
+
     </div>
+
   </div>
 
   <section class="specifications">
+
     <h2>Specifications</h2>
 
-    @for (spec of product.specifications; track spec.key) {
+    @for (
+      spec of product.specifications;
+      track spec.key
+    ) {
+
       <div class="spec-row">
+
         <strong>
           {{ spec.key }}
         </strong>
@@ -80,20 +124,37 @@
         <span>
           {{ spec.value }}
         </span>
+
       </div>
+
     }
+
   </section>
 
   @if (relatedProducts.length > 0) {
+
     <section class="related-products">
+
       <h2>Related Products</h2>
 
       <div class="products-grid">
-        @for (relatedProduct of relatedProducts; track relatedProduct._id) {
-          <app-product-card [product]="relatedProduct" (addToCart)="onAddToCart($event)">
+
+        @for (
+          relatedProduct of relatedProducts;
+          track relatedProduct._id
+        ) {
+
+          <app-product-card
+            [product]="relatedProduct"
+            (addToCart)="onAddToCart($event)">
           </app-product-card>
+
         }
+
       </div>
+
     </section>
+
   }
+
 }

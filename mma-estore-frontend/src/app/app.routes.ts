@@ -19,6 +19,7 @@ import { Profile } from './features/profile/pages/profile/profile';
 import { TestApiComponent } from '../app/pages/test-api/test-api';
 import { ProductList } from './features/products/pages/product-list/product-list';
 import { ProductDetails } from './features/products/pages/product-details/product-details';
+import { Cart } from './features/cart/pages/cart/cart';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,10 @@ export const routes: Routes = [
         path: 'products/:id',
         component: ProductDetails,
       },
+      {
+  path: 'cart',
+  component: Cart,
+},
 
       {
         path: 'profile',
@@ -120,4 +125,20 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'home',
   },
+  {
+  path: 'test-api',
+  component: TestApiComponent,
+},
+
+{
+  path: 'checkout',
+  loadComponent: () =>
+    import('./features/checkout/pages/checkout/checkout')
+      .then(m => m.Checkout),
+},
+
+{
+  path: '**',
+  redirectTo: 'home',
+},
 ];

@@ -6,7 +6,11 @@
 
     <img
       [routerLink]="['/products', product()._id]"
-      [src]="product().images?.[0]?.url"
+      [src]="
+        product().images?.[0]?.url
+          ? 'http://localhost:3000' + product().images[0].url
+          : 'assets/images/no-image.png'
+      "
       [alt]="product().name"
     />
   </div>
@@ -32,7 +36,16 @@
       <span class="current-price"> ${{ product().price }} </span>
     </div>
 
-    <app-button variant="primary" width="full" (clicked)="addToCart.emit(product())">
+    @if (product().inventory?.totalStock === 0) {
+      <p class="out-of-stock">Out of Stock</p>
+    }
+
+    <app-button
+      variant="primary"
+      width="full"
+      [disabled]="product().inventory?.totalStock === 0"
+      (clicked)="addToCart.emit(product())"
+    >
       Add to Cart
     </app-button>
   </div>

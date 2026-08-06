@@ -7,20 +7,20 @@
     <input
       type="text"
       placeholder="Search products..."
-      [(ngModel)]="searchTerm">
+      [(ngModel)]="searchTerm"
+    />
 
     <button
       type="button"
-      (click)="searchProducts()">
-
+      (click)="searchProducts()"
+    >
       Search
-
     </button>
 
     <select
       [(ngModel)]="selectedAudience"
-      (change)="filterProducts()">
-
+      (change)="filterProducts()"
+    >
       <option value="">
         All Audiences
       </option>
@@ -41,10 +41,9 @@
 
     <button
       type="button"
-      (click)="clearFilters()">
-
+      (click)="clearFilters()"
+    >
       Reset
-
     </button>
 
   </div>
@@ -53,20 +52,16 @@
 
     <p>Loading products...</p>
 
-  }
-
-  @if (!loading) {
+  } @else {
 
     <div class="products-grid">
 
-      @for (
-        product of products;
-        track product._id
-      ) {
+      @for (product of products; track product._id) {
 
         <app-product-card
           [product]="product"
-          (addToCart)="onAddToCart(product)">
+          (addToCart)="onAddToCart($event)"
+        >
         </app-product-card>
 
       }

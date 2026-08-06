@@ -1,0 +1,74 @@
+<section class="featured-products">
+
+    <div class="section-header">
+        <h2>Featured Products</h2>
+        <a routerLink="/products">
+            View All
+        </a>
+    </div>
+
+    <!-- The *ngIf ensures Swiper only initializes when data is ready -->
+    <ng-container *ngIf="!loading && products.length > 0; else loaderState">
+        
+        <swiper-container
+            #productsSwiper
+            slides-per-view="4"
+            space-between="28"
+            navigation="true"
+            pagination="true"
+            [attr.breakpoints]="JSON.stringify(swiperBreakpoints)">
+
+            <swiper-slide *ngFor="let product of products">
+                <div class="product-card">
+                    <div class="image-wrapper">
+                        <img
+                            [src]="getMainImage(product)"
+                            [alt]="product.name">
+
+                        <span class="sale-badge" *ngIf="product.onSale">
+                            SALE
+                        </span>
+                    </div>
+
+                    <div class="product-info">
+                        <small class="brand" *ngIf="product.brandID">
+                            {{ product.brandID.name }}
+                        </small>
+
+                        <h3>{{ product.name }}</h3>
+
+                        <p class="fighter" *ngIf="product.fighterID">
+                            {{ product.fighterID.firstName }}
+                            {{ product.fighterID.lastName }}
+                        </p>
+
+                        <div class="price">
+                            <span class="old-price" *ngIf="product.oldPrice">
+                                ${{ product.oldPrice }}
+                            </span>
+                            <span class="new-price">
+                                ${{ product.price }}
+                            </span>
+                        </div>
+
+                        <button>
+                            Add To Cart
+                        </button>
+                    </div>
+                </div>
+            </swiper-slide>
+
+        </swiper-container>
+
+    </ng-container>
+
+    <ng-template #loaderState>
+        <div style="text-align: center; padding: 60px;" *ngIf="loading">
+            <p>Loading Featured Gear...</p>
+        </div>
+        <div style="text-align: center; padding: 60px;" *ngIf="!loading && products.length === 0">
+            <p>No featured products found.</p>
+        </div>
+    </ng-template>
+
+</section>

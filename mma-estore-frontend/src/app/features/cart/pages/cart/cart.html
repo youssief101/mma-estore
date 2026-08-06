@@ -1,1 +1,66 @@
-<p>cart works!</p>
+<section class="cart-page">
+  <h1>Shopping Cart</h1>
+
+  @if (items.length === 0) {
+    <div class="empty-cart">
+      <p>Your cart is empty.</p>
+      <a routerLink="/products">Continue Shopping</a>
+    </div>
+  }
+
+  @if (items.length > 0) {
+    <div class="cart-container">
+      <div class="cart-items">
+        @for (item of items; track trackByItem($index, item)) {
+          <div class="cart-item">
+            <div class="item-image">
+              <img
+                [src]="'http://localhost:3000' + item.product.images?.[0]?.url"
+                [alt]="item.product.name"
+              />
+            </div>
+
+            <div class="item-details">
+              <h3>
+                <a [routerLink]="['/products', item.product._id]">{{ item.product.name }}</a>
+              </h3>
+              <p class="brand">{{ item.product.brandID?.name }}</p>
+              @if (item.selectedSize) {
+                <p class="size">Size: {{ item.selectedSize }}</p>
+              }
+              <p class="unit-price">${{ item.product.price }}</p>
+            </div>
+
+            <div class="quantity-controls">
+              <button type="button" (click)="decreaseQuantity(item)">-</button>
+              <span class="quantity">{{ item.quantity }}</span>
+              <button type="button" (click)="increaseQuantity(item)">+</button>
+            </div>
+
+            <div class="item-total">
+              <p class="subtotal">${{ item.product.price * item.quantity }}</p>
+              <button type="button" class="remove-btn" (click)="removeItem(item)">Remove</button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <aside class="cart-summary">
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span>Items ({{ totalItems }})</span>
+          <span>${{ totalPrice }}</span>
+        </div>
+
+        <div class="summary-row total">
+          <span>Total</span>
+          <span>${{ totalPrice }}</span>
+        </div>
+
+        <button class="checkout-btn" routerLink="/checkout">Proceed to Checkout</button>
+        <button class="clear-btn" (click)="clearCart()">Clear Cart</button>
+      </aside>
+    </div>
+  }
+</section>

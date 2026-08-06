@@ -2,13 +2,19 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeCarousel } from '../../../carousel/components/home-carousel/home-carousel';
 import { CarouselSlide } from '../../../../core/models/carousel-slide.model';
+import { HomeHero } from './home-hero/home-hero';
+import { FeaturedFightersComponent } from './featured-fighters/featured-fighters';
+import { FeaturedProductsComponent } from './featured-products/featured-products';
 
 @Component({
     selector: 'app-home',
     standalone: true,
     imports: [
         CommonModule,
-        HomeCarousel
+        HomeCarousel,
+        HomeHero,
+        FeaturedFightersComponent,
+        FeaturedProductsComponent
     ],
     templateUrl: './home.html',
     styleUrl: './home.css'

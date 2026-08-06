@@ -1,29 +1,82 @@
 <header class="store-header">
+  <div class="header-container">
+    <button
+      type="button"
+      class="menu-button"
+      aria-label="Open navigation menu"
+      (click)="navigation.toggleDrawer()"
+    >
+      <i class="bi bi-list"></i>
+    </button>
 
-    <div class="header-container">
+    <a routerLink="/" class="logo">
+      <img src="logos/logo.png" alt="MMA E-Store" />
+    </a>
 
-        <button
-            type="button"
-            class="menu-button"
-            aria-label="Open navigation menu"
-            (click)="navigation.toggleDrawer()">
+    <app-search-bar></app-search-bar>
 
-            <i class="bi bi-list"></i>
+    <div class="header-actions">
+      <button type="button" class="cart-button" (click)="toggleCartDrawer()">
+        <i class="bi bi-bag"></i>
 
-        </button>
+        @if (cartCount > 0) {
+          <span class="cart-badge">
+            {{ cartCount }}
+          </span>
+        }
+      </button>
+    </div>
+  </div>
+</header>
 
-        <a
-            routerLink="/"
-            class="logo">
+@if (cartDrawerOpen) {
+  <div class="drawer-backdrop" (click)="closeCartDrawer()"></div>
+}
 
-            <img
-                src="logos/logo.png"
-                alt="MMA E-Store">
+<div class="cart-drawer" [class.open]="cartDrawerOpen">
+  <div class="drawer-header">
+    <h2>Shopping Cart</h2>
 
-        </a>
+    <button type="button" class="close-btn" (click)="closeCartDrawer()">✕</button>
+  </div>
 
-        <app-search-bar></app-search-bar>
+  @if (cartItems.length === 0) {
+    <div class="empty-cart">
+      <p>Your cart is empty.</p>
+    </div>
+  }
 
+  @if (cartItems.length > 0) {
+    <div class="drawer-items">
+      @for (item of cartItems; track item.product._id) {
+        <div class="drawer-item">
+          <img
+            [src]="'http://localhost:3000' + item.product.images?.[0]?.url"
+            [alt]="item.product.name"
+          />
+
+          <div class="drawer-info">
+            <h4>{{ item.product.name }}</h4>
+
+            <p>
+              {{ item.quantity }}
+              × ${{ item.product.price }}
+            </p>
+
+            <p class="line-total">${{ item.quantity * item.product.price }}</p>
+          </div>
+
+          <button class="remove-item" (click)="removeItem(item.product._id, item.selectedSize)">
+            ✕
+          </button>
+        </div>
+      }
     </div>
 
-</header>
+    <div class="drawer-footer">
+      <div class="drawer-total">Total: ${{ cartTotal }}</div>
+
+      <a routerLink="/cart" class="view-cart-btn" (click)="closeCartDrawer()"> View Cart </a>
+    </div>
+  }
+</div>
