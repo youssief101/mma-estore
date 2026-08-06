@@ -1,160 +1,179 @@
+<!-- Breadcrumb -->
+<nav class="breadcrumb">
+  <a routerLink="/">Home</a>
+  <span>/</span>
+  <a routerLink="/products">Products</a>
+  <span>/</span>
+  <span class="current">{{ product?.name || 'Product Details' }}</span>
+</nav>
+
 @if (loading) {
-  <p>Loading product...</p>
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading product...</p>
+  </div>
+}
+
+@if (!loading && errorMessage) {
+  <div class="error-state">
+    <p>{{ errorMessage }}</p>
+    <a routerLink="/products" class="btn-back">← Back to Products</a>
+  </div>
+}
+
+@if (!loading && !product) {
+  <div class="not-found">
+    <p>Product not found.</p>
+    <a routerLink="/products" class="btn-back">← Back to Products</a>
+  </div>
 }
 
 @if (!loading && product) {
+  <div class="product-container">
+    <!-- Left: Images -->
+    <div class="product-gallery">
+      <div class="main-image">
+        <img
+          [src]="getImageUrl(product.images?.[selectedImage]?.url)"
+          [alt]="product.name || 'Product'"
+          (error)="onImageError($event)"
+        />
+        @if (product.discountPercentage > 0) {
+          <span class="discount-badge">-{{ product.discountPercentage }}%</span>
+        }
+      </div>
 
-  <div class="product-page">
-
-    <div class="image-section">
-
-      <img
-        [src]="getImageUrl(product.images?.[0]?.url)"
-        [alt]="product.name">
-
+      @if (product.images && product.images.length > 1) {
+        <div class="thumbnail-list">
+          @for (img of product.images; track $index) {
+            <button
+              type="button"
+              class="thumb-btn"
+              [class.active]="selectedImage === $index"
+              (click)="selectedImage = $index">
+              <img [src]="getImageUrl(img.url)" [alt]="product.name + ' ' + $index" />
+            </button>
+          }
+        </div>
+      }
     </div>
 
-    <div class="info-section">
+    <!-- Right: Info -->
+    <div class="product-info">
+      <div class="brand-tag">{{ product.brandID?.name || 'Brand' }}</div>
 
-      <p class="brand">
-        {{ product.brandID.name }}
-      </p>
+      <h1 class="product-title">{{ product.name }}</h1>
 
-      <h1>
-        {{ product.name }}
-      </h1>
+      <div class="rating">
+        ⭐⭐⭐⭐⭐ <span>(4.8)</span>
+      </div>
 
-      <p class="category">
-        {{ product.categoryID.name }}
-      </p>
-
-      <div class="price-section">
-
+      <div class="price-box">
         @if (product.oldPrice) {
-          <span class="old-price">
-            ${{ product.oldPrice }}
-          </span>
+          <span class="old-price">${{ product.oldPrice }}</span>
         }
-
-        <span class="price">
-          ${{ product.price }}
-        </span>
-
+        <span class="current-price">${{ product.price }}</span>
+        @if (product.discountPercentage > 0) {
+          <span class="save-tag">Save {{ product.discountPercentage }}%</span>
+        }
       </div>
 
-      <p class="description">
-        {{ product.description }}
-      </p>
+      <p class="description">{{ product.description || 'No description available.' }}</p>
 
-      <div class="details">
-
-        <p>
-          <strong>Audience:</strong>
-          {{ product.audience }}
-        </p>
-
-        <p>
-          <strong>Stock:</strong>
-          {{ product.inventory.totalStock }}
-        </p>
-
-        <p>
-          <strong>Department:</strong>
-          {{ product.departmentID.name }}
-        </p>
-
-      </div>
-
-      @if (product.inventory.variants.length > 0) {
-
-        <div class="sizes">
-
-          <h3>Select Size</h3>
-
-          <div class="size-buttons">
-
-            @for (
-              size of product.inventory.variants;
-              track size.size
-            ) {
-
+      <!-- Sizes -->
+      @if (product.inventory && product.inventory.variants && product.inventory.variants.length > 0) {
+        <div class="size-section">
+          <label>Select Size</label>
+          <div class="size-options">
+            @for (variant of product.inventory.variants; track variant.size) {
               <button
                 type="button"
-                (click)="selectedSize = size.size">
-
-                {{ size.size }}
-
+                class="size-btn"
+                [class.active]="selectedSize === variant.size"
+                [class.out-of-stock]="variant.stock === 0"
+                [disabled]="variant.stock === 0"
+                (click)="selectedSize = variant.size">
+                {{ variant.size }}
+                @if (variant.stock === 0) {
+                  <small>Out</small>
+                }
               </button>
-
             }
-
           </div>
-
         </div>
-
       }
 
-      <button
-        class="add-cart-btn"
-        (click)="addToCart()">
-
-        Add To Cart
-
-      </button>
-
-    </div>
-
-  </div>
-
-  <section class="specifications">
-
-    <h2>Specifications</h2>
-
-    @for (
-      spec of product.specifications;
-      track spec.key
-    ) {
-
-      <div class="spec-row">
-
-        <strong>
-          {{ spec.key }}
-        </strong>
-
-        <span>
-          {{ spec.value }}
-        </span>
-
+      <!-- Quantity -->
+      <div class="quantity-section">
+        <label>Quantity</label>
+        <div class="qty-selector">
+          <button type="button" (click)="decreaseQty()">−</button>
+          <span>{{ quantity }}</span>
+          <button type="button" (click)="increaseQty()">+</button>
+        </div>
       </div>
 
-    }
+      <!-- Actions -->
+      <div class="actions">
+        <button type="button" class="btn-add-cart" (click)="addToCart()">
+          🛒 Add to Cart — ${{ (product.price * quantity) | number:'1.2-2' }}
+        </button>
+        <button type="button" class="btn-wishlist" title="Add to Wishlist">
+          ♡
+        </button>
+      </div>
 
-  </section>
+      <!-- Meta -->
+      <div class="product-meta">
+        <div class="meta-item">
+          <span>Category:</span>
+          <span>{{ product.categoryID?.name || 'N/A' }}</span>
+        </div>
+        <div class="meta-item">
+          <span>Department:</span>
+          <span>{{ product.departmentID?.name || 'N/A' }}</span>
+        </div>
+        <div class="meta-item">
+          <span>Audience:</span>
+          <span>{{ product.audience || 'All' }}</span>
+        </div>
+        <div class="meta-item">
+          <span>Stock:</span>
+          <span [class.in-stock]="(product.inventory?.totalStock || 0) > 0" [class.out-stock]="(product.inventory?.totalStock || 0) === 0">
+            {{ product.inventory?.totalStock || 0 }} available
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Specifications -->
+  @if (product.specifications && product.specifications.length > 0) {
+    <section class="specs-section">
+      <h2>Specifications</h2>
+      <div class="specs-grid">
+        @for (spec of product.specifications; track spec.key) {
+          <div class="spec-card">
+            <span class="spec-key">{{ spec.key }}</span>
+            <span class="spec-value">{{ spec.value }}</span>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Related Products -->
   @if (relatedProducts.length > 0) {
-
-    <section class="related-products">
-
-      <h2>Related Products</h2>
-
+    <section class="related-section">
+      <h2>You May Also Like</h2>
       <div class="products-grid">
-
-        @for (
-          relatedProduct of relatedProducts;
-          track relatedProduct._id
-        ) {
-
+        @for (relatedProduct of relatedProducts; track relatedProduct._id) {
           <app-product-card
             [product]="relatedProduct"
             (addToCart)="onAddToCart($event)">
           </app-product-card>
-
         }
-
       </div>
-
     </section>
-
   }
-
 }

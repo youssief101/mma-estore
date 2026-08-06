@@ -5,7 +5,7 @@ import { ProductService } from '../../../../../services/product.service';
 import { Product } from '../../../../../models/product.model';
 import { ProductCard } from '../../../../shared/components/product-card/product-card';
 import { CartService } from '../../../../core/services/cart.service';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-product-list',
   standalone: true,
@@ -95,8 +95,17 @@ export class ProductList implements OnInit {
     this.loadProducts();
   }
 
-  onAddToCart(product: Product): void {
-    this.cartService.addToCart(product);
-    alert(`${product.name} added to cart`);
-  }
+ onAddToCart(product: Product): void {
+  this.cartService.addToCart(product);
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Added to Cart!',
+    text: product.name,
+    timer: 2000,
+    showConfirmButton: false,
+    toast: true,
+    position: 'top-end'
+  });
+}
 }

@@ -20,6 +20,8 @@ import { TestApiComponent } from '../app/pages/test-api/test-api';
 import { ProductList } from './features/products/pages/product-list/product-list';
 import { ProductDetails } from './features/products/pages/product-details/product-details';
 import { Cart } from './features/cart/pages/cart/cart';
+import { CheckoutComponent } from './features/checkout/pages/checkout/checkout';
+
 
 export const routes: Routes = [
   {
@@ -130,12 +132,12 @@ export const routes: Routes = [
   component: TestApiComponent,
 },
 
-{
-  path: 'checkout',
-  loadComponent: () =>
-    import('./features/checkout/pages/checkout/checkout')
-      .then(m => m.Checkout),
-},
+
+
+  {
+    path: 'checkout',
+    component: CheckoutComponent
+  },
 
 {
   path: '**',

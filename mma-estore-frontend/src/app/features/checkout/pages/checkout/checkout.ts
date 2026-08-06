@@ -1,84 +1,44 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-
-import {
-  CartService,
-  CartItem,
-} from '../../../../core/services/cart.service';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-checkout',
-
   standalone: true,
-
-  imports: [
-    CommonModule,
-    FormsModule,
-  ],
-
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './checkout.html',
-
   styleUrl: './checkout.css',
 })
-export class Checkout implements OnInit {
-  private cartService = inject(CartService);
+export class CheckoutComponent {
+  private fb = inject(FormBuilder);
 
-  private router = inject(Router);
+  checkoutForm = this.fb.group({
+    firstName: ['', Validators.required],
 
-  items: CartItem[] = [];
+    lastName: ['', Validators.required],
 
-  totalItems = 0;
+    email: ['', [Validators.required, Validators.email]],
 
-  totalPrice = 0;
+    phone: ['', Validators.required],
 
-  firstName = '';
+    address: ['', Validators.required],
 
-  lastName = '';
+    city: ['', Validators.required],
 
-  email = '';
+    country: ['', Validators.required],
 
-  phone = '';
+    postalCode: ['', Validators.required],
 
-  address = '';
-
-  city = '';
-
-  state = '';
-
-  zipCode = '';
-
-  country = '';
-
-  paymentMethod = 'card';
-
-  ngOnInit(): void {
-    this.items = this.cartService.getItems();
-
-    this.totalItems = this.cartService.getCount();
-
-    this.totalPrice = this.cartService.getTotal();
-  }
+    paymentMethod: ['card', Validators.required],
+  });
 
   placeOrder(): void {
-    if (
-      !this.firstName ||
-      !this.lastName ||
-      !this.email ||
-      !this.address ||
-      !this.city ||
-      !this.country
-    ) {
-      alert('Please complete all required fields.');
+    if (this.checkoutForm.invalid) {
+      this.checkoutForm.markAllAsTouched();
 
       return;
     }
 
-    alert('Order placed successfully!');
-
-    this.cartService.clearCart();
-
-    this.router.navigate(['/']);
+    console.log(this.checkoutForm.value);
   }
 }
