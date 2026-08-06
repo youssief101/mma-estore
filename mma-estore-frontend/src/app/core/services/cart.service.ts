@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../../../models/product.model';
 
 export interface CartItem {
@@ -10,19 +9,16 @@ export interface CartItem {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CartService {
   private readonly CART_KEY = 'mma_cart';
+  private itemsSubject = new BehaviorSubject<CartItem[]>(this.getItems());
+  items$: Observable<CartItem[]> = this.itemsSubject.asObservable();
 
-  private itemsSubject = new BehaviorSubject<CartItem[]>(this.loadCart());
-
-  readonly items$ = this.itemsSubject.asObservable();
-
-  private loadCart(): CartItem[] {
+  getItems(): CartItem[] {
     try {
       const data = localStorage.getItem(this.CART_KEY);
-
       return data ? JSON.parse(data) : [];
     } catch {
       return [];
@@ -31,77 +27,64 @@ export class CartService {
 
   private saveItems(items: CartItem[]): void {
     localStorage.setItem(this.CART_KEY, JSON.stringify(items));
-
     this.itemsSubject.next(items);
   }
 
-  getItems(): CartItem[] {
-    return this.itemsSubject.value;
-  }
-
   addToCart(product: Product, selectedSize?: string): void {
-    const items = [...this.itemsSubject.value];
-
-    const existing = items.find(
-      (item) => item.product._id === product._id && item.selectedSize === selectedSize,
+    const items = this.getItems();
+    const existingIndex = items.findIndex(
+      item => item.product._id === product._id && item.selectedSize === selectedSize
     );
 
-    if (existing) {
-      existing.quantity += 1;
+    if (existingIndex > -1) {
+      items[existingIndex].quantity += 1;
     } else {
-      items.push({
-        product,
-        quantity: 1,
-        selectedSize,
-      });
+      items.push({ product, quantity: 1, selectedSize });
     }
 
+    this.saveItems(items);
+  }
+
+  removeFromCart(productId: string, selectedSize?: string): void {
+    const items = this.getItems().filter(
+      item => !(item.product._id === productId && item.selectedSize === selectedSize)
+    );
     this.saveItems(items);
   }
 
   removeItem(productId: string, selectedSize?: string): void {
-    const items = this.itemsSubject.value.filter(
-      (item) => !(item.product._id === productId && item.selectedSize === selectedSize),
-    );
-
-    this.saveItems(items);
+    this.removeFromCart(productId, selectedSize);
   }
 
   updateQuantity(productId: string, quantity: number, selectedSize?: string): void {
     if (quantity <= 0) {
-      this.removeItem(productId, selectedSize);
-
+      this.removeFromCart(productId, selectedSize);
       return;
     }
 
-    const items = this.itemsSubject.value.map((item) => {
+    const items = this.getItems().map(item => {
       if (item.product._id === productId && item.selectedSize === selectedSize) {
-        return {
-          ...item,
-          quantity,
-        };
+        return { ...item, quantity };
       }
-
       return item;
     });
-
     this.saveItems(items);
   }
 
   clearCart(): void {
     localStorage.removeItem(this.CART_KEY);
-
     this.itemsSubject.next([]);
   }
 
+  getTotalItems(): number {
+    return this.getItems().reduce((sum, item) => sum + item.quantity, 0);
+  }
+
   getCount(): number {
-    return this.itemsSubject.value.reduce((sum, item) => sum + item.quantity, 0);
+    return this.getTotalItems();
   }
 
   getTotal(): number {
-    return this.itemsSubject.value.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0,
-    );
+    return this.getItems().reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   }
 }

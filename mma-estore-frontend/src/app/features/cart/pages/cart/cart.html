@@ -1,66 +1,105 @@
-<section class="cart-page">
-  <h1>Shopping Cart</h1>
+<div class="cart-page">
+  <h1 class="page-title">Shopping Cart</h1>
 
   @if (items.length === 0) {
     <div class="empty-cart">
-      <p>Your cart is empty.</p>
-      <a routerLink="/products">Continue Shopping</a>
+      <div class="empty-icon">🛒</div>
+      <p class="empty-text">Your cart is empty</p>
+      <p class="empty-sub">Looks like you haven't added anything yet.</p>
+      <a routerLink="/products" class="btn-shop">Continue Shopping</a>
     </div>
   }
 
   @if (items.length > 0) {
-    <div class="cart-container">
-      <div class="cart-items">
-        @for (item of items; track trackByItem($index, item)) {
-          <div class="cart-item">
-            <div class="item-image">
-              <img
-                [src]="'http://localhost:3000' + item.product.images?.[0]?.url"
-                [alt]="item.product.name"
-              />
-            </div>
+    <div class="cart-layout">
+      <!-- Left: Cart Items -->
+      <div class="cart-items-section">
+        <div class="cart-header">
+          <h2>Cart ({{ totalItems }} items)</h2>
+          <a routerLink="/products" class="continue-link">Continue Shopping →</a>
+        </div>
 
-            <div class="item-details">
-              <h3>
-                <a [routerLink]="['/products', item.product._id]">{{ item.product.name }}</a>
-              </h3>
-              <p class="brand">{{ item.product.brandID?.name }}</p>
-              @if (item.selectedSize) {
-                <p class="size">Size: {{ item.selectedSize }}</p>
-              }
-              <p class="unit-price">${{ item.product.price }}</p>
-            </div>
+        <div class="items-list">
+          @for (item of items; track trackByItem($index, item)) {
+            <div class="cart-item">
+              <div class="item-image">
+                <img [src]="getImageUrl(item.product.images?.[0]?.url)" [alt]="item.product.name" (error)="onImageError($event)" />
+              </div>
 
-            <div class="quantity-controls">
-              <button type="button" (click)="decreaseQuantity(item)">-</button>
-              <span class="quantity">{{ item.quantity }}</span>
-              <button type="button" (click)="increaseQuantity(item)">+</button>
-            </div>
+              <div class="item-details">
+                <div class="item-top">
+                  <div class="item-info">
+                    <h3 class="item-name">{{ item.product.name }}</h3>
+                    <p class="item-brand">{{ item.product.brandID?.name }}</p>
+                    @if (item.selectedSize) {
+                      <span class="item-size">Size: {{ item.selectedSize }}</span>
+                    }
+                  </div>
+                  <p class="item-price">${{ item.product.price * item.quantity | number:'1.2-2' }}</p>
+                </div>
 
-            <div class="item-total">
-              <p class="subtotal">${{ item.product.price * item.quantity }}</p>
-              <button type="button" class="remove-btn" (click)="removeItem(item)">Remove</button>
+                <div class="item-actions">
+                  <div class="qty-selector">
+                    <button type="button" (click)="decreaseQuantity(item)">−</button>
+                    <span>{{ item.quantity }}</span>
+                    <button type="button" (click)="increaseQuantity(item)">+</button>
+                  </div>
+
+                  <div class="item-links">
+                    <button class="link-save">Save for later</button>
+                    <button class="link-remove" (click)="removeItem(item)">Remove</button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        }
+          }
+        </div>
       </div>
 
-      <aside class="cart-summary">
-        <h2>Order Summary</h2>
+      <!-- Right: Order Summary -->
+      <div class="summary-section">
+        <div class="summary-card">
+          <h3>Order Summary</h3>
 
-        <div class="summary-row">
-          <span>Items ({{ totalItems }})</span>
-          <span>${{ totalPrice }}</span>
+          <div class="promo-box">
+            <input type="text" placeholder="Promo code" />
+            <button>Apply</button>
+          </div>
+
+          <div class="summary-lines">
+            <div class="line">
+              <span>Subtotal ({{ totalItems }} items)</span>
+              <span>${{ totalPrice | number:'1.2-2' }}</span>
+            </div>
+            <div class="line">
+              <span>Shipping</span>
+              <span class="free">FREE</span>
+            </div>
+            <div class="line">
+              <span>Tax</span>
+              <span>$0.00</span>
+            </div>
+          </div>
+
+          <div class="summary-total">
+            <span>Total</span>
+            <span>${{ totalPrice | number:'1.2-2' }}</span>
+          </div>
+
+          <button class="btn-checkout" routerLink="/checkout">Proceed to Checkout</button>
+
+          <div class="trust-badges">
+            <span>🔒 Secure</span>
+            <span>🚚 Free Ship</span>
+            <span>↩️ Returns</span>
+          </div>
         </div>
 
-        <div class="summary-row total">
-          <span>Total</span>
-          <span>${{ totalPrice }}</span>
+        <div class="payment-card">
+          <p>We accept</p>
+          <div class="icons">💳 💳 💳 💳</div>
         </div>
-
-        <button class="checkout-btn" routerLink="/checkout">Proceed to Checkout</button>
-        <button class="clear-btn" (click)="clearCart()">Clear Cart</button>
-      </aside>
+      </div>
     </div>
   }
-</section>
+</div>

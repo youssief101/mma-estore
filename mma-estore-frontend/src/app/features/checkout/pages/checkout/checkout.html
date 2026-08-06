@@ -1,61 +1,140 @@
-<hr>
+<div class="checkout-page">
+  <h1 class="page-title">Checkout</h1>
 
-<h2>Order Summary</h2>
-
-<div class="summary">
-
-  @for (item of cartItems; track item.product._id) {
-
-    <div class="summary-row">
-
-      <span>
-
-        {{ item.product.name }}
-
-        @if(item.selectedSize){
-
-          ({{ item.selectedSize }})
-
-        }
-
-        × {{ item.quantity }}
-
-      </span>
-
-      <span>
-
-        ${{ item.product.price * item.quantity }}
-
-      </span>
-
+  @if (cartItems.length === 0) {
+    <div class="empty-cart">
+      <p>Your cart is empty.</p>
+      <a routerLink="/products" class="btn-primary">Continue Shopping</a>
     </div>
-
   }
 
-  <hr>
+  @if (cartItems.length > 0) {
+    <div class="checkout-grid">
+      <div class="checkout-form-section">
+        <h2>Shipping Information</h2>
+        <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name *</label>
+              <input type="text" formControlName="firstName" placeholder="John" />
+              @if (checkoutForm.get('firstName')?.invalid && checkoutForm.get('firstName')?.touched) {
+                <span class="error">First name is required</span>
+              }
+            </div>
+            <div class="form-group">
+              <label>Last Name *</label>
+              <input type="text" formControlName="lastName" placeholder="Doe" />
+              @if (checkoutForm.get('lastName')?.invalid && checkoutForm.get('lastName')?.touched) {
+                <span class="error">Last name is required</span>
+              }
+            </div>
+          </div>
 
-  <div class="summary-row">
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" formControlName="email" placeholder="john@example.com" />
+            @if (checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched) {
+              <span class="error">Valid email is required</span>
+            }
+          </div>
 
-    <strong>Subtotal</strong>
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" formControlName="phone" placeholder="+1 234 567 890" />
+            @if (checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched) {
+              <span class="error">Phone is required</span>
+            }
+          </div>
 
-    <strong>${{ subtotal }}</strong>
+          <div class="form-group">
+            <label>Address *</label>
+            <input type="text" formControlName="address" placeholder="123 Main Street" />
+            @if (checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched) {
+              <span class="error">Address is required</span>
+            }
+          </div>
 
-  </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" formControlName="city" placeholder="New York" />
+            </div>
+            <div class="form-group">
+              <label>Postal Code *</label>
+              <input type="text" formControlName="postalCode" placeholder="10001" />
+            </div>
+          </div>
 
-  <div class="summary-row">
+          <div class="form-group">
+            <label>Country *</label>
+            <input type="text" formControlName="country" placeholder="United States" />
+          </div>
 
-    <strong>Shipping</strong>
+          <h2 class="section-title">Payment Method</h2>
+          <div class="payment-options">
+            <label class="payment-card">
+              <input type="radio" formControlName="paymentMethod" value="Cash" />
+              <span class="checkmark"></span>
+              <span class="label-text">Cash on Delivery</span>
+            </label>
+            <label class="payment-card">
+              <input type="radio" formControlName="paymentMethod" value="Visa" />
+              <span class="checkmark"></span>
+              <span class="label-text">Visa</span>
+            </label>
+            <label class="payment-card">
+              <input type="radio" formControlName="paymentMethod" value="Mastercard" />
+              <span class="checkmark"></span>
+              <span class="label-text">Mastercard</span>
+            </label>
+            <label class="payment-card">
+              <input type="radio" formControlName="paymentMethod" value="Gift Card" />
+              <span class="checkmark"></span>
+              <span class="label-text">Gift Card</span>
+            </label>
+          </div>
 
-    <strong>FREE</strong>
+          <button type="submit" class="btn-place-order">Place Order — ${{ total | number:'1.2-2' }}</button>
+        </form>
+      </div>
 
-  </div>
+      <div class="order-summary-section">
+        <h2>Order Summary</h2>
+        <div class="summary-card">
+          <div class="items-list">
+            @for (item of cartItems; track item.product._id + (item.selectedSize || '')) {
+              <div class="item-row">
+                <div class="item-image">
+                  <img [src]="getImageUrl(item.product.images?.[0]?.url)" [alt]="item.product.name" (error)="onImageError($event)" />
+                  <span class="qty-badge">{{ item.quantity }}</span>
+                </div>
+                <div class="item-info">
+                  <p class="item-name">{{ item.product.name }}</p>
+                  @if (item.selectedSize) {
+                    <p class="item-size">Size: {{ item.selectedSize }}</p>
+                  }
+                </div>
+                <div class="item-price">${{ item.product.price * item.quantity | number:'1.2-2' }}</div>
+              </div>
+            }
+          </div>
 
-  <div class="summary-row total">
+          <div class="summary-divider"></div>
 
-    <strong>Total</strong>
-
-    <strong>${{ total }}</strong>
-
-  </div>
-
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span>${{ subtotal | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-line">
+            <span>Shipping</span>
+            <span class="free">FREE</span>
+          </div>
+          <div class="summary-line total">
+            <span>Total</span>
+            <span>${{ total | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>

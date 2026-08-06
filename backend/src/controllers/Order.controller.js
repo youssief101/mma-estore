@@ -109,21 +109,27 @@ const findOrder = async (req, res) => {
 // @Nassar: Create order
 const createOrder = async (req, res) => {
   try {
-    const { shippingAddress, paymentMethod } = req.body;
+    const { shippingAddress, paymentMethod, items: bodyItems } = req.body;
 
-    const cart = await Cart.findOne({
-      userID: req.user._id,
-    });
+    let orderItems = [];
+    let subtotal = 0;
 
-    if (!cart || cart.items.length === 0) {
+    const cart = await Cart.findOne({ userID: req.user._id });
+
+    if (cart && cart.items.length > 0) {
+      orderItems = cart.items;
+      subtotal = cart.totalPrice;
+    } else if (bodyItems && bodyItems.length > 0) {
+      orderItems = bodyItems;
+      subtotal = bodyItems.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+    } else {
       return res.status(400).json({
         success: false,
         message: "Cart is empty.",
       });
     }
 
-    // Validate stock
-    for (const item of cart.items) {
+    for (const item of orderItems) {
       const product = await Product.findById(item.productID);
 
       if (!product) {
@@ -145,36 +151,26 @@ const createOrder = async (req, res) => {
       }
     }
 
-    const subtotal = cart.totalPrice;
     const shipping = 0;
     const total = subtotal + shipping;
 
     const lastOrder = await Order.findOne().sort({ orderNumber: -1 });
-
     const orderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1001;
 
     const order = await Order.create({
       orderNumber,
-
       userID: req.user._id,
-
       shippingAddress,
-
-      items: cart.items,
-
+      items: orderItems,
       subtotal,
-
       shipping,
-
       total,
-
       payment: {
         method: paymentMethod,
       },
     });
 
-    // Update inventory using bulkWrite()
-    const bulkOperations = cart.items.map((item) => ({
+    const bulkOperations = orderItems.map((item) => ({
       updateOne: {
         filter: {
           _id: item.productID,
@@ -191,11 +187,11 @@ const createOrder = async (req, res) => {
 
     await Product.bulkWrite(bulkOperations);
 
-    // Clear cart
-    cart.items = [];
-    cart.totalPrice = 0;
-
-    await cart.save();
+    if (cart) {
+      cart.items = [];
+      cart.totalPrice = 0;
+      await cart.save();
+    }
 
     return res.status(201).json({
       success: true,
