@@ -40,25 +40,34 @@ export class ProductList implements OnInit {
     });
   }
 
- searchProducts(): void {
+  searchProducts(): void {
   if (!this.searchTerm.trim()) {
     this.loadProducts();
     return;
   }
 
   this.loading = true;
-  console.log('🔍 Searching for:', this.searchTerm);
 
   this.productService.searchProducts(this.searchTerm.trim()).subscribe({
     next: (response) => {
-      console.log('🔍 Search results:', response);
-      this.products = response.products || [];
-      this.loading = false;
+      console.log('SEARCH RESPONSE:', response);
+
+      try {
+        this.products = response.products ?? [];
+
+        console.log('PRODUCT COUNT:', this.products.length);
+
+        this.loading = false;
+
+        console.log('LOADING FALSE');
+      } catch (e) {
+        console.error('RENDER ERROR:', e);
+      }
     },
     error: (error) => {
-      console.error('❌ Search error:', error);
+      console.error(error);
       this.loading = false;
-    },
+    }
   });
 }
 

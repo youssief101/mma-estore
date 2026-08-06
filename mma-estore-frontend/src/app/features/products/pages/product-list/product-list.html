@@ -2,72 +2,27 @@
 
   <h1>Products</h1>
 
-  <div class="filters">
+ <input
+  [(ngModel)]="searchTerm"
+  (keyup.enter)="searchProducts()"
+  placeholder="Search..."
+/>
 
-    <input
-      type="text"
-      placeholder="Search products..."
-      [(ngModel)]="searchTerm"
-    />
+  <button (click)="searchProducts()">
+    Search
+  </button>
+  
 
-    <button
-      type="button"
-      (click)="searchProducts()"
-    >
-      Search
-    </button>
+  <div class="products-grid">
 
-    <select
-      [(ngModel)]="selectedAudience"
-      (change)="filterProducts()"
-    >
-      <option value="">
-        All Audiences
-      </option>
+    @for (product of products; track product._id) {
 
-      <option value="Men">
-        Men
-      </option>
+      <app-product-card
+        [product]="product">
+      </app-product-card>
 
-      <option value="Women">
-        Women
-      </option>
-
-      <option value="Kids">
-        Kids
-      </option>
-
-    </select>
-
-    <button
-      type="button"
-      (click)="clearFilters()"
-    >
-      Reset
-    </button>
+    }
 
   </div>
-
-  @if (loading) {
-
-    <p>Loading products...</p>
-
-  } @else {
-
-    <div class="products-grid">
-
-      @for (product of products; track product._id) {
-
-        <app-product-card
-          [product]="product"
-          (addToCart)="onAddToCart($event)"
-        >
-        </app-product-card>
-
-      }
-
-    </div>
-
-  }
 
 </section>

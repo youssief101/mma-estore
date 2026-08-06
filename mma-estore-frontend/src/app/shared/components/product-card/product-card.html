@@ -1,21 +1,26 @@
-<app-card shadow="sm" [hover]="true" [clickable]="true">
+<app-card
+  shadow="sm"
+  [hover]="true"
+  [clickable]="true"
+>
   <div card-image class="image-wrapper">
+
     @if (product().discountPercentage > 0) {
-      <span class="sale-badge"> -{{ product().discountPercentage }}% </span>
+      <span class="sale-badge">
+        -{{ product().discountPercentage }}%
+      </span>
     }
 
     <img
       [routerLink]="['/products', product()._id]"
-      [src]="
-        product().images?.[0]?.url
-          ? 'http://localhost:3000' + product().images[0].url
-          : 'assets/images/no-image.png'
-      "
+      [src]="product().images?.length ? product().images[0].url : 'assets/images/no-image.png'"
       [alt]="product().name"
     />
+
   </div>
 
   <div class="content">
+
     <p class="brand">
       {{ product().brandID?.name }}
     </p>
@@ -29,24 +34,34 @@
     </p>
 
     <div class="price">
+
       @if (product().oldPrice) {
-        <span class="old-price"> ${{ product().oldPrice }} </span>
+        <span class="old-price">
+          ${{ product().oldPrice }}
+        </span>
       }
 
-      <span class="current-price"> ${{ product().price }} </span>
+      <span class="current-price">
+        ${{ product().price }}
+      </span>
+
     </div>
 
     @if (product().inventory?.totalStock === 0) {
-      <p class="out-of-stock">Out of Stock</p>
+      <p class="out-of-stock">
+        Out of Stock
+      </p>
     }
 
     <app-button
       variant="primary"
-      width="full"
+      [fullWidth]="true"
       [disabled]="product().inventory?.totalStock === 0"
       (clicked)="addToCart.emit(product())"
     >
       Add to Cart
     </app-button>
+
   </div>
+
 </app-card>

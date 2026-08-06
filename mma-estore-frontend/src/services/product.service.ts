@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { environment } from "../environments/environment";
+import { environment } from '../environments/environment';
 
 import {
   Product,
@@ -41,7 +41,6 @@ export class ProductService {
   }
 
   searchProducts(query: string): Observable<ProductListResponse> {
-
     return this.http.get<ProductListResponse>(
       `${this.api}/search`,
       {
@@ -57,7 +56,6 @@ export class ProductService {
     let params = new HttpParams();
 
     Object.entries(filters).forEach(([key, value]) => {
-
       if (
         value !== null &&
         value !== undefined &&
@@ -65,7 +63,6 @@ export class ProductService {
       ) {
         params = params.set(key, value);
       }
-
     });
 
     return this.http.get<ProductListResponse>(
@@ -75,35 +72,30 @@ export class ProductService {
   }
 
   getFeaturedProducts(): Observable<ProductListResponse> {
-
     return this.http.get<ProductListResponse>(
       `${this.api}/featured`
     );
   }
 
   getChampionGear(): Observable<ProductListResponse> {
-
     return this.http.get<ProductListResponse>(
       `${this.api}/champion-gear`
     );
   }
 
   getNewArrivals(): Observable<ProductListResponse> {
-
     return this.http.get<ProductListResponse>(
       `${this.api}/new-arrivals`
     );
   }
 
   getRelatedProducts(id: string): Observable<ProductListResponse> {
-
     return this.http.get<ProductListResponse>(
       `${this.api}/${id}/related`
     );
   }
 
   createProduct(product: Partial<Product>): Observable<ProductResponse> {
-
     return this.http.post<ProductResponse>(
       this.api,
       product
@@ -122,10 +114,8 @@ export class ProductService {
   }
 
   deleteProduct(id: string): Observable<any> {
-
     return this.http.delete(
       `${this.api}/${id}`
     );
   }
-
 }
