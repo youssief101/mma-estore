@@ -1,0 +1,36 @@
+<aside class="sidebar">
+    <app-filter-section 
+        title="Categories" 
+        [items]="categories" 
+        [activeIds]="getActiveIds('category')" 
+        (itemToggled)="toggleFilter('category', $event)">
+    </app-filter-section>
+
+    <app-filter-section 
+        title="Fighters" 
+        [items]="fighters" 
+        [activeIds]="getActiveIds('fighter')" 
+        (itemToggled)="toggleFilter('fighter', $event)">
+    </app-filter-section>
+
+    <app-filter-section 
+        title="Brands" 
+        [items]="brands" 
+        [activeIds]="getActiveIds('brand')" 
+        (itemToggled)="toggleFilter('brand', $event)">
+    </app-filter-section>
+
+    <app-filter-section 
+        title="Departments" 
+        [items]="departments" 
+        [activeIds]="getActiveIds('department')" 
+        (itemToggled)="toggleFilter('department', $event)">
+    </app-filter-section>
+
+    <app-filter-section 
+        title="Events" 
+        [items]="events" 
+        [activeIds]="getActiveIds('event')" 
+        (itemToggled)="toggleFilter('event', $event)">
+    </app-filter-section>
+</aside>

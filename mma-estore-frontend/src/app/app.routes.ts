@@ -17,6 +17,7 @@ import { roleGuard } from './core/guards/role.guard';
 import { permissionGuard } from './core/guards/permission.guard';
 import { Profile } from './features/profile/pages/profile/profile';
 import { TestApiComponent } from '../app/pages/test-api/test-api';
+import { ProductList } from './features/products/pages/product-list/product-list';
 
 export const routes: Routes = [
   {
@@ -39,6 +40,10 @@ export const routes: Routes = [
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
+      },
+      {
+          path: 'products',
+          component: ProductList
       },
 
       /*

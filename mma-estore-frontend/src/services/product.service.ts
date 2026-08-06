@@ -53,19 +53,13 @@ export class ProductService {
   }
 
   filterProducts(filters: Record<string, any>): Observable<ProductListResponse> {
-
     let params = new HttpParams();
 
     Object.entries(filters).forEach(([key, value]) => {
-
-      if (
-        value !== null &&
-        value !== undefined &&
-        value !== ''
-      ) {
-        params = params.set(key, value);
+      if (value !== null && value !== undefined && value !== '') {
+        // value might be "id1,id2", HttpParams handles this as a string correctly
+        params = params.set(key, value.toString());
       }
-
     });
 
     return this.http.get<ProductListResponse>(

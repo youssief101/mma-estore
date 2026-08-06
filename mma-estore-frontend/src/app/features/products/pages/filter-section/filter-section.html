@@ -1,0 +1,22 @@
+<section class="filter">
+    <h3>{{ title() }}</h3>
+
+    @if (items().length === 0) {
+        <p class="loading">Loading...</p>
+    } @else {
+        <ul class="filter-list">
+            @for (item of items(); track item.id) {
+                <li class="filter-item">
+                    <label class="checkbox-container">
+                        <input 
+                            type="checkbox" 
+                            [checked]="activeIds().includes(item.id)"
+                            (change)="onToggle(item.id)">
+                        <span class="checkmark"></span>
+                        <span class="item-name">{{ item.name }}</span>
+                    </label>
+                </li>
+            }
+        </ul>
+    }
+</section>

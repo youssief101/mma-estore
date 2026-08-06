@@ -1,1 +1,58 @@
-<p>product-list works!</p>
+<div class="products-page">
+    <div class="breadcrumb">Home / Products</div>
+
+    <header class="page-header">
+        <h1>MMA Official Store</h1>
+    </header>
+
+    <div class="store-layout">
+        <!-- LEFT SIDEBAR -->
+        <app-products-sidebar></app-products-sidebar>
+
+        <!-- RIGHT CONTENT -->
+        <main class="content">
+            
+            <section class="toolbar">
+                <div><strong>{{ totalProducts }}</strong> products found</div>
+                <!-- Removed Sort / Items Per Page div -->
+            </section>
+
+            <!-- ACTIVE TAGS SECTION -->
+            <section class="active-filters" *ngIf="activeTags.length > 0">
+                <div class="tags-wrapper">
+                    <span *ngFor="let tag of activeTags" class="filter-tag" (click)="removeTag(tag)">
+                        {{ tag.name }} <i class="close-icon">×</i>
+                    </span>
+                    <button class="clear-btn" (click)="clearFilters()">Clear All</button>
+                </div>
+            </section>
+
+            <section class="products-grid">
+                @if (loading) {
+                    <div class="status">Loading...</div>
+                } @else if (products.length === 0) {
+                    <div class="status">No products found.</div>
+                } @else {
+                    <div class="grid-container">
+                        @for (product of products; track product._id) {
+                            <div class="product-card">
+                                <div class="image-box">
+                                    <img [src]="getProductImage(product)" [alt]="product.name">
+                                </div>
+                                <div class="product-info">
+                                    <h3>{{ product.name }}</h3>
+                                    <p class="price">${{ product.price }}</p>
+                                    <p class="desc">{{ product.description }}</p>
+                                    <button class="buy-btn">Add to Cart</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </section>
+
+            <!-- Removed Pagination section -->
+
+        </main>
+    </div>
+</div>
