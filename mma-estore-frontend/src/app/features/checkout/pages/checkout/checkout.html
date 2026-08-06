@@ -1,83 +1,61 @@
-<section class="checkout-page">
+<hr>
 
-  <h1>Checkout</h1>
+<h2>Order Summary</h2>
 
-  <form
-    [formGroup]="checkoutForm"
-    (ngSubmit)="placeOrder()">
+<div class="summary">
 
-    <h2>Shipping Address</h2>
+  @for (item of cartItems; track item.product._id) {
 
-    <input
-      type="text"
-      placeholder="First Name"
-      formControlName="firstName">
+    <div class="summary-row">
 
-    <input
-      type="text"
-      placeholder="Last Name"
-      formControlName="lastName">
+      <span>
 
-    <input
-      type="email"
-      placeholder="Email"
-      formControlName="email">
+        {{ item.product.name }}
 
-    <input
-      type="text"
-      placeholder="Phone"
-      formControlName="phone">
+        @if(item.selectedSize){
 
-    <input
-      type="text"
-      placeholder="Address"
-      formControlName="address">
+          ({{ item.selectedSize }})
 
-    <input
-      type="text"
-      placeholder="City"
-      formControlName="city">
+        }
 
-    <input
-      type="text"
-      placeholder="Country"
-      formControlName="country">
+        × {{ item.quantity }}
 
-    <input
-      type="text"
-      placeholder="Postal Code"
-      formControlName="postalCode">
+      </span>
 
-    <h2>Payment</h2>
+      <span>
 
-    <label>
+        ${{ item.product.price * item.quantity }}
 
-      <input
-        type="radio"
-        value="card"
-        formControlName="paymentMethod">
+      </span>
 
-      Credit Card
+    </div>
 
-    </label>
+  }
 
-    <label>
+  <hr>
 
-      <input
-        type="radio"
-        value="cash"
-        formControlName="paymentMethod">
+  <div class="summary-row">
 
-      Cash on Delivery
+    <strong>Subtotal</strong>
 
-    </label>
+    <strong>${{ subtotal }}</strong>
 
-    <button type="submit">
+  </div>
 
-      Place Order
+  <div class="summary-row">
 
-    </button>
+    <strong>Shipping</strong>
 
-  </form>
+    <strong>FREE</strong>
 
-</section>
+  </div>
+
+  <div class="summary-row total">
+
+    <strong>Total</strong>
+
+    <strong>${{ total }}</strong>
+
+  </div>
+
+</div>
