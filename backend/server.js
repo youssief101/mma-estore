@@ -19,6 +19,7 @@ const cartRoutes = require("./src/routes/cart.routes");
 const giftCardRoutes = require("./src/routes/giftCard.routes");
 const homeRoutes = require("./src/routes/home.routes");
 
+
 const app = express();
 
 connectDB();
@@ -39,6 +40,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/gift-cards", giftCardRoutes);
 app.use("/api/home", homeRoutes);
+
 
 app.get("/", (req, res) => {
   res.json({
