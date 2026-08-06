@@ -32,8 +32,6 @@ const validateCreateCategory = [
         .trim()
         .notEmpty()
         .withMessage("Image is required.")
-        .isURL()
-        .withMessage("Image must be a valid URL.")
 
 ];
 
@@ -61,9 +59,7 @@ const validateUpdateCategory = [
         .optional()
         .trim()
         .notEmpty()
-        .withMessage("Image cannot be empty.")
-        .isURL()
-        .withMessage("Image must be a valid URL."),
+        .withMessage("Image cannot be empty."),
 
     body("isActive")
         .optional()

@@ -1,0 +1,44 @@
+<section class="featured-categories">
+
+    <div class="section-header">
+        <h2>TRENDING FOR YOU</h2>
+    </div>
+
+    <!-- The @if guard prevents the "disappearing on reload" bug -->
+    @if (!loading && cards.length > 0) {
+        
+        <swiper-container
+            #categoriesSwiper
+            navigation="true"
+            slides-per-view="1.2"
+            space-between="20"
+            grab-cursor="true"
+            breakpoints='{
+                "640": { "slidesPerView": 2.2 },
+                "1024": { "slidesPerView": 3.2 },
+                "1400": { "slidesPerView": 4.2 }
+            }'>
+
+            @for (card of cards; track card.id) {
+                <swiper-slide>
+                    <div class="category-item">
+                        <div class="image-box">
+                            <img [src]="card.image" [alt]="card.name">
+                        </div>
+                        <div class="text-box">
+                            <h3>{{ card.name }}</h3>
+                            <p *ngIf="card.description">{{ card.description }}</p>
+                        </div>
+                    </div>
+                </swiper-slide>
+            }
+
+        </swiper-container>
+
+    } @else if (loading) {
+        <div class="loading-box">
+            <p>Loading Trending items...</p>
+        </div>
+    }
+
+</section>

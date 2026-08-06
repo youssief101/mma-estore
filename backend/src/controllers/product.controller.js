@@ -184,10 +184,12 @@ const getFeaturedProducts = async (req, res) => {
             isActive: true,
             "display.featured": true
         })
-            .populate("brandID", "name logo")
-            .populate("categoryID", "name")
-            .populate("departmentID", "name")
-            .sort({ createdAt: -1 });
+        .populate("brandID", "name logo")
+        .populate("categoryID", "name")
+        .populate("departmentID", "name")
+        .populate("fighterID", "firstName lastName nickname")
+        .populate("eventID", "name eventDate")
+        .sort({ createdAt: -1 });
 
         return res.status(200).json({
             success: true,

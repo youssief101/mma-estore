@@ -5,6 +5,7 @@ import { CarouselSlide } from '../../../../core/models/carousel-slide.model';
 import { HomeHero } from './home-hero/home-hero';
 import { FeaturedFightersComponent } from './featured-fighters/featured-fighters';
 import { FeaturedProductsComponent } from './featured-products/featured-products';
+import { FeaturedCategories } from './featured-categories/featured-categories';
 
 @Component({
     selector: 'app-home',
@@ -14,7 +15,8 @@ import { FeaturedProductsComponent } from './featured-products/featured-products
         HomeCarousel,
         HomeHero,
         FeaturedFightersComponent,
-        FeaturedProductsComponent
+        FeaturedProductsComponent,
+        FeaturedCategories
     ],
     templateUrl: './home.html',
     styleUrl: './home.css'
