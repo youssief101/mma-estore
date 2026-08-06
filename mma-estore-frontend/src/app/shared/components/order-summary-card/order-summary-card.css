@@ -1,75 +1,171 @@
-.summary{
+:host {
+  display: block;
 
-    padding:2rem;
-
+  height: 100%;
 }
 
-h2{
+app-card {
+  display: block;
 
-    margin-bottom:2rem;
-
-    font-size:1.5rem;
-
-    font-weight:700;
-
+  height: 100%;
 }
 
-.row{
+/* ==========================================================
+   Summary
+========================================================== */
 
-    display:flex;
+.summary {
+  display: flex;
 
-    justify-content:space-between;
+  flex-direction: column;
 
-    align-items:center;
+  height: 100%;
 
-    padding:.8rem 0;
-
-    color:var(--color-text);
-
+  padding: var(--space-8);
 }
 
-.discount{
+h2 {
+  margin: 0 0 var(--space-8);
 
-    color:var(--color-success);
+  font-size: var(--fs-h3);
 
+  font-weight: 700;
+
+  color: var(--color-text);
 }
 
-.gift{
+/* ==========================================================
+   Rows
+========================================================== */
 
-    color:var(--color-primary);
+.row {
+  display: flex;
 
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: var(--space-4);
+
+  padding: var(--space-3) 0;
+
+  font-size: var(--fs-body);
+
+  color: var(--color-text);
 }
 
-hr{
-
-    margin:1.5rem 0;
-
-    border:none;
-
-    border-top:1px solid var(--color-border);
-
+.discount {
+  color: var(--color-success);
 }
 
-.total{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:2rem;
-
-    font-size:1.3rem;
-
-    font-weight:700;
-
+.gift {
+  color: var(--color-primary);
 }
 
-app-button{
+/* ==========================================================
+   Divider
+========================================================== */
 
-    display:block;
+hr {
+  margin: var(--space-6) 0;
 
-    margin-bottom:1rem;
+  border: none;
 
+  border-top: 1px solid var(--color-border);
+}
+
+/* ==========================================================
+   Total
+========================================================== */
+
+.total {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: var(--space-8);
+
+  font-size: var(--fs-h5);
+
+  font-weight: 700;
+}
+
+.total strong {
+  color: var(--color-primary);
+}
+
+/* ==========================================================
+   Buttons
+========================================================== */
+
+app-button {
+  display: block;
+
+  width: 100%;
+}
+
+app-button + app-button {
+  margin-top: var(--space-4);
+}
+
+/* ==========================================================
+   Responsive
+========================================================== */
+
+@media (max-width: 991px) {
+  .summary {
+    padding: var(--space-6);
+  }
+
+  h2 {
+    margin-bottom: var(--space-6);
+
+    font-size: var(--fs-h4);
+  }
+
+  .total {
+    margin-bottom: var(--space-6);
+  }
+}
+
+@media (max-width: 767px) {
+  .summary {
+    padding: var(--space-5);
+  }
+
+  h2 {
+    font-size: var(--fs-h5);
+  }
+
+  .row {
+    font-size: var(--fs-body-sm);
+
+    padding: var(--space-2) 0;
+  }
+
+  .total {
+    font-size: var(--fs-body-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .summary {
+    padding: var(--space-4);
+  }
+
+  .row {
+    flex-wrap: wrap;
+
+    gap: var(--space-2);
+  }
+
+  .row span:last-child {
+    margin-left: auto;
+  }
+
+  .total {
+    font-size: var(--fs-body);
+  }
 }

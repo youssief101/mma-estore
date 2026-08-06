@@ -1,1 +1,37 @@
-<p>profile works!</p>
+<div class="profile-page">
+  <h1>My Account</h1>
+
+  @if (loading) {
+    <p>Loading profile...</p>
+  } @else {
+    <section class="profile-card">
+      <h2>Profile Information</h2>
+
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+        <input type="text" placeholder="Username" formControlName="username" />
+
+        <input type="text" placeholder="First Name" formControlName="firstName" />
+
+        <input type="text" placeholder="Last Name" formControlName="lastName" />
+
+        <input type="email" placeholder="Email" formControlName="email" />
+
+        <input type="text" placeholder="Phone" formControlName="phone" />
+
+        <button type="submit" [disabled]="saving">Update Profile</button>
+      </form>
+    </section>
+
+    <section class="profile-card">
+      <h2>Change Password</h2>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <input type="password" placeholder="Current Password" formControlName="currentPassword" />
+
+        <input type="password" placeholder="New Password" formControlName="newPassword" />
+
+        <button type="submit" [disabled]="passwordSaving">Change Password</button>
+      </form>
+    </section>
+  }
+</div>

@@ -1,0 +1,84 @@
+
+/* ==========================================================
+   Loading State
+========================================================== */
+
+.auth-loading {
+  pointer-events: none;
+
+  opacity: 0.75;
+}
+
+/* ==========================================================
+   Button Loading
+========================================================== */
+
+.auth-button-loading {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 0.75rem;
+}
+
+.auth-spinner {
+  width: 18px;
+
+  height: 18px;
+
+  border: 2px solid rgba(255,255,255,.35);
+
+  border-top-color: white;
+
+  border-radius: 50%;
+
+  animation: auth-spin .8s linear infinite;
+}
+
+@keyframes auth-spin {
+
+  to {
+
+    transform: rotate(360deg);
+
+  }
+
+}
+
+/* ==========================================================
+   Error Alert
+========================================================== */
+
+.auth-alert-error {
+  padding: 1rem;
+
+  border-radius: var(--radius-md);
+
+  background: rgba(220,38,38,.08);
+
+  border: 1px solid rgba(220,38,38,.15);
+
+  color: #dc2626;
+
+  font-size: .95rem;
+}
+
+/* ==========================================================
+   Success Alert
+========================================================== */
+
+.auth-alert-success {
+  padding: 1rem;
+
+  border-radius: var(--radius-md);
+
+  background: rgba(22,163,74,.08);
+
+  border: 1px solid rgba(22,163,74,.15);
+
+  color: #16a34a;
+
+  font-size: .95rem;
+}

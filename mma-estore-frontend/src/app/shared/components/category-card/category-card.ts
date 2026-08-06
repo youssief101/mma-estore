@@ -14,7 +14,7 @@ import {
 
 import {
   CategoryCardModel
-} from '../../models/category-card.model';
+} from '../../../core/models/category-card.model';
 
 @Component({
 

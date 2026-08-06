@@ -1,32 +1,46 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import {
+  HttpInterceptorFn,
+  HttpErrorResponse,
+} from '@angular/common/http';
+
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { catchError, throwError } from 'rxjs';
 
 import { AuthService } from '../services/auth.service';
 
-export const authInterceptor: HttpInterceptorFn = (req, next) => {
+export const authInterceptor: HttpInterceptorFn = (request, next) => {
 
   const authService = inject(AuthService);
+  const router = inject(Router);
 
-  // Skip authentication endpoints
+  // Don't attach token to auth endpoints
   if (
-    req.url.endsWith('/auth/login') ||
-    req.url.endsWith('/auth/register')
+    request.url.includes('/auth/login') ||
+    request.url.includes('/auth/register')
   ) {
-    return next(req);
+    return next(request);
   }
 
   const token = authService.getToken();
 
-  if (!token) {
-    return next(req);
-  }
+  const authRequest = token
+    ? request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    : request;
 
-  const authenticatedRequest = req.clone({
-    setHeaders: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+  return next(authRequest).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        authService.clearSession();
+        router.navigate(['/login']);
+      }
 
-  return next(authenticatedRequest);
-
+      return throwError(() => error);
+    })
+  );
 };

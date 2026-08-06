@@ -7,6 +7,8 @@ import { Header } from '../../shared/components/header/header';
 import { MobileDrawer } from '../../shared/components/mobile-drawer/mobile-drawer';
 import { Navbar } from '../../shared/components/navbar/navbar';
 import { Footer } from '../../shared/components/footer/footer';
+import { RegisterModal } from '../../features/auth/pages/register/register';
+
 import { NavigationService } from '../../core/services/navigation.service';
 
 @Component({
@@ -15,19 +17,15 @@ import { NavigationService } from '../../core/services/navigation.service';
   imports: [
     RouterOutlet,
     TopBar,
-    AnnouncementBar,
     Header,
     MobileDrawer,
     Navbar,
-    Footer
+    Footer,
+    RegisterModal,
   ],
   templateUrl: './store-layout.html',
-  styleUrl: './store-layout.css'
+  styleUrl: './store-layout.css',
 })
 export class StoreLayout {
-
-    constructor(
-        public navigation: NavigationService
-    ) {}
-
+  constructor(public navigation: NavigationService) {}
 }

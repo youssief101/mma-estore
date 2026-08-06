@@ -1,4 +1,7 @@
-/* Abstracts */
+/* ==========================================================
+   Abstracts
+========================================================== */
+
 @import "./app/styles/abstracts/variables.css";
 @import "./app/styles/abstracts/colors.css";
 @import "./app/styles/abstracts/typography.css";
@@ -9,8 +12,33 @@
 @import "./app/styles/abstracts/breakpoints.css";
 @import "./app/styles/abstracts/z-index.css";
 
-/* Base */
+/* ==========================================================
+   Base
+========================================================== */
+
 @import "./app/styles/base/reset.css";
 @import "./app/styles/base/typography.css";
 @import "./app/styles/base/global.css";
 @import "./app/styles/base/utilities.css";
+
+/* ==========================================================
+   Layout
+========================================================== */
+
+/* @import "./app/styles/layout/form-container.css"; */
+@import "./app/styles/layout/form-grid.css";
+@import "./app/styles/layout/form-actions.css";
+@import "./app/styles/layout/form-sections.css";
+@import "./app/styles/layout/form-rows.css";
+@import "./app/styles/layout/form-labels.css";
+@import "./app/styles/layout/form-validation.css";
+@import "./app/styles/layout/form-accessibility.css";
+
+/* ==========================================================
+   Pages
+========================================================== */
+
+@import "./app/styles/pages/auth-layout.css";
+@import "./app/styles/pages/auth-card.css";
+@import "./app/styles/pages/auth-forms.css";
+@import "./app/styles/pages/auth-ux.css";

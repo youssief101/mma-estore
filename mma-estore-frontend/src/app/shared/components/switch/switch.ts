@@ -30,8 +30,7 @@ import {
 export class Switch
 implements ControlValueAccessor {
 
-  readonly label =
-    input('');
+  readonly label = input('');
 
   checked = false;
 
@@ -80,6 +79,24 @@ implements ControlValueAccessor {
     this.onChange(this.checked);
 
     this.onTouched();
+
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+
+    if (this.disabled) {
+
+      return;
+
+    }
+
+    if (event.key === ' ' || event.key === 'Enter') {
+
+      event.preventDefault();
+
+      this.toggle();
+
+    }
 
   }
 

@@ -21,8 +21,11 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
 export interface CurrentUserResponse {
   success: boolean;
   user: User;
 }
-

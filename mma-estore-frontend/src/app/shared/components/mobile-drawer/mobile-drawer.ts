@@ -17,44 +17,13 @@ export class MobileDrawer {
   constructor(public navigation: NavigationService) {}
 
   readonly categories = [
-    {
-      title: 'UFC',
-      link: '/products',
-    },
-
-    {
-      title: 'Venum',
-      link: '/venum',
-    },
-
-    {
-      title: 'Fighters',
-      link: '/fighters',
-    },
-
-    {
-      title: 'Events',
-      link: '/events',
-    },
-
-    {
-      title: 'T-Shirts',
-      link: '/t-shirts',
-    },
-
-    {
-      title: 'Hats',
-      link: '/hats',
-    },
-
-    {
-      title: 'Equipment',
-      link: '/equipment',
-    },
-
-    {
-      title: 'Sale',
-      link: '/sale',
-    },
+    { title: 'UFC', link: '/products' },
+    { title: 'Venum', link: '/venum' },
+    { title: 'Fighters', link: '/fighters' },
+    { title: 'Events', link: '/events' },
+    { title: 'T-Shirts', link: '/t-shirts' },
+    { title: 'Hats', link: '/hats' },
+    { title: 'Equipment', link: '/equipment' },
+    { title: 'Sale', link: '/sale' },
   ];
 }

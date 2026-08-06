@@ -1,172 +1,113 @@
-<div class="register-container">
+@if (isOpen) {
+  <div class="modal-overlay" (click)="onClose()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
 
-    <form
-        [formGroup]="registerForm"
-        (ngSubmit)="onSubmit()">
+      <!-- Close Button -->
+      <button type="button" class="modal-close" (click)="onClose()">
+        <i class="bi bi-x-lg"></i>
+      </button>
 
-        <h2>Create Account</h2>
+      @if (!showSuccess) {
+        <!-- UFC Store Style Header -->
+        <div class="modal-ufc-header">
+          <div class="modal-logo">
+            <img src="logos/logo.png" alt="MMA E-Store" />
+          </div>
 
-        <div class="mb-3">
+          <h2>Save 10% Instantly</h2>
+          <p class="modal-subtitle">*Offer valid for new customers only</p>
 
-            <label>Username</label>
-
-            <input
-                type="text"
-                class="form-control"
-                formControlName="username">
-
-            @if(registerForm.controls.username.touched &&
-                registerForm.controls.username.invalid){
-
-                <small class="text-danger">
-
-                    Username must be 3-30 lowercase letters, numbers or underscores.
-
-                </small>
-
-            }
-
-        </div>
-
-        <div class="mb-3">
-
-            <label>First Name</label>
-
-            <input
-                type="text"
-                class="form-control"
-                formControlName="firstName">
-
-            @if(registerForm.controls.firstName.touched &&
-                registerForm.controls.firstName.invalid){
-
-                <small class="text-danger">
-
-                    First name must be between 2 and 50 characters.
-
-                </small>
-
-            }
-
-        </div>
-
-        <div class="mb-3">
-
-            <label>Last Name</label>
-
-            <input
-                type="text"
-                class="form-control"
-                formControlName="lastName">
-
-            @if(registerForm.controls.lastName.touched &&
-                registerForm.controls.lastName.invalid){
-
-                <small class="text-danger">
-
-                    Last name must be between 2 and 50 characters.
-
-                </small>
-
-            }
-
-        </div>
-
-        <div class="mb-3">
-
-            <label>Email</label>
-
-            <input
-                type="email"
-                class="form-control"
-                formControlName="email">
-
-            @if(registerForm.controls.email.touched &&
-                registerForm.controls.email.invalid){
-
-                <small class="text-danger">
-
-                    Please enter a valid email address.
-
-                </small>
-
-            }
-
-        </div>
-
-        <div class="mb-3">
-
-            <label>Password</label>
-
-            <input
-                type="password"
-                class="form-control"
-                formControlName="password">
-
-            @if(registerForm.controls.password.touched &&
-                registerForm.controls.password.invalid){
-
-                <small class="text-danger">
-
-                    Password must contain uppercase, lowercase, number, special character and be at least 8 characters.
-
-                </small>
-
-            }
-
-        </div>
-
-        <div class="mb-3">
-
-            <label>Phone (Optional)</label>
-
-            <input
-                type="text"
-                class="form-control"
-                formControlName="phone">
-
-            @if(registerForm.controls.phone.touched &&
-                registerForm.controls.phone.invalid){
-
-                <small class="text-danger">
-
-                    Invalid phone number.
-
-                </small>
-
-            }
-
-        </div>
-
-        @if(errorMessage){
-
-            <div class="alert alert-danger">
-
-                {{ errorMessage }}
-
+          <div class="benefits-grid">
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <i class="bi bi-gem"></i>
+              </div>
+              <span>Exclusive Offers</span>
             </div>
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <i class="bi bi-tag-fill"></i>
+              </div>
+              <span>Instant 10% Off*</span>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <i class="bi bi-bell-fill"></i>
+              </div>
+              <span>New Gear Alerts</span>
+            </div>
+          </div>
+        </div>
 
-        }
+        <!-- Form (Same as before) -->
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="modal-form">
 
-        <button
-            class="btn btn-dark w-100"
+          <div class="form-row">
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="firstName"
+                placeholder="First Name"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                formControlName="lastName"
+                placeholder="Last Name"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input
+              type="email"
+              formControlName="email"
+              placeholder="Email Address"
+            />
+          </div>
+
+          <div class="form-group">
+            <input
+              type="password"
+              formControlName="password"
+              placeholder="Password"
+            />
+          </div>
+
+          @if (errorMessage) {
+            <div class="modal-error">{{ errorMessage }}</div>
+          }
+
+          <button
             type="submit"
-            [disabled]="loading">
-
-            @if(!loading){
-
-                Create Account
-
+            class="modal-submit"
+            [disabled]="loading"
+          >
+            @if (loading) {
+              <span class="loading-spinner"></span>
+              Creating...
+            } @else {
+              Create Account
             }
+          </button>
 
-            @if(loading){
+          <p class="modal-login">
+            Already have an account?
+            <a (click)="goToLogin()">Sign In</a>
+          </p>
+        </form>
+      } @else {
+        <!-- Success Message -->
+        <div class="modal-success">
+          <h2>Thanks for Signing Up.</h2>
+          <p>Your 10% off coupon will be auto applied during checkout</p>
+          <button class="modal-submit" (click)="onClose()">
+            Continue Shopping
+          </button>
+        </div>
+      }
 
-                Creating Account...
-
-            }
-
-        </button>
-
-    </form>
-
-</div>
+    </div>
+  </div>
+}

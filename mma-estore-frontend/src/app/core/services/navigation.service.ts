@@ -7,6 +7,8 @@ export class NavigationService {
 
   readonly drawerOpen = signal(false);
 
+  readonly registerModalOpen = signal(false);
+
   constructor() {
 
     effect(() => {
@@ -40,6 +42,18 @@ export class NavigationService {
   toggleDrawer(): void {
 
     this.drawerOpen.update(value => !value);
+
+  }
+
+  openRegisterModal(): void {
+
+    this.registerModalOpen.set(true);
+
+  }
+
+  closeRegisterModal(): void {
+
+    this.registerModalOpen.set(false);
 
   }
 

@@ -1,0 +1,111 @@
+/* ==========================================================
+   Authentication Card
+========================================================== */
+
+.auth-card {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: var(--space-6);
+
+  padding: var(--space-8);
+}
+
+/* ==========================================================
+   Header
+========================================================== */
+
+.auth-header {
+  text-align: center;
+}
+
+.auth-title {
+  margin: 0;
+
+  font-size: var(--fs-h2);
+
+  font-weight: 700;
+
+  color: var(--color-text);
+}
+
+.auth-subtitle {
+  margin-top: var(--space-2);
+
+  color: var(--color-text-muted);
+
+  line-height: 1.6;
+}
+
+/* ==========================================================
+   Body
+========================================================== */
+
+.auth-body {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: var(--space-5);
+}
+
+/* ==========================================================
+   Footer
+========================================================== */
+
+.auth-footer {
+  text-align: center;
+
+  color: var(--color-text-muted);
+
+  font-size: var(--fs-body-sm);
+}
+
+.auth-footer a {
+  color: var(--color-primary);
+
+  text-decoration: none;
+
+  font-weight: 600;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width: 991px) {
+  .auth-card {
+    padding: var(--space-6);
+  }
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 767px) {
+  .auth-card {
+    gap: var(--space-5);
+
+    padding: var(--space-5);
+  }
+
+  .auth-title {
+    font-size: var(--fs-h3);
+  }
+}
+
+/* ==========================================================
+   Small Mobile
+========================================================== */
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: var(--space-4);
+  }
+}

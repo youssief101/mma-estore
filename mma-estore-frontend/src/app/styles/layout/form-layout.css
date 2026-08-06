@@ -1,0 +1,51 @@
+/* ==========================================================
+   Form Container
+========================================================== */
+
+.form-container {
+  width: 100%;
+
+  max-width: 720px;
+
+  margin-inline: auto;
+
+  padding-inline: var(--space-6);
+}
+
+.form-container--sm {
+  max-width: 480px;
+}
+
+.form-container--md {
+  max-width: 720px;
+}
+
+.form-container--lg {
+  max-width: 960px;
+}
+
+.form-container--full {
+  max-width: 100%;
+}
+
+/* ==========================================================
+   Responsive
+========================================================== */
+
+@media (max-width: 991px) {
+  .form-container {
+    padding-inline: var(--space-5);
+  }
+}
+
+@media (max-width: 767px) {
+  .form-container {
+    padding-inline: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding-inline: var(--space-3);
+  }
+}

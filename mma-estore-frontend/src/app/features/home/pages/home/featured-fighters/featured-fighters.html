@@ -1,0 +1,59 @@
+<section class="featured-fighters">
+    <div class="section-header">
+        <h2>Featured Fighters</h2>
+        <a routerLink="/fighters">View All</a>
+    </div>
+
+    <!-- 1. Wait for fighters to load before rendering the Swiper -->
+    <ng-container *ngIf="!loading && fighters.length > 0; else loaderState">
+        
+        <swiper-container
+            #fightersSwiper
+            slides-per-view="4"
+            space-between="25"
+            navigation="true"
+            pagination="true"
+            loop="true"
+            autoplay-delay="3500"
+            autoplay-disable-on-interaction="false"
+            [attr.breakpoints]="JSON.stringify(swiperBreakpoints)">
+
+            <swiper-slide *ngFor="let fighter of fighters">
+                <div class="fighter-card">
+                    <div class="fighter-image-wrapper">
+                        <img
+                            class="fighter-image"
+                            [src]="getImage(fighter.image)"
+                            [alt]="fighter.firstName">
+
+                        <span class="champion-badge" *ngIf="fighter.champion">
+                            Champion
+                        </span>
+                    </div>
+
+                    <div class="fighter-info">
+                        <h3>
+                            {{ fighter.firstName }}
+                            {{ fighter.lastName }}
+                        </h3>
+                        <p>{{ fighter.weightClass }}</p>
+                        <small>{{ fighter.country }}</small>
+                        <button>Shop Collection →</button>
+                    </div>
+                </div>
+            </swiper-slide>
+
+        </swiper-container>
+    </ng-container>
+
+    <!-- 2. Loading and Empty templates -->
+    <ng-template #loaderState>
+        <div style="text-align: center; padding: 50px;" *ngIf="loading">
+            <p>Loading Champions...</p>
+        </div>
+        <div style="text-align: center; padding: 50px;" *ngIf="!loading && fighters.length === 0">
+            <p>No fighters available at the moment.</p>
+        </div>
+    </ng-template>
+
+</section>

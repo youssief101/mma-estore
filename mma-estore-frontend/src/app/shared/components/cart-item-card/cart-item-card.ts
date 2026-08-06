@@ -10,7 +10,7 @@ import { Card } from '../card/card';
 
 
 
-import { CartItemCardModel } from '../../models/cart-item-card.model';
+import { CartItemCardModel } from '../../../core/models/cart-item-card.model';
 
 @Component({
 

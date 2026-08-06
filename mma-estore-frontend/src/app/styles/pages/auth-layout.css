@@ -1,0 +1,67 @@
+/* ==========================================================
+   Authentication Page
+========================================================== */
+
+.auth-page {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  min-height: 100vh;
+
+  padding: var(--space-8);
+
+  background: var(--color-background);
+}
+
+/* ==========================================================
+   Wrapper
+========================================================== */
+
+.auth-wrapper {
+  width: 100%;
+
+  max-width: 460px;
+}
+
+/* ==========================================================
+   Tablet
+========================================================== */
+
+@media (max-width: 991px) {
+  .auth-page {
+    padding: var(--space-6);
+  }
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 767px) {
+  .auth-page {
+    align-items: flex-start;
+
+    padding: var(--space-5);
+
+    padding-top: var(--space-8);
+  }
+
+  .auth-wrapper {
+    max-width: 100%;
+  }
+}
+
+/* ==========================================================
+   Small Mobile
+========================================================== */
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: var(--space-4);
+
+    padding-top: var(--space-6);
+  }
+}

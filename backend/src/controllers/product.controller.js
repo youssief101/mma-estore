@@ -99,56 +99,43 @@ const searchProducts = async (req, res) => {
 
     }
 };// @Nassar: Filter products
+// @Nassar: Filter products - UPDATED for Multi-select and ID matching
 const filterProducts = async (req, res) => {
     try {
-
+        // Map the URL keys (left) to your Database keys (right)
         const {
-            categoryID,
-            brandID,
-            departmentID,
-            fighterID,
-            eventID,
-            audience,
+            category,    // from URL ?category=...
+            brand,       // from URL ?brand=...
+            department,
+            fighter,
+            event,
             onSale,
             minPrice,
             maxPrice
         } = req.query;
 
-        const filter = {
-            isActive: true
+        const filter = { isActive: true };
+
+        // Helper function to handle multi-select (comma separated strings)
+        const convertToQuery = (val) => {
+            if (!val) return null;
+            const ids = val.split(',');
+            return ids.length > 1 ? { $in: ids } : ids[0];
         };
 
-        if (categoryID)
-            filter.categoryID = categoryID;
+        // Assign to the correct Schema field names (categoryID, brandID, etc.)
+        if (category)   filter.categoryID   = convertToQuery(category);
+        if (brand)      filter.brandID      = convertToQuery(brand);
+        if (department) filter.departmentID = convertToQuery(department);
+        if (fighter)    filter.fighterID    = convertToQuery(fighter);
+        if (event)      filter.eventID      = convertToQuery(event);
 
-        if (brandID)
-            filter.brandID = brandID;
-
-        if (departmentID)
-            filter.departmentID = departmentID;
-
-        if (fighterID)
-            filter.fighterID = fighterID;
-
-        if (eventID)
-            filter.eventID = eventID;
-
-        if (audience)
-            filter.audience = audience;
-
-        if (onSale !== undefined)
-            filter.onSale = onSale === "true";
+        if (onSale !== undefined) filter.onSale = onSale === "true";
 
         if (minPrice || maxPrice) {
-
             filter.price = {};
-
-            if (minPrice)
-                filter.price.$gte = Number(minPrice);
-
-            if (maxPrice)
-                filter.price.$lte = Number(maxPrice);
-
+            if (minPrice) filter.price.$gte = Number(minPrice);
+            if (maxPrice) filter.price.$lte = Number(maxPrice);
         }
 
         const products = await Product.find(filter)
@@ -166,14 +153,8 @@ const filterProducts = async (req, res) => {
         });
 
     } catch (error) {
-
         console.error(error);
-
-        return res.status(500).json({
-            success: false,
-            message: "Internal server error."
-        });
-
+        return res.status(500).json({ success: false, message: "Internal server error." });
     }
 };
 // @Nassar: Get featured products
@@ -184,10 +165,12 @@ const getFeaturedProducts = async (req, res) => {
             isActive: true,
             "display.featured": true
         })
-            .populate("brandID", "name logo")
-            .populate("categoryID", "name")
-            .populate("departmentID", "name")
-            .sort({ createdAt: -1 });
+        .populate("brandID", "name logo")
+        .populate("categoryID", "name")
+        .populate("departmentID", "name")
+        .populate("fighterID", "firstName lastName nickname")
+        .populate("eventID", "name eventDate")
+        .sort({ createdAt: -1 });
 
         return res.status(200).json({
             success: true,

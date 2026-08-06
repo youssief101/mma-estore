@@ -1,84 +1,203 @@
-<div class="login-container">
+<div class="auth-page">
+  <div class="auth-wrapper">
+    <app-card>
+      <div class="auth-card">
+        <header class="auth-header">
+          <h1 class="auth-title">Welcome Back</h1>
 
-    <form
-        [formGroup]="loginForm"
-        (ngSubmit)="onSubmit()">
+          <p class="auth-subtitle">Sign in to continue shopping.</p>
+        </header>
 
-        <h2>Login</h2>
+        @if (accountLocked) {
+          <div class="auth-lockout">
+            <strong> Account Temporarily Locked </strong>
 
-        <div class="mb-3">
-
-            <label>Email</label>
-
-            <input
-                type="email"
-                class="form-control"
-                formControlName="email">
-
-            @if(loginForm.controls.email.touched &&
-                loginForm.controls.email.invalid){
-
-                <small class="text-danger">
-
-                    Please enter a valid email.
-
-                </small>
-
-            }
-
-        </div>
-
-        <div class="mb-3">
-
-            <label>Password</label>
-
-            <input
-                type="password"
-                class="form-control"
-                formControlName="password">
-
-            @if(loginForm.controls.password.touched &&
-                loginForm.controls.password.invalid){
-
-                <small class="text-danger">
-
-                    Password is required.
-
-                </small>
-
-            }
-
-        </div>
-
-        @if(errorMessage){
-
-            <div class="alert alert-danger">
-
-                {{ errorMessage }}
-
-            </div>
-
+            <p>
+              Too many failed login attempts. Try again in
+              {{ lockoutSeconds }}
+              seconds.
+            </p>
+          </div>
         }
 
-        <button
-            class="btn btn-dark w-100"
-            type="submit"
-            [disabled]="loading">
+        @if (securityMessage && !accountLocked) {
+          <div class="auth-security-alert">
+            <i class="bi bi-shield-exclamation"></i>
 
-            @if(!loading){
+            <span>
+              {{ securityMessage }}
+            </span>
+          </div>
+        }
 
-                Login
+        @if (suspiciousLogin) {
+          <div class="auth-security-alert">
+            <i class="bi bi-shield-lock"></i>
 
+            <span> Unusual login activity detected. Please verify your identity. </span>
+          </div>
+        }
+
+        @if (emailNotVerified) {
+          <div class="auth-verification-alert">
+            <i class="bi bi-envelope-check"></i>
+
+            <div>
+              <strong> Email Verification Required </strong>
+
+              <p>Your account has not been verified yet.</p>
+
+              <button type="button" class="verification-link" (click)="resendVerification()">
+                Resend Verification Email
+              </button>
+            </div>
+          </div>
+        }
+
+        <form
+          class="form-container auth-form"
+          [class.auth-loading]="loading || redirecting"
+          [formGroup]="loginForm"
+          (ngSubmit)="onSubmit()"
+          autocomplete="off"
+          novalidate
+        >
+          <!-- Email -->
+
+          <section class="form-section">
+            <label class="form-label"> Email Address </label>
+
+            <app-input type="email" formControlName="email" placeholder="Enter your email">
+            </app-input>
+
+            @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+              <div class="form-error">
+                @if (loginForm.controls.email.errors?.['required']) {
+                  Email is required.
+                }
+
+                @if (loginForm.controls.email.errors?.['email']) {
+                  Enter a valid email address.
+                }
+              </div>
             }
+          </section>
 
-            @if(loading){
+          <!-- Password -->
 
-                Logging in...
+          <section class="form-section">
+            <label class="form-label"> Password </label>
 
+            <app-password-input formControlName="password"> </app-password-input>
+
+            @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+              <div class="form-error">Password is required.</div>
             }
+          </section>
 
-        </button>
+          <!-- MFA -->
 
-    </form>
+          @if (requireMfa) {
+            <section class="form-section">
+              <label class="form-label"> Verification Code </label>
 
+              <app-input formControlName="mfaCode" placeholder="Enter 6-digit code"> </app-input>
+
+              <small class="auth-helper"> Enter the code from your authenticator app. </small>
+            </section>
+          }
+
+          <!-- Device Trust -->
+
+          <div class="device-trust-note">
+            <i class="bi bi-shield-check"></i>
+
+            <span> We only recommend remembering your account on a personal device. </span>
+          </div>
+
+          <!-- Remember Me -->
+
+          <section class="form-row">
+            <div class="remember-section">
+              <app-checkbox formControlName="rememberMe" label="Remember me"> </app-checkbox>
+
+              <small class="remember-helper"> Stay signed in on this device. </small>
+            </div>
+
+            <a routerLink="/forgot-password" class="form-link"> Forgot Password? </a>
+          </section>
+
+          <!-- Error -->
+
+          @if (errorMessage) {
+            <div class="auth-alert-error">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+
+              <span>
+                {{ errorMessage }}
+              </span>
+            </div>
+          }
+
+          <!-- Success -->
+
+          @if (successMessage) {
+            <div class="auth-alert-success">
+              {{ successMessage }}
+            </div>
+          }
+
+          <!-- Submit -->
+
+          <div class="form-actions">
+            <app-button type="submit" [disabled]="loading || redirecting || accountLocked">
+              @if (loading) {
+                <span class="auth-button-loading">
+                  <span class="auth-spinner"></span>
+
+                  Please wait...
+                </span>
+              } @else if (redirecting) {
+                Redirecting...
+              } @else {
+                Sign In
+              }
+            </app-button>
+          </div>
+        </form>
+
+        <!-- Social Login -->
+
+        <div class="auth-divider">
+          <span> or continue with </span>
+        </div>
+
+        <div class="social-auth">
+          <button type="button" class="social-btn">
+            <i class="bi bi-google"></i>
+
+            <span>Google</span>
+          </button>
+
+          <button type="button" class="social-btn">
+            <i class="bi bi-facebook"></i>
+
+            <span>Facebook</span>
+          </button>
+
+          <button type="button" class="social-btn">
+            <i class="bi bi-apple"></i>
+
+            <span>Apple</span>
+          </button>
+        </div>
+
+        <footer class="auth-footer">
+          Don't have an account?
+
+          <a routerLink="/register"> Create one </a>
+        </footer>
+      </div>
+    </app-card>
+  </div>
 </div>

@@ -177,7 +177,6 @@ const productSchema = new mongoose.Schema(
 
 // indexing multiple search hits for optimizing performance
 
-productSchema.index({ name: "text" });
 productSchema.index({ brandID: 1 });
 productSchema.index({ categoryID: 1 });
 productSchema.index({ departmentID: 1 });

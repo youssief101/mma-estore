@@ -1,0 +1,77 @@
+/* ==========================================================
+   Validation States
+========================================================== */
+
+.is-error,
+.is-success,
+.is-warning {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* ==========================================================
+   Error
+========================================================== */
+
+.is-error {
+  border-color: var(--color-danger) !important;
+
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.12);
+}
+
+/* ==========================================================
+   Success
+========================================================== */
+
+.is-success {
+  border-color: var(--color-success) !important;
+
+  box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.12);
+}
+
+/* ==========================================================
+   Warning
+========================================================== */
+
+.is-warning {
+  border-color: var(--color-warning) !important;
+
+  box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.12);
+}
+
+/* ==========================================================
+   Validation Message
+========================================================== */
+
+.validation-message {
+  display: block;
+
+  margin-top: var(--space-2);
+
+  font-size: var(--fs-body-sm);
+
+  line-height: 1.4;
+}
+
+.validation-message.error {
+  color: var(--color-danger);
+}
+
+.validation-message.success {
+  color: var(--color-success);
+}
+
+.validation-message.warning {
+  color: var(--color-warning);
+}
+
+/* ==========================================================
+   Mobile
+========================================================== */
+
+@media (max-width: 767px) {
+  .validation-message {
+    font-size: var(--fs-caption);
+  }
+}

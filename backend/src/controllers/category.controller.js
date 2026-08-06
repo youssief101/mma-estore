@@ -203,7 +203,7 @@ const deleteCategory = async (req, res) => {
 
         const productsCount = await Product.countDocuments({
             categoryID: category._id,
-            active: true
+            isActive: true
         });
 
         if (productsCount > 0) {
