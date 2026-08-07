@@ -18,7 +18,7 @@ const {
     getUserById,
     updateUserStatus,
     deleteUser
-} = require("../controllers/User.controller");
+} = require("../controllers/user.controller");
 
 const {
     validateUpdateProfile,

@@ -27,7 +27,7 @@ const {
     createProduct,
     updateProduct,
     deleteProduct
-} = require("../controllers/Product.controller");
+} = require("../controllers/product.controller");
 
 // ============================================
 // Public Routes

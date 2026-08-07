@@ -3,7 +3,10 @@ const express = require("express");
 const {
     register,
     login,
-    getCurrentUser
+    socialLogin,
+    getCurrentUser,
+    forgotPassword,
+    resetPassword
 } = require("../controllers/auth.controller");
 
 const authenticate = require("../middlewares/auth.middleware");
@@ -33,11 +36,29 @@ router.post(
     login
 );
 
+// Social Login
+router.post(
+    "/social-login",
+    socialLogin
+);
+
 // Current User
 router.get(
     "/me",
     authenticate,
     getCurrentUser
+);
+
+// Forgot Password
+router.post(
+    "/forgot-password",
+    forgotPassword
+);
+
+// Reset Password
+router.post(
+    "/reset-password",
+    resetPassword
 );
 
 module.exports = router;
