@@ -19,8 +19,7 @@ import {
 export class UserService {
   private http = inject(HttpClient);
 
-  private apiUrl =
-    'http://localhost:3000/api/users';
+  private apiUrl = '/api/users';
 
   getProfile(): Observable<ProfileResponse> {
     return this.http.get<ProfileResponse>(

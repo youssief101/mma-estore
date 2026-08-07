@@ -2,6 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+interface NavCategory {
+  title: string;
+  link: string;
+  queryParams?: Record<string, any>;
+}
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -14,64 +20,59 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './navbar.css'
 })
 export class Navbar {
-
-  categories = [
-
+  categories: NavCategory[] = [
     {
       title: 'UFC Venum',
-      link: '/venum'
+      link: '/products',
+      queryParams: { brand: 'Venum' }
     },
-
     {
       title: 'Fighters',
       link: '/fighters'
     },
-
     {
       title: 'Events',
       link: '/events'
     },
-
     {
       title: 'Apparel',
-      link: '/products/apparel'
+      link: '/products',
+      queryParams: { category: 'Apparel' }
     },
-
     {
       title: 'T-Shirts',
-      link: '/products/t-shirts'
+      link: '/products',
+      queryParams: { category: 'T-Shirts' }
     },
-
     {
       title: 'Hats',
-      link: '/products/hats'
+      link: '/products',
+      queryParams: { category: 'Hats' }
     },
-
     {
       title: 'Equipment',
-      link: '/products/equipment'
+      link: '/products',
+      queryParams: { category: 'Equipment' }
     },
-
     {
       title: 'Replica Belts',
-      link: '/products/replica-belts'
+      link: '/products',
+      queryParams: { category: 'Replica Belts' }
     },
-
     {
       title: 'Collectibles',
-      link: '/products/collectibles'
+      link: '/products',
+      queryParams: { category: 'Collectibles' }
     },
-
     {
       title: 'Home & Office',
-      link: '/products/home-office'
+      link: '/products',
+      queryParams: { category: 'Home & Office' }
     },
-
     {
       title: 'Sale',
-      link: '/sale'
+      link: '/products',
+      queryParams: { onSale: 'true' }
     }
-
   ];
-
 }

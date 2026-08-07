@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-customer-layout',
   imports: [],
   templateUrl: './customer-layout.html',
-  styleUrl: './customer-layout.css',
 })
 export class CustomerLayout {
 

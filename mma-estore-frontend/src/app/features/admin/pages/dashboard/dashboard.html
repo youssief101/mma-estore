@@ -1,1 +1,238 @@
-<p>dashboard works!</p>
+<div class="admin-page">
+  <div class="admin-header">
+    <div>
+      <span class="eyebrow">Store Operations</span>
+      <h1>Admin Control Panel</h1>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/products" class="store-link"><i class="bi bi-shop"></i> View Storefront</a>
+    </div>
+  </div>
+
+  <!-- STATS OVERVIEW CARDS -->
+  <section class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-icon revenue"><i class="bi bi-currency-dollar"></i></div>
+      <div class="stat-data">
+        <span class="stat-title">Total Revenue</span>
+        <span class="stat-value">${{ totalRevenue.toFixed(2) }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orders"><i class="bi bi-bag-check-fill"></i></div>
+      <div class="stat-data">
+        <span class="stat-title">Total Orders</span>
+        <span class="stat-value">{{ orders.length }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon products"><i class="bi bi-box-seam-fill"></i></div>
+      <div class="stat-data">
+        <span class="stat-title">Active Products</span>
+        <span class="stat-value">{{ products.length }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon fighters"><i class="bi bi-person-badge-fill"></i></div>
+      <div class="stat-data">
+        <span class="stat-title">Fighters & Brands</span>
+        <span class="stat-value">{{ fighters.length + brands.length }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB NAVIGATION -->
+  <div class="admin-tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'products'" (click)="switchTab('products')">
+      <i class="bi bi-grid-fill"></i> Products
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'orders'" (click)="switchTab('orders')">
+      <i class="bi bi-receipt"></i> Orders
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'categories'" (click)="switchTab('categories')">
+      <i class="bi bi-tags-fill"></i> Categories
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'fighters'" (click)="switchTab('fighters')">
+      <i class="bi bi-person-lines-fill"></i> Fighters
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'brands'" (click)="switchTab('brands')">
+      <i class="bi bi-shield-fill"></i> Brands
+    </button>
+  </div>
+
+  <!-- TAB CONTENT: PRODUCTS -->
+  @if (activeTab === 'products') {
+    <div class="tab-panel">
+      <div class="panel-toolbar">
+        <div class="search-input">
+          <i class="bi bi-search"></i>
+          <input type="text" [(ngModel)]="searchTerm" placeholder="Search products...">
+        </div>
+        <button class="primary-add-btn" (click)="openAddProductModal()">
+          <i class="bi bi-plus-lg"></i> Add New Product
+        </button>
+      </div>
+
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product Name</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of filteredProducts; track product._id) {
+              <tr>
+                <td>
+                  <img [src]="product.images?.[0]?.url || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100'" class="table-thumb">
+                </td>
+                <td>
+                  <strong>{{ product.name }}</strong>
+                </td>
+                <td class="price-cell">${{ product.price }}</td>
+                <td><span class="stock-badge">In Stock</span></td>
+                <td class="actions-cell">
+                  <button class="icon-btn edit" (click)="openEditProductModal(product)"><i class="bi bi-pencil-fill"></i> Edit</button>
+                  <button class="icon-btn delete" (click)="deleteProduct(product._id)"><i class="bi bi-trash-fill"></i> Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- TAB CONTENT: ORDERS -->
+  @if (activeTab === 'orders') {
+    <div class="tab-panel">
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Update Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of orders; track order._id) {
+              <tr>
+                <td><strong>#{{ order.orderNumber }}</strong></td>
+                <td>{{ order.createdAt | date:'shortDate' }}</td>
+                <td>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</td>
+                <td class="price-cell">${{ order.totalAmount.toFixed(2) }}</td>
+                <td>
+                  <span class="status-pill" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span>
+                </td>
+                <td>
+                  <select [value]="order.status" (change)="updateOrderStatus(order, $any($event.target).value)" class="status-select">
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- TAB CONTENT: CATEGORIES -->
+  @if (activeTab === 'categories') {
+    <div class="tab-panel">
+      <div class="grid-cards">
+        @for (cat of categories; track cat._id) {
+          <div class="simple-card">
+            <h3>{{ cat.name }}</h3>
+            <p>{{ cat.description || 'Category' }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- TAB CONTENT: FIGHTERS -->
+  @if (activeTab === 'fighters') {
+    <div class="tab-panel">
+      <div class="grid-cards">
+        @for (f of fighters; track f._id) {
+          <div class="simple-card">
+            <h3>{{ f.firstName }} {{ f.lastName }}</h3>
+            <p>Weightclass: {{ f.weightClass || 'N/A' }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- TAB CONTENT: BRANDS -->
+  @if (activeTab === 'brands') {
+    <div class="tab-panel">
+      <div class="grid-cards">
+        @for (b of brands; track b._id) {
+          <div class="simple-card">
+            <h3>{{ b.name }}</h3>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- EDIT / CREATE PRODUCT MODAL -->
+  @if (showProductModal && editingProduct) {
+    <div class="modal-backdrop">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>{{ editingProduct._id ? 'Edit Product' : 'Create New Product' }}</h2>
+          <button class="close-modal" (click)="showProductModal = false">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" [(ngModel)]="editingProduct.name">
+          </div>
+
+          <div class="form-row duo">
+            <div class="form-group">
+              <label>Price ($) *</label>
+              <input type="number" [(ngModel)]="editingProduct.price">
+            </div>
+            <div class="form-group">
+              <label>Original Price ($)</label>
+              <input type="number" [(ngModel)]="editingProduct.oldPrice">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="text" [(ngModel)]="editingProduct.images![0].url">
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="editingProduct.description" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" (click)="showProductModal = false">Cancel</button>
+          <button class="save-btn" (click)="saveProduct()">Save Product</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

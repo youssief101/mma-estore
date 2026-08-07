@@ -1,1 +1,141 @@
-<p>cart works!</p>
+<div class="cart-page">
+  <div class="breadcrumb">
+    <a routerLink="/home">Home</a> &nbsp;/&nbsp; <span>Shopping Cart</span>
+  </div>
+
+  <h1 class="page-title">Shopping Cart</h1>
+
+  @if (cartService.items().length === 0) {
+    <div class="empty-cart">
+      <div class="empty-icon-circle">
+        <i class="bi bi-cart-x"></i>
+      </div>
+      <h2>Your cart is currently empty</h2>
+      <p>Looks like you haven't added any fight gear or apparel yet.</p>
+      <a routerLink="/products" class="shop-now-btn">
+        <i class="bi bi-bag-fill"></i> Explore Products
+      </a>
+    </div>
+  } @else {
+    <div class="cart-layout">
+      <!-- CART ITEMS LIST -->
+      <div class="cart-items-section">
+        <div class="cart-header-row">
+          <span>Item Details</span>
+          <span>Quantity</span>
+          <span>Total</span>
+        </div>
+
+        <div class="items-list">
+          @for (item of cartService.items(); track item.product._id + item.selectedSize) {
+            <div class="cart-item-row">
+              <div class="product-col">
+                <img [src]="getItemImage(item.product)" [alt]="item.product.name" class="item-img">
+                <div class="item-details">
+                  <a [routerLink]="['/products', item.product._id]" class="item-title">{{ item.product.name }}</a>
+                  <div class="item-meta">
+                    @if (item.selectedSize) {
+                      <span class="size-badge">Size: {{ item.selectedSize }}</span>
+                    }
+                    <span class="unit-price">${{ item.product.price }} each</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qty-col">
+                <div class="quantity-picker">
+                  <button type="button" (click)="updateQty(item, -1)">-</button>
+                  <span>{{ item.quantity }}</span>
+                  <button type="button" (click)="updateQty(item, 1)">+</button>
+                </div>
+              </div>
+
+              <div class="total-col">
+                <span class="item-total-price">${{ (item.product.price * item.quantity).toFixed(2) }}</span>
+                <button type="button" class="remove-btn" (click)="removeItem(item)" title="Remove item">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="cart-actions-row">
+          <a routerLink="/products" class="continue-btn">
+            <i class="bi bi-arrow-left"></i> Continue Shopping
+          </a>
+          <button type="button" class="clear-cart-btn" (click)="cartService.clearCart()">
+            Clear Cart
+          </button>
+        </div>
+      </div>
+
+      <!-- ORDER SUMMARY SIDEBAR -->
+      <aside class="summary-section">
+        <div class="summary-card">
+          <h2 class="summary-title">Order Summary</h2>
+
+          <div class="summary-row">
+            <span>Subtotal ({{ cartService.itemCount() }} items)</span>
+            <span>${{ cartService.subtotal().toFixed(2) }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Estimated Shipping</span>
+            @if (cartService.shipping() === 0) {
+              <span class="free-text">FREE</span>
+            } @else {
+              <span>${{ cartService.shipping().toFixed(2) }}</span>
+            }
+          </div>
+
+          <div class="summary-row">
+            <span>Estimated Tax (8%)</span>
+            <span>${{ cartService.tax().toFixed(2) }}</span>
+          </div>
+
+          @if (finalDiscountAmount > 0) {
+            <div class="summary-row discount-row">
+              <span>Promo Discount ({{ discountPercent }}%)</span>
+              <span class="discount-val">-${{ finalDiscountAmount.toFixed(2) }}</span>
+            </div>
+          }
+
+          <!-- PROMO CODE -->
+          <div class="promo-box">
+            <label for="promo-input">Promo Code</label>
+            <div class="promo-input-group">
+              <input 
+                id="promo-input" 
+                type="text" 
+                [(ngModel)]="promoCode" 
+                placeholder="Enter UFC10"
+                (keyup.enter)="applyPromoCode()">
+              <button type="button" (click)="applyPromoCode()">Apply</button>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="summary-row total-row">
+            <span>Total</span>
+            <span class="grand-total-val">${{ grandTotal.toFixed(2) }}</span>
+          </div>
+
+          <a routerLink="/checkout" class="checkout-btn">
+            Proceed to Checkout <i class="bi bi-arrow-right"></i>
+          </a>
+
+          <div class="payment-badges">
+            <span><i class="bi bi-shield-lock-fill"></i> Guaranteed Safe Checkout</span>
+            <div class="icons">
+              <i class="bi bi-credit-card-2-front-fill"></i>
+              <i class="bi bi-paypal"></i>
+              <i class="bi bi-apple"></i>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  }
+</div>

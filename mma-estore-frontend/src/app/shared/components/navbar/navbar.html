@@ -1,27 +1,17 @@
 <nav class="store-navbar">
-
     <div class="container">
-
         <ul class="nav-list">
-
             @for(category of categories; track category.title){
-
                 <li>
-
                     <a
                         [routerLink]="category.link"
-                        routerLinkActive="active">
-
+                        [queryParams]="category.queryParams || {}"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: false }">
                         {{ category.title }}
-
                     </a>
-
                 </li>
-
             }
-
         </ul>
-
     </div>
-
 </nav>

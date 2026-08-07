@@ -1,0 +1,8 @@
+{
+  "name": "MMA E-Store",
+  "description": "E-commerce platform and REST API for MMA and combat sports gear and apparel",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

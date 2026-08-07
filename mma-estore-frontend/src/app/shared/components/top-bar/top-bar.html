@@ -1,21 +1,35 @@
 <div class="top-bar">
   <div class="top-bar-left">
-     <span class="top-bar-promo" (click)="openRegister.emit()">SIGN UP & SAVE 10%</span>
+    @if (!authService.isLoggedIn()) {
+      <span class="top-bar-promo" (click)="openRegister.emit()">SIGN UP & SAVE 10%</span>
+    } @else {
+      <span class="top-bar-welcome">Welcome, {{ authService.currentUser()?.firstName || 'User' }}</span>
+    }
   </div>
 
   <div class="top-bar-right">
+    <a routerLink="/products" class="shop-now-top">Shop Now</a>
+
     <a routerLink="/gift-cards">Gift Cards</a>
 
     <a routerLink="/orders">Find Your Order</a>
 
     <a routerLink="/help">Help</a>
 
-    <a routerLink="/account">My Account</a>
+    <a routerLink="/profile">My Account</a>
+
+    @if (authService.hasRole('admin')) {
+      <a routerLink="/admin" class="admin-link">
+        <i class="bi bi-shield-lock-fill me-1"></i> Admin Dashboard
+      </a>
+    }
 
     <a routerLink="/cart" class="cart-link">
       <i class="bi bi-cart3"></i>
-
       <span>Cart</span>
+      @if (cartService.itemCount() > 0) {
+        <span class="cart-badge">{{ cartService.itemCount() }}</span>
+      }
     </a>
   </div>
 </div>

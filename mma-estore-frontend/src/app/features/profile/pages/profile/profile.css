@@ -1,53 +1,53 @@
-.profile-page {
-  max-width: 900px;
-
-  margin: 40px auto;
-
-  padding: 20px;
+.profile-container {
+  background-color: #f8fafc;
+  min-height: 80vh;
 }
 
-.profile-card {
-  background: #ffffff;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 12px;
-
-  padding: 24px;
-
-  margin-bottom: 24px;
+.profile-banner {
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  border-bottom: 3px solid #d20a11;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-.profile-card h2 {
-  margin-bottom: 20px;
-}
-
-form {
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  background: #d20a11;
+  color: #ffffff;
+  border-radius: 50%;
   display: flex;
-
-  flex-direction: column;
-
-  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(210, 10, 17, 0.4);
 }
 
-input {
-  width: 100%;
-
-  padding: 12px;
-
-  border: 1px solid #d1d5db;
-
-  border-radius: 8px;
+.fs-7 {
+  font-size: 0.82rem;
 }
 
-button {
-  width: fit-content;
-
-  padding: 12px 20px;
-
+.profile-tabs .list-group-item {
   border: none;
-
-  border-radius: 8px;
-
+  border-left: 4px solid transparent;
+  color: #4b5563;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-tabs .list-group-item:hover {
+  background-color: #f1f5f9;
+  color: #111827;
+}
+
+.profile-tabs .list-group-item.active {
+  background-color: #fef2f2;
+  color: #d20a11;
+  border-left-color: #d20a11;
+}
+
+.form-control:focus {
+  border-color: #d20a11;
+  box-shadow: 0 0 0 3px rgba(210, 10, 17, 0.15);
 }

@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 import {
   Category,
@@ -14,7 +15,7 @@ import {
 export class CategoryService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'http://localhost:3000/api/categories';
+  private readonly apiUrl = `${environment.apiUrl}/categories`;
 
   /**
    * GET /categories
