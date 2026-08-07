@@ -1,1 +1,126 @@
-<p>fighters works!</p>
+<div class="fighters-container py-5">
+  <div class="container">
+    
+    <!-- Hero Banner -->
+    <div class="fighters-hero p-4 p-md-5 rounded-4 text-white mb-5 position-relative overflow-hidden">
+      <div class="row align-items-center position-relative z-1">
+        <div class="col-lg-8">
+          <span class="badge bg-danger text-uppercase px-3 py-2 mb-3 tracking-wider">Official Roster</span>
+          <h1 class="display-5 fw-extrabold mb-3 text-uppercase">UFC Athletes & Fighters</h1>
+          <p class="lead mb-4 opacity-90">Explore elite UFC champions and contenders. Select any fighter to browse their official event kits, walkout shirts, and fight gear.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 p-md-4 mb-4">
+      <div class="row g-3 align-items-center">
+        <div class="col-lg-5">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+            <input 
+              type="text" 
+              class="form-control border-start-0 ps-0 shadow-none" 
+              placeholder="Search fighters by name, nickname, country..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearch()">
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="d-flex align-items-center gap-2">
+            <label class="form-label mb-0 fw-semibold fs-7 text-muted text-nowrap">Division:</label>
+            <select class="form-select shadow-none" [(ngModel)]="selectedWeightClass" (change)="applyFilters()">
+              @for (wc of weightClasses; track wc) {
+                <option [value]="wc">{{ wc === 'all' ? 'All Weight Classes' : wc }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="col-lg-3 text-lg-end">
+          <button 
+            type="button" 
+            class="btn btn-sm font-weight-bold px-3 py-2"
+            [class.btn-danger]="championsOnly"
+            [class.btn-outline-secondary]="!championsOnly"
+            (click)="toggleChampions()">
+            <i class="bi bi-trophy-fill me-1"></i> Champions Only
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 text-muted fw-bold fs-5">Loading UFC Fighters Roster...</p>
+      </div>
+    } @else if (errorMessage) {
+      <div class="alert alert-danger rounded-3 p-4 my-4" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+        <span>{{ errorMessage }}</span>
+        <button class="btn btn-outline-danger btn-sm ms-3" (click)="loadFighters()">Retry</button>
+      </div>
+    } @else {
+      <!-- Roster Grid -->
+      <div class="row g-4">
+        @for (fighter of filteredFighters; track fighter._id) {
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 fighter-card border-0 shadow-sm rounded-4 overflow-hidden" (click)="viewFighterGear(fighter)">
+              <div class="fighter-img-wrapper position-relative">
+                <img [src]="getFighterImage(fighter)" [alt]="fighter.firstName + ' ' + fighter.lastName" class="fighter-img">
+                
+                @if (fighter.champion) {
+                  <span class="champion-badge position-absolute top-0 end-0 m-3 shadow-sm">
+                    <i class="bi bi-trophy-fill me-1"></i> Champion
+                  </span>
+                }
+
+                @if (fighter.ranking) {
+                  <span class="ranking-badge position-absolute top-0 start-0 m-3 shadow-sm">
+                    #{{ fighter.ranking }}
+                  </span>
+                }
+              </div>
+
+              <div class="card-body p-3 d-flex flex-column justify-content-between">
+                <div>
+                  <div class="d-flex align-items-center justify-content-between mb-1">
+                    <span class="text-muted fs-8 fw-semibold text-uppercase tracking-wider">{{ fighter.weightClass || 'UFC Fighter' }}</span>
+                    <span class="badge bg-light text-dark border fs-8">{{ fighter.country }}</span>
+                  </div>
+
+                  <h5 class="card-title fw-bold text-dark mb-1">
+                    {{ fighter.firstName }} {{ fighter.lastName }}
+                  </h5>
+
+                  @if (fighter.nickname) {
+                    <p class="text-danger fw-semibold fs-7 mb-3">"{{ fighter.nickname }}"</p>
+                  }
+                </div>
+
+                <div class="mt-3 pt-2 border-top text-center">
+                  <button type="button" class="btn btn-danger btn-sm w-100 font-weight-bold" (click)="viewFighterGear(fighter, $event)">
+                    Shop Official Gear <i class="bi bi-arrow-right ms-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <div class="col-12 text-center py-5">
+            <div class="p-5 bg-white rounded-4 shadow-sm">
+              <i class="bi bi-people fs-1 text-muted d-block mb-3"></i>
+              <h4 class="fw-bold text-dark mb-2">No Fighters Found</h4>
+              <p class="text-muted mb-4">No UFC fighters matched your filter criteria.</p>
+              <button class="btn btn-outline-danger" (click)="searchTerm = ''; selectedWeightClass = 'all'; championsOnly = false; applyFilters()">Reset Filters</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+</div>

@@ -1,1 +1,177 @@
-<p>product-details works!</p>
+<div class="product-details-page">
+  @if (loading) {
+    <!-- SKELETON PLACEHOLDER -->
+    <div class="skeleton-layout">
+      <div class="skeleton-breadcrumb"></div>
+      <div class="details-grid">
+        <div class="skeleton-gallery">
+          <div class="skeleton-main-img"></div>
+          <div class="skeleton-thumbs">
+            <div class="thumb-box"></div>
+            <div class="thumb-box"></div>
+            <div class="thumb-box"></div>
+          </div>
+        </div>
+        <div class="skeleton-info">
+          <div class="skeleton-title"></div>
+          <div class="skeleton-price"></div>
+          <div class="skeleton-desc"></div>
+          <div class="skeleton-desc short"></div>
+          <div class="skeleton-btn"></div>
+        </div>
+      </div>
+    </div>
+  } @else if (notFound || !product) {
+    <!-- 404 NOT FOUND STATE -->
+    <div class="error-container">
+      <div class="error-box">
+        <i class="bi bi-exclamation-octagon error-icon"></i>
+        <h2>404 — Product Not Found</h2>
+        <p>The product you are looking for does not exist or may have been removed.</p>
+        <a routerLink="/products" class="back-btn">Back to Store</a>
+      </div>
+    </div>
+  } @else {
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb">
+      <a routerLink="/home">Home</a> &nbsp;/&nbsp;
+      <a routerLink="/products">Products</a> &nbsp;/&nbsp;
+      @if (product.categoryID) {
+        <a [routerLink]="['/products']" [queryParams]="{ category: product.categoryID._id }">{{ product.categoryID.name }}</a> &nbsp;/&nbsp;
+      }
+      <span class="active">{{ product.name }}</span>
+    </nav>
+
+    <!-- MAIN PRODUCT SECTION -->
+    <div class="product-main-grid">
+      <!-- IMAGE GALLERY -->
+      <div class="gallery-column">
+        <div class="main-image-wrapper">
+          @if (product.onSale && product.discountPercentage) {
+            <span class="sale-badge">-{{ product.discountPercentage }}% OFF</span>
+          }
+          <img [src]="getImageUrl(product.images, selectedImageIndex)" [alt]="product.name">
+        </div>
+
+        @if (product.images && product.images.length > 1) {
+          <div class="thumbnails-row">
+            @for (img of product.images; track $index) {
+              <button 
+                type="button" 
+                class="thumb-btn" 
+                [class.active]="$index === selectedImageIndex"
+                (click)="selectImage($index)">
+                <img [src]="getImageUrl(product.images, $index)" [alt]="product.name">
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- PRODUCT INFO -->
+      <div class="info-column">
+        <div class="brand-row">
+          @if (product.brandID) {
+            <span class="meta-tag brand">{{ product.brandID.name }}</span>
+          }
+          @if (product.fighterID) {
+            <span class="meta-tag fighter"><i class="bi bi-person-fill"></i> {{ product.fighterID.firstName }} {{ product.fighterID.lastName }}</span>
+          }
+          @if (product.eventID) {
+            <span class="meta-tag event"><i class="bi bi-trophy-fill"></i> {{ product.eventID.name }}</span>
+          }
+        </div>
+
+        <h1 class="product-name">{{ product.name }}</h1>
+
+        <div class="price-stock-row">
+          <div class="price-box">
+            <span class="current-price">${{ product.price }}</span>
+            @if (product.oldPrice) {
+              <span class="old-price">${{ product.oldPrice }}</span>
+            }
+          </div>
+          <div class="stock-badge" [class.in-stock]="true">
+            <i class="bi bi-check-circle-fill"></i> In Stock & Ready to Ship
+          </div>
+        </div>
+
+        <p class="description">{{ product.description }}</p>
+
+        <!-- SIZE SELECTOR -->
+        <div class="option-section">
+          <label class="option-label">Select Size:</label>
+          <div class="size-pills">
+            @for (size of availableSizes; track size) {
+              <button 
+                type="button" 
+                class="size-pill" 
+                [class.selected]="selectedSize === size"
+                (click)="selectSize(size)">
+                {{ size }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- QUANTITY & ADD TO CART -->
+        <div class="actions-section">
+          <div class="quantity-picker">
+            <button type="button" class="qty-btn" (click)="updateQuantity(-1)" [disabled]="quantity <= 1">-</button>
+            <span class="qty-val">{{ quantity }}</span>
+            <button type="button" class="qty-btn" (click)="updateQuantity(1)">+</button>
+          </div>
+
+          <button type="button" class="add-to-cart-btn" (click)="addToCart()">
+            <i class="bi bi-cart-check-fill"></i> Add to Cart
+          </button>
+        </div>
+
+        <!-- PRODUCT HIGHLIGHTS & SHIPPING -->
+        <div class="highlights-box">
+          <div class="highlight-item">
+            <i class="bi bi-truck"></i>
+            <div>
+              <strong>Free Shipping</strong>
+              <span>On official gear orders over $100</span>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <i class="bi bi-shield-check"></i>
+            <div>
+              <strong>100% Authentic Gear</strong>
+              <span>Official MMA & Fighter licensed product</span>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <div>
+              <strong>Easy Returns</strong>
+              <span>30-day hassle-free return policy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED PRODUCTS SECTION -->
+    @if (relatedProducts.length > 0) {
+      <section class="related-products-section">
+        <h2 class="section-title">You May Also Like</h2>
+        <div class="related-grid">
+          @for (rel of relatedProducts; track rel._id) {
+            <div class="related-card" [routerLink]="['/products', rel._id]">
+              <div class="rel-img-box">
+                <img [src]="getImageUrl(rel.images, 0)" [alt]="rel.name">
+              </div>
+              <div class="rel-info">
+                <h3>{{ rel.name }}</h3>
+                <p class="rel-price">${{ rel.price }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  }
+</div>

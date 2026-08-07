@@ -1,1 +1,104 @@
-<p>gift-cards works!</p>
+<div class="gift-cards-page">
+  <div class="breadcrumb">
+    <a routerLink="/home">Home</a> &nbsp;/&nbsp; <span>E-Gift Cards</span>
+  </div>
+
+  <div class="hero-section">
+    <div class="hero-content">
+      <span class="eyebrow">The Ultimate Fight Fan Gift</span>
+      <h1>MMA Official Digital Gift Cards</h1>
+      <p>Give the gift of premium fight gear, fighter apparel, and exclusive event merchandise.</p>
+    </div>
+  </div>
+
+  <div class="gift-grid">
+    <!-- LEFT: GIFT CARD CREATOR -->
+    <div class="creator-card">
+      <h2>Purchase E-Gift Card</h2>
+
+      <!-- DENOMINATION PICKER -->
+      <div class="form-section">
+        <label class="section-label">Select Amount ($USD)</label>
+        <div class="amount-pills">
+          <button type="button" class="amount-pill" [class.selected]="selectedAmount === 25" (click)="selectAmount(25)">$25</button>
+          <button type="button" class="amount-pill" [class.selected]="selectedAmount === 50" (click)="selectAmount(50)">$50</button>
+          <button type="button" class="amount-pill" [class.selected]="selectedAmount === 100" (click)="selectAmount(100)">$100</button>
+          <button type="button" class="amount-pill" [class.selected]="selectedAmount === 250" (click)="selectAmount(250)">$250</button>
+          <button type="button" class="amount-pill" [class.selected]="selectedAmount === -1" (click)="selectAmount(-1)">Custom</button>
+        </div>
+
+        @if (selectedAmount === -1) {
+          <div class="custom-amount-input">
+            <span class="currency-symbol">$</span>
+            <input type="number" [(ngModel)]="customAmount" placeholder="Enter amount (min $10)" min="10">
+          </div>
+        }
+      </div>
+
+      <!-- RECIPIENT FORM -->
+      <form class="gift-form">
+        <div class="form-row duo">
+          <div class="form-group">
+            <label for="recName">Recipient Name</label>
+            <input id="recName" type="text" [(ngModel)]="recipientName" name="recName" placeholder="Alex Silva">
+          </div>
+          <div class="form-group">
+            <label for="recEmail">Recipient Email *</label>
+            <input id="recEmail" type="email" [(ngModel)]="recipientEmail" name="recEmail" required placeholder="alex@example.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="senderName">Your Name</label>
+          <input id="senderName" type="text" [(ngModel)]="senderName" name="senderName" placeholder="Your Name">
+        </div>
+
+        <div class="form-group">
+          <label for="msg">Personal Message (Optional)</label>
+          <textarea id="msg" [(ngModel)]="message" name="msg" rows="3" placeholder="Happy Birthday! Enjoy the new fight gear!"></textarea>
+        </div>
+
+        <button type="button" class="add-cart-btn" (click)="addGiftCardToCart()">
+          <i class="bi bi-cart-plus-fill"></i> Add E-Gift Card to Cart (${{ finalAmount }})
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT: GIFT CARD PREVIEW & BALANCE CHECKER -->
+    <div class="sidebar-column">
+      <!-- PREVIEW CARD -->
+      <div class="card-preview">
+        <div class="gc-badge">OFFICIAL STORE</div>
+        <div class="gc-brand">MMA E-STORE</div>
+        <div class="gc-amount">${{ finalAmount }}</div>
+        <div class="gc-footer">Digital E-Gift Card</div>
+      </div>
+
+      <!-- CHECK BALANCE -->
+      <div class="balance-card">
+        <h3>Check Gift Card Balance</h3>
+        <p>Have an existing gift card code? Check your remaining balance below.</p>
+
+        <div class="balance-input-group">
+          <input type="text" [(ngModel)]="checkCode" placeholder="Code (e.g. GIFT-50)" (keyup.enter)="verifyBalance()">
+          <button (click)="verifyBalance()">Check</button>
+        </div>
+
+        @if (checkResult) {
+          <div class="result-box" [class.success]="checkResult.valid" [class.error]="!checkResult.valid">
+            @if (checkResult.valid) {
+              <i class="bi bi-check-circle-fill"></i>
+              <div>
+                <strong>Active Gift Card</strong>
+                <span>Available Balance: ${{ checkResult.balance?.toFixed(2) }}</span>
+              </div>
+            } @else {
+              <i class="bi bi-x-circle-fill"></i>
+              <span>{{ checkResult.message }}</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

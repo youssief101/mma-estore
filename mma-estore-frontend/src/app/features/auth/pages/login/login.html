@@ -173,19 +173,19 @@
         </div>
 
         <div class="social-auth">
-          <button type="button" class="social-btn">
+          <button type="button" class="social-btn" (click)="onSocialLogin('Google')" [disabled]="loading || redirecting">
             <i class="bi bi-google"></i>
 
             <span>Google</span>
           </button>
 
-          <button type="button" class="social-btn">
+          <button type="button" class="social-btn" (click)="onSocialLogin('Facebook')" [disabled]="loading || redirecting">
             <i class="bi bi-facebook"></i>
 
             <span>Facebook</span>
           </button>
 
-          <button type="button" class="social-btn">
+          <button type="button" class="social-btn" (click)="onSocialLogin('Apple')" [disabled]="loading || redirecting">
             <i class="bi bi-apple"></i>
 
             <span>Apple</span>

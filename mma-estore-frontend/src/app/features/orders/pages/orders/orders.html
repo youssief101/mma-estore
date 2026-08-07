@@ -1,1 +1,153 @@
-<p>orders works!</p>
+<div class="orders-page">
+  <div class="breadcrumb">
+    <a routerLink="/home">Home</a> &nbsp;/&nbsp; <span>Orders</span>
+  </div>
+
+  <div class="page-header-row">
+    <h1 class="page-title">{{ selectedOrder ? 'Order #' + selectedOrder.orderNumber : 'Your Orders' }}</h1>
+
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchOrderNum" 
+        placeholder="Find order by # (e.g. MMA-123456)" 
+        (keyup.enter)="searchOrder()">
+      <button (click)="searchOrder()">Track</button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-state">
+      <i class="bi bi-arrow-repeat spin"></i>
+      <p>Loading order history...</p>
+    </div>
+  } @else if (selectedOrder) {
+    <!-- SINGLE ORDER DETAILS VIEW -->
+    <div class="order-detail-card">
+      <div class="detail-header">
+        <div>
+          <span class="order-date">Placed on {{ selectedOrder.createdAt | date:'mediumDate' }}</span>
+          <h2>Order #{{ selectedOrder.orderNumber }}</h2>
+        </div>
+        <span class="status-badge" [ngClass]="selectedOrder.status.toLowerCase()">
+          {{ selectedOrder.status }}
+        </span>
+      </div>
+
+      <!-- PROGRESS TRACKER TIMELINE -->
+      @if (selectedOrder.status !== 'Cancelled') {
+        <div class="tracker-timeline">
+          <div class="track-step" [class.completed]="getStatusStepIndex(selectedOrder.status) >= 1">
+            <div class="step-icon"><i class="bi bi-cart-check"></i></div>
+            <span>Order Placed</span>
+          </div>
+          <div class="track-line" [class.active]="getStatusStepIndex(selectedOrder.status) >= 2"></div>
+
+          <div class="track-step" [class.completed]="getStatusStepIndex(selectedOrder.status) >= 2">
+            <div class="step-icon"><i class="bi bi-gear-wide-connected"></i></div>
+            <span>Processing</span>
+          </div>
+          <div class="track-line" [class.active]="getStatusStepIndex(selectedOrder.status) >= 3"></div>
+
+          <div class="track-step" [class.completed]="getStatusStepIndex(selectedOrder.status) >= 3">
+            <div class="step-icon"><i class="bi bi-box-seam"></i></div>
+            <span>Shipped</span>
+          </div>
+          <div class="track-line" [class.active]="getStatusStepIndex(selectedOrder.status) >= 4"></div>
+
+          <div class="track-step" [class.completed]="getStatusStepIndex(selectedOrder.status) >= 4">
+            <div class="step-icon"><i class="bi bi-house-door"></i></div>
+            <span>Delivered</span>
+          </div>
+        </div>
+      }
+
+      <div class="order-grid">
+        <!-- ITEMS LIST -->
+        <div class="items-column">
+          <h3>Items Purchased</h3>
+          <div class="order-items-list">
+            @for (item of selectedOrder.items; track item.product._id) {
+              <div class="order-item-row">
+                <img [src]="item.product.image || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200'" [alt]="item.product.name">
+                <div class="item-meta">
+                  <a [routerLink]="['/products', item.product._id]" class="item-name">{{ item.product.name }}</a>
+                  <span class="item-qty">Qty: {{ item.quantity }} @if (item.size) { | Size: {{ item.size }} }</span>
+                </div>
+                <span class="item-price">${{ (item.price * item.quantity).toFixed(2) }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- SHIPPING & SUMMARY -->
+        <div class="info-column">
+          <div class="info-block">
+            <h3>Shipping Address</h3>
+            <p><strong>{{ selectedOrder.shippingAddress.firstName }} {{ selectedOrder.shippingAddress.lastName }}</strong></p>
+            <p>{{ selectedOrder.shippingAddress.address }}</p>
+            <p>{{ selectedOrder.shippingAddress.city }}, {{ selectedOrder.shippingAddress.state }} {{ selectedOrder.shippingAddress.zipCode }}</p>
+            <p>{{ selectedOrder.shippingAddress.country }}</p>
+            <p>Email: {{ selectedOrder.shippingAddress.email }}</p>
+          </div>
+
+          <div class="info-block summary-totals">
+            <h3>Order Summary</h3>
+            <div class="row"><span>Subtotal:</span> <span>${{ selectedOrder.subtotal.toFixed(2) }}</span></div>
+            <div class="row"><span>Shipping:</span> <span>${{ selectedOrder.shipping.toFixed(2) }}</span></div>
+            <div class="row"><span>Tax:</span> <span>${{ selectedOrder.tax.toFixed(2) }}</span></div>
+            <div class="row total-row"><span>Total:</span> <span class="total-val">${{ selectedOrder.totalAmount.toFixed(2) }}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <a routerLink="/orders" class="back-link"><i class="bi bi-arrow-left"></i> View All Orders</a>
+      </div>
+    </div>
+  } @else {
+    <!-- ALL ORDERS LIST -->
+    @if (orders.length === 0) {
+      <div class="empty-orders">
+        <i class="bi bi-box-seam empty-icon"></i>
+        <h2>No orders found</h2>
+        <p>You haven't placed any orders yet. Check out our latest products!</p>
+        <a routerLink="/products" class="shop-btn">Browse Shop</a>
+      </div>
+    } @else {
+      <div class="orders-list">
+        @for (order of orders; track order._id) {
+          <div class="order-summary-card">
+            <div class="card-head">
+              <div class="head-info">
+                <span class="ord-num">Order #{{ order.orderNumber }}</span>
+                <span class="ord-date">{{ order.createdAt | date:'mediumDate' }}</span>
+              </div>
+              <span class="status-badge" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span>
+            </div>
+
+            <div class="card-body">
+              <div class="item-preview">
+                @for (item of order.items.slice(0, 3); track item.product._id) {
+                  <img [src]="item.product.image || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100'" [alt]="item.product.name" title="{{ item.product.name }}">
+                }
+                @if (order.items.length > 3) {
+                  <span class="more-items">+{{ order.items.length - 3 }} more</span>
+                }
+              </div>
+
+              <div class="card-meta">
+                <span>{{ order.items.length }} Item(s)</span>
+                <span class="total-price">${{ order.totalAmount.toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <a [routerLink]="['/orders', order._id]" class="view-btn">View Details & Tracking <i class="bi bi-chevron-right"></i></a>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

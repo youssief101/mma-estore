@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 // 1. Import and register Swiper Web Components
 import { register } from 'swiper/element/bundle';
@@ -28,6 +28,7 @@ register();
 })
 export class FeaturedFightersComponent implements OnInit, AfterViewInit {
   private fighterService = inject(FighterService);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   // 2. EXPOSE JSON TO THE TEMPLATE
@@ -86,5 +87,12 @@ export class FeaturedFightersComponent implements OnInit, AfterViewInit {
     if (!image) return '/images/placeholder-fighter.png';
     if (image.startsWith('http') || image.startsWith('/')) return image;
     return `/${image}`;
+  }
+
+  shopFighter(fighter: Fighter): void {
+    const name = `${fighter.firstName} ${fighter.lastName}`.trim();
+    this.router.navigate(['/products'], {
+      queryParams: { fighter: fighter._id || name }
+    });
   }
 }

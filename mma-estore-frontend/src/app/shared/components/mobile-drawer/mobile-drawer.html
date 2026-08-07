@@ -47,6 +47,12 @@
       <i class="bi bi-person"></i>
       <span>Account</span>
     </a>
+    @if (authService.hasRole('admin')) {
+      <a routerLink="/admin" class="action-btn" (click)="navigation.closeDrawer()">
+        <i class="bi bi-shield-lock"></i>
+        <span>Admin</span>
+      </a>
+    }
     <a routerLink="/cart" class="action-btn" (click)="navigation.closeDrawer()">
       <i class="bi bi-cart3"></i>
       <span>Cart</span>

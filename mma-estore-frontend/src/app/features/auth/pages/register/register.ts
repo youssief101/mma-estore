@@ -28,6 +28,7 @@ export class RegisterModal {
   registerForm = this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
     lastName: ['', [Validators.required, Validators.minLength(2)]],
+    username: ['', [Validators.required, Validators.minLength(3)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
@@ -45,9 +46,9 @@ export class RegisterModal {
       .register({
         firstName: this.registerForm.value.firstName!,
         lastName: this.registerForm.value.lastName!,
+        username: this.registerForm.value.username!,
         email: this.registerForm.value.email!,
         password: this.registerForm.value.password!,
-        username: this.registerForm.value.email!.split('@')[0],
       })
       .subscribe({
         next: () => {

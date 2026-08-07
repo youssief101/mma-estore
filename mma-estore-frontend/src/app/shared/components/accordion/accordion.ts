@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-accordion',
   imports: [],
   templateUrl: './accordion.html',
-  styleUrl: './accordion.css',
 })
 export class Accordion {
 

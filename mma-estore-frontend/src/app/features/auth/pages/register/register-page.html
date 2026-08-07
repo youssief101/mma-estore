@@ -1,0 +1,117 @@
+<div class="auth-page">
+  <div class="auth-wrapper">
+    <app-card>
+      <div class="auth-card">
+        <header class="auth-header">
+          <h1 class="auth-title">Create an Account</h1>
+          <p class="auth-subtitle">Join the ultimate MMA store and gear community.</p>
+        </header>
+
+        <form
+          class="form-container auth-form"
+          [class.auth-loading]="loading || redirecting"
+          [formGroup]="registerForm"
+          (ngSubmit)="onSubmit()"
+          autocomplete="off"
+          novalidate
+        >
+          <!-- Name row -->
+          <div class="form-row-grid">
+            <section class="form-section">
+              <label class="form-label">First Name</label>
+              <app-input formControlName="firstName" placeholder="First Name"></app-input>
+              @if (registerForm.controls.firstName.touched && registerForm.controls.firstName.invalid) {
+                <div class="form-error">First name is required (min 2 chars).</div>
+              }
+            </section>
+
+            <section class="form-section">
+              <label class="form-label">Last Name</label>
+              <app-input formControlName="lastName" placeholder="Last Name"></app-input>
+              @if (registerForm.controls.lastName.touched && registerForm.controls.lastName.invalid) {
+                <div class="form-error">Last name is required (min 2 chars).</div>
+              }
+            </section>
+          </div>
+
+          <!-- Username -->
+          <section class="form-section">
+            <label class="form-label">Username</label>
+            <app-input formControlName="username" placeholder="Choose a username"></app-input>
+            @if (registerForm.controls.username.touched && registerForm.controls.username.invalid) {
+              <div class="form-error">Username is required (min 3 chars).</div>
+            }
+          </section>
+
+          <!-- Email -->
+          <section class="form-section">
+            <label class="form-label">Email Address</label>
+            <app-input type="email" formControlName="email" placeholder="Enter your email"></app-input>
+            @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
+              <div class="form-error">
+                @if (registerForm.controls.email.errors?.['required']) { Email is required. }
+                @if (registerForm.controls.email.errors?.['email']) { Enter a valid email address. }
+              </div>
+            }
+          </section>
+
+          <!-- Password -->
+          <section class="form-section">
+            <label class="form-label">Password</label>
+            <app-password-input formControlName="password" placeholder="Min 6 characters"></app-password-input>
+            @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
+              <div class="form-error">Password must be at least 6 characters.</div>
+            }
+          </section>
+
+          <!-- Confirm Password -->
+          <section class="form-section">
+            <label class="form-label">Confirm Password</label>
+            <app-password-input formControlName="confirmPassword" placeholder="Re-enter password"></app-password-input>
+            @if (registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.invalid) {
+              <div class="form-error">Please confirm your password.</div>
+            }
+            @if (registerForm.touched && registerForm.errors?.['passwordMismatch']) {
+              <div class="form-error">Passwords do not match.</div>
+            }
+          </section>
+
+          <!-- Error Alert -->
+          @if (errorMessage) {
+            <div class="auth-alert-error">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              <span>{{ errorMessage }}</span>
+            </div>
+          }
+
+          <!-- Success Alert -->
+          @if (successMessage) {
+            <div class="auth-alert-success">
+              {{ successMessage }}
+            </div>
+          }
+
+          <!-- Submit Action -->
+          <div class="form-actions">
+            <app-button type="submit" [disabled]="loading || redirecting">
+              @if (loading) {
+                <span class="auth-button-loading">
+                  <span class="auth-spinner"></span> Creating Account...
+                </span>
+              } @else if (redirecting) {
+                Redirecting...
+              } @else {
+                Register Now
+              }
+            </app-button>
+          </div>
+        </form>
+
+        <footer class="auth-footer">
+          Already have an account?
+          <a routerLink="/login"> Sign In </a>
+        </footer>
+      </div>
+    </app-card>
+  </div>
+</div>

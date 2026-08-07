@@ -1,58 +1,189 @@
 <div class="products-page">
-    <div class="breadcrumb">Home / Products</div>
+  <div class="breadcrumb">
+    <a routerLink="/home">Home</a> &nbsp;/&nbsp; <span>Products</span>
+  </div>
 
-    <header class="page-header">
-        <h1>MMA Official Store</h1>
-    </header>
-
-    <div class="store-layout">
-        <!-- LEFT SIDEBAR -->
-        <app-products-sidebar></app-products-sidebar>
-
-        <!-- RIGHT CONTENT -->
-        <main class="content">
-            
-            <section class="toolbar">
-                <div><strong>{{ totalProducts }}</strong> products found</div>
-                <!-- Removed Sort / Items Per Page div -->
-            </section>
-
-            <!-- ACTIVE TAGS SECTION -->
-            <section class="active-filters" *ngIf="activeTags.length > 0">
-                <div class="tags-wrapper">
-                    <span *ngFor="let tag of activeTags" class="filter-tag" (click)="removeTag(tag)">
-                        {{ tag.name }} <i class="close-icon">×</i>
-                    </span>
-                    <button class="clear-btn" (click)="clearFilters()">Clear All</button>
-                </div>
-            </section>
-
-            <section class="products-grid">
-                @if (loading) {
-                    <div class="status">Loading...</div>
-                } @else if (products.length === 0) {
-                    <div class="status">No products found.</div>
-                } @else {
-                    <div class="grid-container">
-                        @for (product of products; track product._id) {
-                            <div class="product-card">
-                                <div class="image-box">
-                                    <img [src]="getProductImage(product)" [alt]="product.name">
-                                </div>
-                                <div class="product-info">
-                                    <h3>{{ product.name }}</h3>
-                                    <p class="price">${{ product.price }}</p>
-                                    <p class="desc">{{ product.description }}</p>
-                                    <button class="buy-btn">Add to Cart</button>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
-            </section>
-
-            <!-- Removed Pagination section -->
-
-        </main>
+  <header class="page-header">
+    <div class="header-content">
+      <h1>MMA Official Store</h1>
+      <p class="subtitle">Official combat gear, apparel, and event merchandise</p>
     </div>
+  </header>
+
+  <div class="store-layout">
+    <!-- LEFT SIDEBAR / MOBILE DRAWER -->
+    <aside class="sidebar-wrapper" [class.open-mobile]="mobileFiltersOpen">
+      <div class="mobile-drawer-header">
+        <h3>Filters</h3>
+        <button class="close-mobile-btn" (click)="toggleMobileFilters()">&times;</button>
+      </div>
+      <app-products-sidebar></app-products-sidebar>
+    </aside>
+
+    <!-- RIGHT CONTENT -->
+    <main class="content">
+      <!-- TOOLBAR -->
+      <section class="toolbar">
+        <div class="toolbar-left">
+          <button class="mobile-filter-btn" (click)="toggleMobileFilters()">
+            <i class="bi bi-funnel"></i> Filters
+          </button>
+          <div class="item-count">
+            @if (totalProducts > 0) {
+              Showing <strong>{{ startItemIndex }}–{{ endItemIndex }}</strong> of <strong>{{ totalProducts }}</strong> products
+            } @else {
+              <strong>0</strong> products found
+            }
+          </div>
+        </div>
+
+        <div class="toolbar-right">
+          <!-- SORT DROPDOWN -->
+          <div class="select-group">
+            <label for="sort-select">Sort:</label>
+            <select id="sort-select" [value]="sortOption" (change)="onSortChange($event)">
+              <option value="newest">Newest Arrivals</option>
+              <option value="priceAsc">Price: Low to High</option>
+              <option value="priceDesc">Price: High to Low</option>
+              <option value="name">Name: A–Z</option>
+            </select>
+          </div>
+
+          <!-- ITEMS PER PAGE -->
+          <div class="select-group">
+            <label for="limit-select">Show:</label>
+            <select id="limit-select" [value]="itemsPerPage" (change)="onLimitChange($event)">
+              <option value="12">12 Items</option>
+              <option value="24">24 Items</option>
+              <option value="48">48 Items</option>
+            </select>
+          </div>
+
+          <!-- GRID/LIST TOGGLE -->
+          <div class="view-toggle">
+            <button 
+              type="button" 
+              class="toggle-btn" 
+              [class.active]="viewMode === 'grid'"
+              (click)="toggleViewMode('grid')"
+              title="Grid View">
+              <i class="bi bi-grid-3x3-gap-fill"></i>
+            </button>
+            <button 
+              type="button" 
+              class="toggle-btn" 
+              [class.active]="viewMode === 'list'"
+              (click)="toggleViewMode('list')"
+              title="List View">
+              <i class="bi bi-list-task"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTIVE FILTERS TAGS -->
+      @if (activeTags.length > 0) {
+        <section class="active-filters">
+          <div class="tags-wrapper">
+            <span class="active-label">Active Filters:</span>
+            @for (tag of activeTags; track tag.id + tag.key) {
+              <span class="filter-tag" (click)="removeTag(tag)">
+                {{ tag.name }} <i class="close-icon">&times;</i>
+              </span>
+            }
+            <button class="clear-btn" (click)="clearFilters()">Clear All</button>
+          </div>
+        </section>
+      }
+
+      <!-- PRODUCTS CONTENT -->
+      <section class="products-container">
+        @if (loading) {
+          <div class="grid-container" [class.list-view]="viewMode === 'list'">
+            @for (i of [1,2,3,4,5,6,7,8]; track i) {
+              <div class="product-card skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-text short"></div>
+                <div class="skeleton-text title"></div>
+                <div class="skeleton-text price"></div>
+              </div>
+            }
+          </div>
+        } @else if (products.length === 0) {
+          <div class="empty-products">
+            <i class="bi bi-search empty-icon"></i>
+            <h3>No products found</h3>
+            <p>Try clearing your filters or searching for something else.</p>
+            <button class="clear-btn-lg" (click)="clearFilters()">Clear All Filters</button>
+          </div>
+        } @else {
+          <div class="grid-container" [class.list-view]="viewMode === 'list'">
+            @for (product of products; track product._id) {
+              <div class="product-card" [routerLink]="['/products', product._id]">
+                <div class="image-box">
+                  @if (product.onSale && product.discountPercentage) {
+                    <span class="badge sale-badge">-{{ product.discountPercentage }}%</span>
+                  }
+                  <img [src]="getProductImage(product)" [alt]="product.name" loading="lazy">
+                </div>
+                <div class="product-info">
+                  <div class="meta-row">
+                    @if (product.brandID) {
+                      <span class="brand-tag">{{ product.brandID.name || 'MMA' }}</span>
+                    }
+                    @if (product.categoryID) {
+                      <span class="category-tag">{{ product.categoryID.name }}</span>
+                    }
+                  </div>
+                  <h3 class="product-title">{{ product.name }}</h3>
+                  <p class="desc" *ngIf="viewMode === 'list'">{{ product.description }}</p>
+
+                  <div class="price-row">
+                    <span class="price">${{ product.price }}</span>
+                    @if (product.oldPrice) {
+                      <span class="old-price">${{ product.oldPrice }}</span>
+                    }
+                  </div>
+
+                  <button class="buy-btn" (click)="addToCart(product, $event)">
+                    <i class="bi bi-cart-plus"></i> Add to Cart
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- PAGINATION -->
+          @if (totalPages > 1) {
+            <div class="pagination">
+              <button 
+                class="page-btn" 
+                [disabled]="currentPage === 1"
+                (click)="onPageChange(currentPage - 1)">
+                <i class="bi bi-chevron-left"></i> Prev
+              </button>
+
+              <div class="page-numbers">
+                @for (p of [].constructor(totalPages); track $index) {
+                  <button 
+                    class="page-num" 
+                    [class.active]="currentPage === ($index + 1)"
+                    (click)="onPageChange($index + 1)">
+                    {{ $index + 1 }}
+                  </button>
+                }
+              </div>
+
+              <button 
+                class="page-btn" 
+                [disabled]="currentPage === totalPages"
+                (click)="onPageChange(currentPage + 1)">
+                Next <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
+          }
+        }
+      </section>
+    </main>
+  </div>
 </div>

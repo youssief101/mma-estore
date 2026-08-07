@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-loading',
   imports: [],
   templateUrl: './loading.html',
-  styleUrl: './loading.css',
 })
 export class Loading {
 

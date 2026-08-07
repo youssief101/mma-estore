@@ -8,11 +8,12 @@ import {
   CUSTOM_ELEMENTS_SCHEMA 
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 // Import Swiper registration
 import { register } from 'swiper/element/bundle';
 import { ProductService } from '../../../../../../services/product.service';
+import { CartService } from '../../../../../core/services/cart.service';
 import { Product } from '../../../../../../models/product.model';
 
 register();
@@ -30,6 +31,8 @@ register();
 })
 export class FeaturedProductsComponent implements OnInit {
     private productService = inject(ProductService);
+    private cartService = inject(CartService);
+    private router = inject(Router);
     private cdr = inject(ChangeDetectorRef);
 
     readonly JSON = JSON;
@@ -84,5 +87,14 @@ export class FeaturedProductsComponent implements OnInit {
             return image.url;
         }
         return `/${image.url}`;
+    }
+
+    viewProduct(product: Product): void {
+        this.router.navigate(['/products', product._id]);
+    }
+
+    addToCart(event: Event, product: Product): void {
+        event.stopPropagation();
+        this.cartService.addToCart(product, 1);
     }
 }

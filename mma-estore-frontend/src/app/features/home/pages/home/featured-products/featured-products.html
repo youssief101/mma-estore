@@ -19,7 +19,7 @@
             [attr.breakpoints]="JSON.stringify(swiperBreakpoints)">
 
             <swiper-slide *ngFor="let product of products">
-                <div class="product-card">
+                <div class="product-card" (click)="viewProduct(product)" style="cursor: pointer;">
                     <div class="image-wrapper">
                         <img
                             [src]="getMainImage(product)"
@@ -51,7 +51,7 @@
                             </span>
                         </div>
 
-                        <button>
+                        <button type="button" (click)="addToCart($event, product)">
                             Add To Cart
                         </button>
                     </div>

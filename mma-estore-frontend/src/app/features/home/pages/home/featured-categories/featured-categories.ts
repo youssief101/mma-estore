@@ -8,6 +8,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA 
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { register } from 'swiper/element/bundle';
 import { CategoryService } from '../../../../../../services/category.service';
 import { Category } from '../../../../../../models/category.model';
@@ -26,6 +27,7 @@ register();
 })
 export class FeaturedCategories implements OnInit {
   private readonly categoryService = inject(CategoryService);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
   loading = true;
@@ -71,5 +73,11 @@ export class FeaturedCategories implements OnInit {
   private formatImagePath(path: string): string {
     if (!path) return '/images/placeholder.png';
     return (path.startsWith('http') || path.startsWith('/')) ? path : `/${path}`;
+  }
+
+  selectCategory(card: CategoryCardModel): void {
+    this.router.navigate(['/products'], {
+      queryParams: { category: card.name || card.id }
+    });
   }
 }

@@ -8,6 +8,7 @@ import { MobileDrawer } from '../../shared/components/mobile-drawer/mobile-drawe
 import { Navbar } from '../../shared/components/navbar/navbar';
 import { Footer } from '../../shared/components/footer/footer';
 import { RegisterModal } from '../../features/auth/pages/register/register';
+import { Toast } from '../../shared/components/toast/toast';
 
 import { NavigationService } from '../../core/services/navigation.service';
 
@@ -22,6 +23,7 @@ import { NavigationService } from '../../core/services/navigation.service';
     Navbar,
     Footer,
     RegisterModal,
+    Toast,
   ],
   templateUrl: './store-layout.html',
   styleUrl: './store-layout.css',

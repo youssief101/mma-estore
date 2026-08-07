@@ -12,6 +12,7 @@ import {
 } from '../models/auth.models';
 
 import { User } from '../models/user.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ import { User } from '../models/user.model';
 export class AuthService {
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   private currentUserSignal = signal<User | null>(null);
 
@@ -27,11 +28,29 @@ export class AuthService {
     return this.currentUserSignal();
   }
 
-  login(payload: LoginRequest): Observable<AuthResponse> {
+  saveToken(token: string, rememberMe: boolean = true): void {
+    if (rememberMe) {
+      localStorage.setItem('accessToken', token);
+      sessionStorage.removeItem('accessToken');
+    } else {
+      sessionStorage.setItem('accessToken', token);
+      localStorage.removeItem('accessToken');
+    }
+  }
+
+  login(payload: LoginRequest & { rememberMe?: boolean }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, payload).pipe(
       tap((response) => {
-        localStorage.setItem('accessToken', response.token);
+        this.saveToken(response.token, payload.rememberMe !== false);
+        this.currentUserSignal.set(response.user);
+      }),
+    );
+  }
 
+  socialLogin(provider: string, rememberMe: boolean = true): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/social-login`, { provider }).pipe(
+      tap((response) => {
+        this.saveToken(response.token, rememberMe);
         this.currentUserSignal.set(response.user);
       }),
     );
@@ -40,8 +59,7 @@ export class AuthService {
   register(payload: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, payload).pipe(
       tap((response) => {
-        localStorage.setItem('accessToken', response.token);
-
+        this.saveToken(response.token, true);
         this.currentUserSignal.set(response.user);
       }),
     );
@@ -56,7 +74,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('accessToken');
+    return localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
   }
 
   isLoggedIn(): boolean {
@@ -70,21 +88,22 @@ export class AuthService {
   hasRole(role: string): boolean {
     const user = this.currentUser();
 
-    if (!user) {
+    if (!user || !user.role) {
       return false;
     }
 
-    return user.role === role;
+    return user.role.toLowerCase() === role.toLowerCase();
   }
 
   hasAnyRole(roles: string[]): boolean {
     const user = this.currentUser();
 
-    if (!user) {
+    if (!user || !user.role) {
       return false;
     }
 
-    return roles.includes(user.role);
+    const lowerRoles = roles.map((r) => r.toLowerCase());
+    return lowerRoles.includes(user.role.toLowerCase());
   }
 
   hasPermission(permission: string): boolean {
@@ -117,11 +136,20 @@ export class AuthService {
 
   clearSession(): void {
     localStorage.removeItem('accessToken');
+    sessionStorage.removeItem('accessToken');
 
     this.currentUserSignal.set(null);
   }
 
   logout(): void {
     this.clearSession();
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword });
   }
 }

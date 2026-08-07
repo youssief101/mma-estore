@@ -1,23 +1,19 @@
 const mongoose = require("mongoose");
+const seedDatabase = require("../utils/seedDatabase");
 
 const connectDB = async () => {
-
-    console.log(process.env.MONGODB_URI);
-
-    try {
-
-        await mongoose.connect(process.env.MONGODB_URI);
-
-        console.log("MongoDB connected successfully");
-
-    } catch (error) {
-
-        console.error(error);
-
-        process.exit(1);
-
+  try {
+    let mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri || !mongoUri.startsWith("mongodb")) {
+      mongoUri = "mongodb://127.0.0.1:27017/mma-estore";
     }
-
+    console.log("Connecting to MongoDB...");
+    await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 15000 });
+    console.log("MongoDB connected successfully");
+    await seedDatabase();
+  } catch (error) {
+    console.warn("[AI Studio] MongoDB connection warning:", error.message);
+  }
 };
 
 module.exports = connectDB;

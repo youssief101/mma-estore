@@ -1,30 +1,22 @@
-<div class="container py-5">
+<div class="home-page-wrapper">
+    <!-- Full-width edge-to-edge carousel banner -->
+    <div class="full-width-banner">
+        <app-home-carousel [slides]="slides"></app-home-carousel>
+    </div>
 
-    <h1>Welcome to MMA Store</h1>
+    <!-- Full-width edge-to-edge promotional banner -->
+    <div class="full-width-banner">
+        <app-home-hero
+            title="TOP PICK TEES & GEAR"
+            subtitle="Rep your favorite fighters with official MMA merchandise."
+            image="/banners/hero-banner.jpg"
+            link="/products">
+        </app-home-hero>
+    </div>
 
-    <p>
-        Temporary page for testing the Store Layout.
-    </p>
-
-    <app-home-carousel
-    [slides]="slides">
-    </app-home-carousel>
-
-    <app-home-hero
-        title="Top Pick Tees"
-        subtitle="Rep your favorite fighters with official MMA merchandise."
-        buttonText="Shop Now"
-        image="/banners/hero-banner.jpg"
-        link="/products">
-    </app-home-hero>
-
-    <app-home-hero></app-home-hero>
-
-    <app-featured-fighters></app-featured-fighters>
-    <app-featured-products></app-featured-products>
-
-    <app-home-carousel></app-home-carousel>
-
-    <app-featured-categories></app-featured-categories>
-
+    <div class="container py-4">
+        <app-featured-fighters></app-featured-fighters>
+        <app-featured-products></app-featured-products>
+        <app-featured-categories></app-featured-categories>
+    </div>
 </div>

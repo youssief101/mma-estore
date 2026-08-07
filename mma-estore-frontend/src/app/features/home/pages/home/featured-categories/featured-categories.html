@@ -21,7 +21,7 @@
 
             @for (card of cards; track card.id) {
                 <swiper-slide>
-                    <div class="category-item">
+                    <div class="category-item" (click)="selectCategory(card)" style="cursor: pointer;">
                         <div class="image-box">
                             <img [src]="card.image" [alt]="card.name">
                         </div>

@@ -90,8 +90,8 @@ export class Login {
     this.authService
       .login({
         email: this.loginForm.value.email!,
-
         password: this.loginForm.value.password!,
+        rememberMe: !!this.loginForm.value.rememberMe,
       })
       .subscribe({
         next: () => {
@@ -103,57 +103,79 @@ export class Login {
 
           setTimeout(() => {
             this.router.navigate(['/']);
-          }, 1500);
+          }, 1200);
         },
 
         error: (err) => {
           this.loading = false;
 
           const status = err.status;
+          const msg = err.error?.message;
+
+          if (status === 404) {
+            this.errorMessage = msg || 'Email does not exist.';
+            return;
+          }
 
           if (status === 401) {
             this.handleFailedLogin();
-
-            this.errorMessage = 'Incorrect email or password.';
-
+            this.errorMessage = msg || 'Incorrect password.';
             return;
           }
 
           if (status === 403) {
-            this.errorMessage = 'Your account is currently unavailable.';
-
+            this.errorMessage = msg || 'Your account is disabled.';
             return;
           }
 
           if (status === 412) {
             this.emailNotVerified = true;
-
-            this.errorMessage = 'Email address not verified.';
-
+            this.errorMessage = msg || 'Email address not verified.';
             return;
           }
 
           if (status === 428) {
             this.requireMfa = true;
-
-            this.errorMessage = 'Two-factor authentication required.';
-
+            this.errorMessage = msg || 'Two-factor authentication required.';
             return;
           }
 
           if (status === 0) {
             this.errorMessage = 'Unable to reach the server. Check your connection.';
-
             return;
           }
 
-          this.errorMessage = err.error?.message ?? 'Something went wrong. Please try again.';
+          this.errorMessage = msg ?? 'Something went wrong. Please try again.';
         },
       });
   }
 
   resendVerification(): void {
     this.successMessage = 'Verification email sent.';
+  }
+
+  onSocialLogin(provider: string): void {
+    if (this.loading || this.redirecting || this.accountLocked) return;
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    const rememberMe = !!this.loginForm.value.rememberMe;
+
+    this.authService.socialLogin(provider, rememberMe).subscribe({
+      next: (res) => {
+        this.loading = false;
+        this.redirecting = true;
+        this.successMessage = `${provider} login successful. Redirecting...`;
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 1200);
+      },
+      error: (err) => {
+        this.loading = false;
+        this.errorMessage = err.error?.message || `Failed to sign in with ${provider}.`;
+      }
+    });
   }
 
   private handleFailedLogin(): void {

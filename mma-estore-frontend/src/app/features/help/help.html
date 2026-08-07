@@ -1,0 +1,109 @@
+<div class="help-page-container">
+  <!-- Hero Section -->
+  <div class="help-hero">
+    <div class="container text-center py-5">
+      <span class="help-badge mb-3">UFC & MMA Help Center</span>
+      <h1 class="help-title">How can we assist you today?</h1>
+      <p class="help-subtitle">Find answers for shipping, order tracking, returns, and gear specifications.</p>
+      
+      <div class="help-search-box mx-auto mt-4">
+        <i class="bi bi-search help-search-icon"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          placeholder="Search support articles, e.g., 'returns', 'gloves size', 'shipping'..."
+          class="help-search-input">
+        @if (searchQuery) {
+          <button class="btn-clear" (click)="searchQuery = ''">&times;</button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <!-- Quick Actions -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="quick-card">
+          <div class="quick-icon"><i class="bi bi-box-seam"></i></div>
+          <h3>Track Your Package</h3>
+          <p>Check real-time status of your official UFC merchandise shipment.</p>
+          <a routerLink="/orders" class="quick-link">Find Your Order <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="quick-card">
+          <div class="quick-icon"><i class="bi bi-arrow-counterclockwise"></i></div>
+          <h3>Returns & Exchanges</h3>
+          <p>Start a return or exchange within 30 days of purchase.</p>
+          <a href="#faqs" (click)="selectedCategory = 'returns'" class="quick-link">View Return Rules <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="quick-card">
+          <div class="quick-icon"><i class="bi bi-gift"></i></div>
+          <h3>Gift Cards</h3>
+          <p>Check gift card balances or redeem codes on checkout.</p>
+          <a routerLink="/gift-cards" class="quick-link">Gift Card Portal <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Tabs & FAQ List -->
+    <div id="faqs" class="faq-section">
+      <h2 class="section-title text-center mb-4">Frequently Asked Questions</h2>
+      
+      <div class="category-tabs mb-4">
+        @for (cat of categories; track cat.id) {
+          <button 
+            type="button" 
+            class="cat-tab" 
+            [class.active]="selectedCategory === cat.id"
+            (click)="selectedCategory = cat.id">
+            <i class="bi" [ngClass]="cat.icon"></i>
+            <span>{{ cat.label }}</span>
+          </button>
+        }
+      </div>
+
+      <div class="faq-accordion">
+        @if (filteredFaqs.length > 0) {
+          @for (faq of filteredFaqs; track faq.question) {
+            <div class="faq-item" [class.open]="faq.isOpen">
+              <div class="faq-header" (click)="toggleFaq(faq)">
+                <span class="faq-question">{{ faq.question }}</span>
+                <i class="bi" [class.bi-chevron-down]="!faq.isOpen" [class.bi-chevron-up]="faq.isOpen"></i>
+              </div>
+              @if (faq.isOpen) {
+                <div class="faq-body">
+                  <p>{{ faq.answer }}</p>
+                </div>
+              }
+            </div>
+          }
+        } @else {
+          <div class="empty-faq text-center py-5">
+            <i class="bi bi-question-circle display-4 text-muted mb-3 d-block"></i>
+            <h5>No matching articles found</h5>
+            <p class="text-muted">Try refining your search terms or view all topics.</p>
+            <button class="btn btn-outline-danger mt-2" (click)="searchQuery = ''; selectedCategory = 'all'">Reset Filters</button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Still need help -->
+    <div class="contact-banner mt-5 p-4 rounded-4 text-center">
+      <h3>Still need assistance?</h3>
+      <p class="text-muted">Our dedicated UFC Customer Care team is available 24/7 to help you.</p>
+      <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+        <a href="mailto:support@mma-estore.com" class="btn btn-danger px-4 py-2 font-weight-bold">
+          <i class="bi bi-envelope-fill me-2"></i>Email Support
+        </a>
+        <a routerLink="/products" class="btn btn-dark px-4 py-2">
+          <i class="bi bi-shop me-2"></i>Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

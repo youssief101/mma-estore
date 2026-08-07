@@ -1,20 +1,79 @@
-<div class="search-bar">
+<div class="amazon-search-container">
+    <div class="amazon-search-bar">
+        <div class="category-select-wrapper">
+            <select [(ngModel)]="selectedCategory" (change)="onInput()">
+                <option value="all">All Departments</option>
+                <option value="Apparel">Apparel</option>
+                <option value="T-Shirts">T-Shirts</option>
+                <option value="Hats">Hats</option>
+                <option value="Equipment">Equipment</option>
+                <option value="Replica Belts">Replica Belts</option>
+                <option value="Collectibles">Collectibles</option>
+                <option value="Home & Office">Home & Office</option>
+                @for (cat of categories; track cat.id) {
+                    @if (!['Apparel','T-Shirts','Hats','Equipment','Replica Belts','Collectibles','Home & Office'].includes(cat.name)) {
+                        <option [value]="cat.name">{{ cat.name }}</option>
+                    }
+                }
+            </select>
+            <i class="bi bi-chevron-down select-arrow"></i>
+        </div>
 
-    <i class="bi bi-search search-icon"></i>
+        <div class="search-input-wrapper">
+            <input
+                type="text"
+                [(ngModel)]="query"
+                (input)="onInput()"
+                (focus)="onFocus()"
+                placeholder="Search UFC gear, fighters, gloves, apparel, belts..."
+                (keyup.enter)="onSearch()">
+            
+            @if (query) {
+                <button type="button" class="clear-search-btn" (click)="query = ''; onInput()">&times;</button>
+            }
+        </div>
 
-    <input
-        type="text"
-        [(ngModel)]="query"
-        placeholder="Search fighters, apparel, hats, belts..."
-        (keyup.enter)="onSearch()">
+        <button type="button" class="amazon-search-btn" (click)="onSearch()" aria-label="Search">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
 
-    <button
-        type="button"
-        class="search-button"
-        (click)="onSearch()">
-
-        Search
-
-    </button>
-
+    @if (showDropdown) {
+        <div class="amazon-search-dropdown shadow-lg">
+            @if (isSearching) {
+                <div class="dropdown-status">
+                    <span class="spinner-border spinner-border-sm text-danger me-2" role="status"></span>
+                    <span>Searching products...</span>
+                </div>
+            } @else if (suggestions.length > 0) {
+                <div class="dropdown-header">
+                    <span>Products Matching "{{ query }}"</span>
+                </div>
+                <div class="suggestions-list">
+                    @for (prod of suggestions; track prod._id) {
+                        <div class="suggestion-item" (click)="selectSuggestion(prod)">
+                            <img [src]="getProductImage(prod)" [alt]="prod.name" class="suggestion-thumb">
+                            <div class="suggestion-details">
+                                <div class="suggestion-name">{{ prod.name }}</div>
+                                <div class="suggestion-sub">
+                                    <span class="suggestion-price">${{ prod.price | number:'1.2-2' }}</span>
+                                    @if (prod.categoryID?.name) {
+                                        <span class="suggestion-badge">{{ prod.categoryID.name }}</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="dropdown-footer" (click)="onSearch()">
+                    View all results for "{{ query }}" <i class="bi bi-arrow-right ms-1"></i>
+                </div>
+            } @else if (query.trim().length >= 1) {
+                <div class="dropdown-empty">
+                    <i class="bi bi-search fs-3 text-muted mb-2"></i>
+                    <div>No products found matching "<strong>{{ query }}</strong>"</div>
+                </div>
+            }
+        </div>
+    }
 </div>
