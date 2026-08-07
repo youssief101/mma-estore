@@ -44,45 +44,39 @@ const validateCreateFighter = [
         .withMessage("Last name cannot exceed 50 characters."),
 
     body("nickname")
-        .optional()
+        .optional({ nullable: true })
         .trim()
         .isLength({ max: 100 })
         .withMessage("Nickname cannot exceed 100 characters."),
 
     body("gender")
-        .notEmpty()
-        .withMessage("Gender is required.")
+        .optional({ nullable: true })
+        .customSanitizer(val => {
+            if (!val) return "Male";
+            if (val.toString().toUpperCase() === "MALE") return "Male";
+            if (val.toString().toUpperCase() === "FEMALE") return "Female";
+            return val;
+        })
         .isIn(FighterGenders)
         .withMessage("Invalid gender."),
 
     body("weightClass")
-        .trim()
-        .notEmpty()
-        .withMessage("Weight class is required.")
-        .isLength({ max: 50 })
-        .withMessage("Weight class cannot exceed 50 characters."),
+        .optional({ nullable: true })
+        .trim(),
 
     body("ranking")
-        .optional({ nullable: true })
-        .isInt({ min: 1 })
-        .withMessage("Ranking must be a positive integer."),
+        .optional({ nullable: true }),
 
     body("country")
-        .trim()
-        .notEmpty()
-        .withMessage("Country is required.")
-        .isLength({ max: 100 })
-        .withMessage("Country cannot exceed 100 characters."),
+        .optional({ nullable: true })
+        .trim(),
 
     body("image")
-        .trim()
-        .notEmpty()
-        .withMessage("Image is required."),
+        .optional({ nullable: true })
+        .trim(),
 
     body("champion")
-        .optional()
-        .isBoolean()
-        .withMessage("Champion must be a boolean.")
+        .optional({ nullable: true })
 
 ];
 

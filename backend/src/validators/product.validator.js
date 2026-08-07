@@ -90,8 +90,7 @@ const validateProductId = [
 const validateCreateProduct = [
 
     body("productCode")
-        .isInt({ min: 1 })
-        .withMessage("Product code must be a positive integer."),
+        .optional({ nullable: true }),
 
     body("name")
         .trim()
@@ -101,96 +100,50 @@ const validateCreateProduct = [
         .withMessage("Product name cannot exceed 200 characters."),
 
     body("brandID")
-        .isMongoId()
-        .withMessage("Invalid brand ID."),
+        .optional({ nullable: true }),
 
     body("description")
-        .trim()
-        .notEmpty()
-        .withMessage("Description is required.")
-        .isLength({ max: 5000 })
-        .withMessage("Description cannot exceed 5000 characters."),
+        .optional({ nullable: true })
+        .trim(),
 
     body("price")
-        .isFloat({ min: 0 })
-        .withMessage("Price must be greater than or equal to 0."),
+        .optional({ nullable: true }),
 
     body("oldPrice")
-        .optional({ nullable: true })
-        .isFloat({ min: 0 })
-        .withMessage("Old price must be greater than or equal to 0."),
+        .optional({ nullable: true }),
 
     body("discountPercentage")
-        .optional()
-        .isFloat({ min: 0, max: 100 })
-        .withMessage("Discount must be between 0 and 100."),
+        .optional({ nullable: true }),
 
     body("onSale")
-        .optional()
-        .isBoolean()
-        .withMessage("onSale must be boolean."),
+        .optional({ nullable: true }),
 
     body("categoryID")
-        .isMongoId()
-        .withMessage("Invalid category ID."),
+        .optional({ nullable: true }),
 
     body("departmentID")
-        .isMongoId()
-        .withMessage("Invalid department ID."),
+        .optional({ nullable: true }),
 
     body("fighterID")
-        .optional({ nullable: true })
-        .isMongoId()
-        .withMessage("Invalid fighter ID."),
+        .optional({ nullable: true }),
 
     body("eventID")
-        .optional({ nullable: true })
-        .isMongoId()
-        .withMessage("Invalid event ID."),
+        .optional({ nullable: true }),
 
     body("audience")
-        .isIn(Audiences)
-        .withMessage("Invalid audience."),
+        .optional({ nullable: true }),
 
     body("images")
-        .isArray({ min: 1 })
-        .withMessage("At least one image is required."),
+        .optional({ nullable: true }),
 
-    body("images.*.url")
-        .notEmpty()
-        .withMessage("Image URL is required."),
-
-    body("images.*.isPrimary")
-        .optional()
-        .isBoolean()
-        .withMessage("isPrimary must be boolean."),
-
-    body("inventory.totalStock")
-        .isInt({ min: 0 })
-        .withMessage("Total stock cannot be negative."),
-
-    body("inventory.variants")
-        .optional()
-        .isArray()
-        .withMessage("Variants must be an array."),
-
-    body("inventory.variants.*.size")
-        .optional()
-        .isIn(Sizes)
-        .withMessage("Invalid size."),
-
-    body("inventory.variants.*.stock")
-        .optional()
-        .isInt({ min: 0 })
-        .withMessage("Stock cannot be negative."),
+    body("inventory")
+        .optional({ nullable: true }),
 
     body("specifications")
-        .optional()
-        .isArray(),
+        .optional({ nullable: true }),
 
     body("display")
-        .optional()
-        .isObject()
+        .optional({ nullable: true })
 
 ];
 

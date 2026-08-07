@@ -155,13 +155,39 @@
   <!-- TAB CONTENT: CATEGORIES -->
   @if (activeTab === 'categories') {
     <div class="tab-panel">
-      <div class="grid-cards">
-        @for (cat of categories; track cat._id) {
-          <div class="simple-card">
-            <h3>{{ cat.name }}</h3>
-            <p>{{ cat.description || 'Category' }}</p>
-          </div>
-        }
+      <div class="panel-toolbar">
+        <div></div>
+        <button class="primary-add-btn" (click)="openAddCategoryModal()">
+          <i class="bi bi-plus-lg"></i> Add New Category
+        </button>
+      </div>
+
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Category Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (cat of categories; track cat._id) {
+              <tr>
+                <td>
+                  <img [src]="cat.image || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100'" class="table-thumb">
+                </td>
+                <td><strong>{{ cat.name }}</strong></td>
+                <td>{{ cat.description || '—' }}</td>
+                <td class="actions-cell">
+                  <button class="icon-btn edit" (click)="openEditCategoryModal(cat)"><i class="bi bi-pencil-fill"></i> Edit</button>
+                  <button class="icon-btn delete" (click)="deleteCategory(cat._id)"><i class="bi bi-trash-fill"></i> Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
   }
@@ -169,13 +195,53 @@
   <!-- TAB CONTENT: FIGHTERS -->
   @if (activeTab === 'fighters') {
     <div class="tab-panel">
-      <div class="grid-cards">
-        @for (f of fighters; track f._id) {
-          <div class="simple-card">
-            <h3>{{ f.firstName }} {{ f.lastName }}</h3>
-            <p>Weightclass: {{ f.weightClass || 'N/A' }}</p>
-          </div>
-        }
+      <div class="panel-toolbar">
+        <div></div>
+        <button class="primary-add-btn" (click)="openAddFighterModal()">
+          <i class="bi bi-plus-lg"></i> Add New Fighter
+        </button>
+      </div>
+
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Nickname</th>
+              <th>Weight Class</th>
+              <th>Ranking</th>
+              <th>Country</th>
+              <th>Champion</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (f of fighters; track f._id) {
+              <tr>
+                <td>
+                  <img [src]="f.image || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100'" class="table-thumb">
+                </td>
+                <td><strong>{{ f.firstName }} {{ f.lastName }}</strong></td>
+                <td>{{ f.nickname || '—' }}</td>
+                <td>{{ f.weightClass || 'N/A' }}</td>
+                <td>{{ f.ranking ? '#' + f.ranking : 'Unranked' }}</td>
+                <td>{{ f.country || 'N/A' }}</td>
+                <td>
+                  @if (f.champion) {
+                    <span class="champ-badge"><i class="bi bi-trophy-fill"></i> Champ</span>
+                  } @else {
+                    <span>—</span>
+                  }
+                </td>
+                <td class="actions-cell">
+                  <button class="icon-btn edit" (click)="openEditFighterModal(f)"><i class="bi bi-pencil-fill"></i> Edit</button>
+                  <button class="icon-btn delete" (click)="deleteFighter(f._id)"><i class="bi bi-trash-fill"></i> Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
   }
@@ -183,12 +249,47 @@
   <!-- TAB CONTENT: BRANDS -->
   @if (activeTab === 'brands') {
     <div class="tab-panel">
-      <div class="grid-cards">
-        @for (b of brands; track b._id) {
-          <div class="simple-card">
-            <h3>{{ b.name }}</h3>
-          </div>
-        }
+      <div class="panel-toolbar">
+        <div></div>
+        <button class="primary-add-btn" (click)="openAddBrandModal()">
+          <i class="bi bi-plus-lg"></i> Add New Brand
+        </button>
+      </div>
+
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>Brand Name</th>
+              <th>Description</th>
+              <th>Website</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (b of brands; track b._id) {
+              <tr>
+                <td>
+                  <img [src]="b.logo || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100'" class="table-thumb">
+                </td>
+                <td><strong>{{ b.name }}</strong></td>
+                <td>{{ b.description || '—' }}</td>
+                <td>
+                  @if (b.website) {
+                    <a [href]="b.website" target="_blank">{{ b.website }}</a>
+                  } @else {
+                    <span>—</span>
+                  }
+                </td>
+                <td class="actions-cell">
+                  <button class="icon-btn edit" (click)="openEditBrandModal(b)"><i class="bi bi-pencil-fill"></i> Edit</button>
+                  <button class="icon-btn delete" (click)="deleteBrand(b._id)"><i class="bi bi-trash-fill"></i> Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
     </div>
   }
@@ -231,6 +332,145 @@
         <div class="modal-footer">
           <button class="cancel-btn" (click)="showProductModal = false">Cancel</button>
           <button class="save-btn" (click)="saveProduct()">Save Product</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- EDIT / CREATE CATEGORY MODAL -->
+  @if (showCategoryModal && editingCategory) {
+    <div class="modal-backdrop">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>{{ editingCategory._id ? 'Edit Category' : 'Create New Category' }}</h2>
+          <button class="close-modal" (click)="showCategoryModal = false">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Category Name *</label>
+            <input type="text" [(ngModel)]="editingCategory.name" placeholder="e.g. Gloves">
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="editingCategory.description" rows="3" placeholder="Category description..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="text" [(ngModel)]="editingCategory.image" placeholder="https://...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" (click)="showCategoryModal = false">Cancel</button>
+          <button class="save-btn" (click)="saveCategory()">Save Category</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- EDIT / CREATE FIGHTER MODAL -->
+  @if (showFighterModal && editingFighter) {
+    <div class="modal-backdrop">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>{{ editingFighter._id ? 'Edit Fighter' : 'Create New Fighter' }}</h2>
+          <button class="close-modal" (click)="showFighterModal = false">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row duo">
+            <div class="form-group">
+              <label>First Name *</label>
+              <input type="text" [(ngModel)]="editingFighter.firstName" placeholder="e.g. Islam">
+            </div>
+            <div class="form-group">
+              <label>Last Name *</label>
+              <input type="text" [(ngModel)]="editingFighter.lastName" placeholder="e.g. Makhachev">
+            </div>
+          </div>
+
+          <div class="form-row duo">
+            <div class="form-group">
+              <label>Nickname</label>
+              <input type="text" [(ngModel)]="editingFighter.nickname" placeholder="e.g. The Eagle">
+            </div>
+            <div class="form-group">
+              <label>Gender *</label>
+              <select [(ngModel)]="editingFighter.gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row duo">
+            <div class="form-group">
+              <label>Weight Class *</label>
+              <input type="text" [(ngModel)]="editingFighter.weightClass" placeholder="e.g. Lightweight">
+            </div>
+            <div class="form-group">
+              <label>Ranking</label>
+              <input type="number" [(ngModel)]="editingFighter.ranking" placeholder="1">
+            </div>
+          </div>
+
+          <div class="form-row duo">
+            <div class="form-group">
+              <label>Country *</label>
+              <input type="text" [(ngModel)]="editingFighter.country" placeholder="e.g. Russia">
+            </div>
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="editingFighter.champion"> Is Champion?
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="text" [(ngModel)]="editingFighter.image" placeholder="https://...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" (click)="showFighterModal = false">Cancel</button>
+          <button class="save-btn" (click)="saveFighter()">Save Fighter</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- EDIT / CREATE BRAND MODAL -->
+  @if (showBrandModal && editingBrand) {
+    <div class="modal-backdrop">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2>{{ editingBrand._id ? 'Edit Brand' : 'Create New Brand' }}</h2>
+          <button class="close-modal" (click)="showBrandModal = false">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Brand Name *</label>
+            <input type="text" [(ngModel)]="editingBrand.name" placeholder="e.g. Venum">
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="editingBrand.description" rows="3" placeholder="Brand description..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Logo URL</label>
+            <input type="text" [(ngModel)]="editingBrand.logo" placeholder="https://...">
+          </div>
+
+          <div class="form-group">
+            <label>Website URL</label>
+            <input type="text" [(ngModel)]="editingBrand.website" placeholder="https://...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" (click)="showBrandModal = false">Cancel</button>
+          <button class="save-btn" (click)="saveBrand()">Save Brand</button>
         </div>
       </div>
     </div>
