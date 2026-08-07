@@ -9,6 +9,8 @@ export interface Brand {
 
   description: string;
 
+  website?: string;
+
   isActive: boolean;
 
   createdAt: string;
