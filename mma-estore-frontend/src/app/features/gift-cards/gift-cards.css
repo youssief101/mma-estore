@@ -174,17 +174,32 @@
 
 /* SIDEBAR CARD PREVIEW */
 .card-preview {
-  background: linear-gradient(135deg, #111827 0%, #374151 100%);
+  position: relative;
+  background: #111827;
   color: white;
   border-radius: 12px;
-  padding: 24px;
-  height: 200px;
+  overflow: hidden;
+  height: 210px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  border: 1px solid #374151;
+}
+
+.gc-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gc-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(17,24,39,0.3) 0%, rgba(17,24,39,0.75) 100%);
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 24px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-  border: 1px solid #4b5563;
 }
 
 .gc-badge {
@@ -276,8 +291,211 @@
   color: #991b1b;
 }
 
-@media (max-width: 991px) {
-  .gift-grid {
-    grid-template-columns: 1fr;
-  }
+/* BANNERS */
+.admin-mode-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-left: 5px solid #d20a11;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.admin-banner-icon {
+  font-size: 1.5rem;
+  color: #d20a11;
+  margin-top: 2px;
+}
+
+.admin-banner-text strong {
+  font-size: 0.95rem;
+  color: #991b1b;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.admin-banner-text p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #7f1d1d;
+}
+
+.customer-info-banner {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-left: 5px solid #2563eb;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.customer-banner-icon {
+  font-size: 1.5rem;
+  color: #2563eb;
+  margin-top: 2px;
+}
+
+.customer-banner-text strong {
+  font-size: 0.95rem;
+  color: #1e40af;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.customer-banner-text p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #1e3a8a;
+}
+
+.creator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.creator-header h2 {
+  margin: 0;
+}
+
+.admin-pill-badge {
+  background: #d20a11;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+/* ADMIN ACTION BUTTONS */
+.admin-actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.admin-generate-btn {
+  width: 100%;
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.admin-generate-btn:hover {
+  background: #1f2937;
+}
+
+.secondary-cart-btn {
+  width: 100%;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.secondary-cart-btn:hover {
+  background: #e5e7eb;
+}
+
+/* GENERATED CODE BOX */
+.generated-code-box {
+  margin-top: 24px;
+  background: #f0fdf4;
+  border: 2px dashed #22c55e;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.gen-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: #15803d;
+}
+
+.gen-header i {
+  font-size: 1.5rem;
+}
+
+.gen-header strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.gen-header span {
+  font-size: 0.8rem;
+  color: #166534;
+}
+
+.gen-code-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border: 1px solid #bbf7d0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.gen-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.gen-code {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: 0.1em;
+  font-family: monospace;
+}
+
+.copy-btn {
+  margin-left: auto;
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gen-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #166534;
 }

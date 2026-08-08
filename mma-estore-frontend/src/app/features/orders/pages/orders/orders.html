@@ -67,14 +67,23 @@
         <div class="items-column">
           <h3>Items Purchased</h3>
           <div class="order-items-list">
-            @for (item of selectedOrder.items; track item.product._id) {
+            @for (item of selectedOrder.items; track (item.product?._id || item.product?.name)) {
               <div class="order-item-row">
-                <img [src]="item.product.image || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200'" [alt]="item.product.name">
+                <img [src]="item.product?.image || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200'" [alt]="item.product?.name || 'UFC Product'">
                 <div class="item-meta">
-                  <a [routerLink]="['/products', item.product._id]" class="item-name">{{ item.product.name }}</a>
+                  <a [routerLink]="['/products', item.product?._id]" class="item-name">{{ item.product?.name || 'UFC Product' }}</a>
                   <span class="item-qty">Qty: {{ item.quantity }} @if (item.size) { | Size: {{ item.size }} }</span>
+                  @if (item.giftCardCode || (item.product?.name && (item.product.name.toLowerCase().includes('gift card') || item.product.name.toLowerCase().includes('e-gift')))) {
+                    <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 8px; background: #1e293b; color: #38bdf8; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">
+                      <i class="bi bi-gift-fill" style="color: #f59e0b;"></i>
+                      <span>E-GIFT CODE: {{ item.giftCardCode || item.product?.giftCardCode || 'MMA-GC' + selectedOrder.orderNumber }}</span>
+                      <button (click)="copyToClipboard(item.giftCardCode || item.product?.giftCardCode || 'MMA-GC' + selectedOrder.orderNumber)" style="background: rgba(255,255,255,0.15); border: none; color: white; padding: 2px 6px; border-radius: 4px; cursor: pointer;">
+                        <i class="bi bi-clipboard"></i>
+                      </button>
+                    </div>
+                  }
                 </div>
-                <span class="item-price">${{ (item.price * item.quantity).toFixed(2) }}</span>
+                <span class="item-price">${{ ((item.price || 0) * (item.quantity || 1)).toFixed(2) }}</span>
               </div>
             }
           </div>
@@ -84,19 +93,19 @@
         <div class="info-column">
           <div class="info-block">
             <h3>Shipping Address</h3>
-            <p><strong>{{ selectedOrder.shippingAddress.firstName }} {{ selectedOrder.shippingAddress.lastName }}</strong></p>
-            <p>{{ selectedOrder.shippingAddress.address }}</p>
-            <p>{{ selectedOrder.shippingAddress.city }}, {{ selectedOrder.shippingAddress.state }} {{ selectedOrder.shippingAddress.zipCode }}</p>
-            <p>{{ selectedOrder.shippingAddress.country }}</p>
-            <p>Email: {{ selectedOrder.shippingAddress.email }}</p>
+            <p><strong>{{ selectedOrder.shippingAddress?.firstName || 'Customer' }} {{ selectedOrder.shippingAddress?.lastName || '' }}</strong></p>
+            <p>{{ selectedOrder.shippingAddress?.address || 'Standard Shipping' }}</p>
+            <p>{{ selectedOrder.shippingAddress?.city || '' }}, {{ selectedOrder.shippingAddress?.state || '' }} {{ selectedOrder.shippingAddress?.zipCode || '' }}</p>
+            <p>{{ selectedOrder.shippingAddress?.country || '' }}</p>
+            <p>Email: {{ selectedOrder.shippingAddress?.email || '' }}</p>
           </div>
 
           <div class="info-block summary-totals">
             <h3>Order Summary</h3>
-            <div class="row"><span>Subtotal:</span> <span>${{ selectedOrder.subtotal.toFixed(2) }}</span></div>
-            <div class="row"><span>Shipping:</span> <span>${{ selectedOrder.shipping.toFixed(2) }}</span></div>
-            <div class="row"><span>Tax:</span> <span>${{ selectedOrder.tax.toFixed(2) }}</span></div>
-            <div class="row total-row"><span>Total:</span> <span class="total-val">${{ selectedOrder.totalAmount.toFixed(2) }}</span></div>
+            <div class="row"><span>Subtotal:</span> <span>${{ (selectedOrder.subtotal || 0).toFixed(2) }}</span></div>
+            <div class="row"><span>Shipping:</span> <span>${{ (selectedOrder.shipping || 0).toFixed(2) }}</span></div>
+            <div class="row"><span>Tax:</span> <span>${{ (selectedOrder.tax || 0).toFixed(2) }}</span></div>
+            <div class="row total-row"><span>Total:</span> <span class="total-val">${{ (selectedOrder.totalAmount || 0).toFixed(2) }}</span></div>
           </div>
         </div>
       </div>
@@ -116,29 +125,29 @@
       </div>
     } @else {
       <div class="orders-list">
-        @for (order of orders; track order._id) {
+        @for (order of orders; track (order._id || order.orderNumber)) {
           <div class="order-summary-card">
             <div class="card-head">
               <div class="head-info">
                 <span class="ord-num">Order #{{ order.orderNumber }}</span>
                 <span class="ord-date">{{ order.createdAt | date:'mediumDate' }}</span>
               </div>
-              <span class="status-badge" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span>
+              <span class="status-badge" [ngClass]="(order.status || 'Processing').toLowerCase()">{{ order.status || 'Processing' }}</span>
             </div>
 
             <div class="card-body">
               <div class="item-preview">
-                @for (item of order.items.slice(0, 3); track item.product._id) {
-                  <img [src]="item.product.image || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100'" [alt]="item.product.name" title="{{ item.product.name }}">
+                @for (item of (order.items || []).slice(0, 3); track (item.product?._id || item.product?.name)) {
+                  <img [src]="item.product?.image || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=100'" [alt]="item.product?.name || 'Item'" title="{{ item.product?.name }}">
                 }
-                @if (order.items.length > 3) {
+                @if ((order.items || []).length > 3) {
                   <span class="more-items">+{{ order.items.length - 3 }} more</span>
                 }
               </div>
 
               <div class="card-meta">
-                <span>{{ order.items.length }} Item(s)</span>
-                <span class="total-price">${{ order.totalAmount.toFixed(2) }}</span>
+                <span>{{ (order.items || []).length }} Item(s)</span>
+                <span class="total-price">${{ (order.totalAmount || 0).toFixed(2) }}</span>
               </div>
             </div>
 

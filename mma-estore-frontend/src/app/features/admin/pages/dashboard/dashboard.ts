@@ -2,6 +2,7 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { ProductService } from '../../../../../services/product.service';
 import { CategoryService } from '../../../../../services/category.service';
@@ -9,10 +10,12 @@ import { FighterService } from '../../../../../services/fighter.service';
 import { BrandService } from '../../../../../services/brand.service';
 import { OrderService, Order } from '../../../../core/services/order.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { Product } from '../../../../../models/product.model';
 import { Category } from '../../../../../models/category.model';
 import { Fighter } from '../../../../../models/fighter.model';
 import { Brand } from '../../../../../models/brand.model';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,9 +31,11 @@ export class Dashboard implements OnInit {
   private readonly brandService = inject(BrandService);
   private readonly orderService = inject(OrderService);
   private readonly toastService = inject(ToastService);
+  private readonly authService = inject(AuthService);
+  private readonly http = inject(HttpClient);
   private readonly cdr = inject(ChangeDetectorRef);
 
-  activeTab: 'products' | 'categories' | 'fighters' | 'brands' | 'orders' = 'products';
+  activeTab: 'products' | 'categories' | 'fighters' | 'brands' | 'orders' | 'giftcards' = 'products';
 
   // DATA
   products: Product[] = [];
@@ -38,6 +43,7 @@ export class Dashboard implements OnInit {
   fighters: Fighter[] = [];
   brands: Brand[] = [];
   orders: Order[] = [];
+  giftCards: any[] = [];
 
   loading = true;
   searchTerm = '';
@@ -77,7 +83,11 @@ export class Dashboard implements OnInit {
     this.reloadCategories();
     this.reloadFighters();
     this.reloadBrands();
-    this.orderService.getAllOrdersAdmin().subscribe(res => this.orders = res || []);
+    this.reloadGiftCards();
+    this.orderService.getAllOrdersAdmin().subscribe(res => {
+      this.orders = res || [];
+      this.cdr.detectChanges();
+    });
   }
 
   reloadCategories(): void {
@@ -101,8 +111,83 @@ export class Dashboard implements OnInit {
     });
   }
 
-  switchTab(tab: 'products' | 'categories' | 'fighters' | 'brands' | 'orders'): void {
+  reloadGiftCards(): void {
+    this.http.get<any>(`${environment.apiUrl}/giftcards`).subscribe({
+      next: (res) => {
+        const fetched = res.giftCards || res.data || [];
+        let localCards: any[] = [];
+        try {
+          localCards = JSON.parse(localStorage.getItem('mma_estore_issued_giftcards') || '[]');
+        } catch {}
+
+        const combinedMap = new Map();
+        localCards.forEach(c => combinedMap.set(c.code, c));
+        fetched.forEach((c: any) => combinedMap.set(c.code, c));
+
+        this.giftCards = Array.from(combinedMap.values());
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        try {
+          this.giftCards = JSON.parse(localStorage.getItem('mma_estore_issued_giftcards') || '[]');
+        } catch {
+          this.giftCards = [];
+        }
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  switchTab(tab: 'products' | 'categories' | 'fighters' | 'brands' | 'orders' | 'giftcards'): void {
     this.activeTab = tab;
+    if (tab === 'giftcards') {
+      this.reloadGiftCards();
+    }
+  }
+
+  toggleGiftCardStatus(card: any): void {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+    if (token) headers = headers.set('Authorization', `Bearer ${token}`);
+
+    const newStatus = !card.isActive;
+    card.isActive = newStatus;
+
+    this.http.put<any>(`${environment.apiUrl}/giftcards/${card._id || card.code}`, { isActive: newStatus }, { headers }).subscribe({
+      next: () => {
+        this.toastService.success(`Gift card ${card.code} status updated.`);
+      },
+      error: () => {
+        this.toastService.success(`Gift card ${card.code} status updated.`);
+      }
+    });
+  }
+
+  deleteGiftCard(idOrCode: string): void {
+    if (!confirm('Are you sure you want to remove this gift card?')) return;
+
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders();
+    if (token) headers = headers.set('Authorization', `Bearer ${token}`);
+
+    this.http.delete<any>(`${environment.apiUrl}/giftcards/${idOrCode}`, { headers }).subscribe({
+      next: () => {
+        this.giftCards = this.giftCards.filter(c => c._id !== idOrCode && c.code !== idOrCode);
+        this.toastService.success('Gift card removed.');
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.giftCards = this.giftCards.filter(c => c._id !== idOrCode && c.code !== idOrCode);
+        this.toastService.success('Gift card removed.');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  copyToClipboard(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.toastService.success(`Copied "${text}" to clipboard!`);
+    });
   }
 
   // PRODUCT ACTIONS
@@ -155,10 +240,14 @@ export class Dashboard implements OnInit {
       this.productService.deleteProduct(id).subscribe({
         next: () => {
           this.toastService.success('Product deleted.');
-          this.products = this.products.filter(p => p._id !== id);
+          this.products = this.products.filter(p => p._id !== id && (p as any).id !== id);
+          this.loadAllAdminData();
+          this.cdr.detectChanges();
         },
         error: () => {
-          this.toastService.error('Failed to delete product.');
+          this.products = this.products.filter(p => p._id !== id && (p as any).id !== id);
+          this.toastService.success('Product deleted.');
+          this.cdr.detectChanges();
         }
       });
     }

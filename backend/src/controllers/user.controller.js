@@ -101,28 +101,70 @@ const changePassword = async (req, res) => {
             newPassword
         } = req.body;
 
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Current password and new password are required."
+            });
+        }
+
+        if (newPassword.trim().length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: "New password must be at least 6 characters long."
+            });
+        }
+
+        const userEmail = (req.user?.email || "").trim().toLowerCase();
+        const { verifyUserPassword, setStoredUserPassword } = require("../utils/fallbackStore");
+
         let user = null;
         try {
-            user = await User.findById(req.user._id).select("+passwordHash");
+            const userId = req.user?._id || req.user?.id;
+            if (userId) {
+                user = await User.findById(userId).select("+passwordHash");
+            }
+            if (!user && userEmail) {
+                user = await User.findOne({ email: userEmail }).select("+passwordHash");
+            }
         } catch (dbErr) {
             console.warn("[AI Studio] changePassword DB lookup warning:", dbErr.message);
         }
 
+        let isCurrentValid = false;
+
         if (user && user.passwordHash) {
-            const isCurrentPasswordCorrect = await bcrypt.compare(
-                currentPassword,
-                user.passwordHash
-            );
-
-            if (!isCurrentPasswordCorrect) {
-                return res.status(401).json({
-                    success: false,
-                    message: "Current password is incorrect."
-                });
+            const isMatchExact = await bcrypt.compare(currentPassword, user.passwordHash);
+            const isMatchTrimmed = await bcrypt.compare(currentPassword.trim(), user.passwordHash);
+            if (isMatchExact || isMatchTrimmed) {
+                isCurrentValid = true;
             }
+        }
 
-            user.passwordHash = await bcrypt.hash(newPassword, 12);
-            await user.save();
+        if (!isCurrentValid && userEmail) {
+            if (verifyUserPassword(userEmail, currentPassword)) {
+                isCurrentValid = true;
+            }
+        }
+
+        if (!isCurrentValid) {
+            return res.status(401).json({
+                success: false,
+                message: "Current password is incorrect."
+            });
+        }
+
+        const newHash = await bcrypt.hash(newPassword, 12);
+
+        if (user) {
+            user.passwordHash = newHash;
+            await user.save().catch((err) => {
+                console.warn("[AI Studio] Error saving updated password to DB:", err.message);
+            });
+        }
+
+        if (userEmail) {
+            setStoredUserPassword(userEmail, newHash, newPassword);
         }
 
         return res.status(200).json({
@@ -134,7 +176,7 @@ const changePassword = async (req, res) => {
         console.error("changePassword error:", error);
         return res.status(500).json({
             success: false,
-            message: "Failed to change password."
+            message: "Failed to change password. Please try again."
         });
     }
 };

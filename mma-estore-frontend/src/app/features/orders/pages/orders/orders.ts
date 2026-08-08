@@ -76,6 +76,12 @@ export class Orders implements OnInit {
     this.router.navigate(['/orders', num]);
   }
 
+  copyToClipboard(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.toastService.success(`Copied code "${text}" to clipboard!`);
+    });
+  }
+
   getStatusStepIndex(status: string): number {
     switch (status) {
       case 'Pending': return 1;

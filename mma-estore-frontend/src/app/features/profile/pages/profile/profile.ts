@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -18,6 +18,7 @@ export class Profile implements OnInit {
   private userService = inject(UserService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   loading = true;
   saving = false;
@@ -142,12 +143,20 @@ export class Profile implements OnInit {
           this.userMeta = { ...this.userMeta, ...res.user };
           this.authService.updateCurrentUser(res.user as any);
         }
-        setTimeout(() => this.successMessage = '', 4000);
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.successMessage = '';
+          this.cdr.detectChanges();
+        }, 4000);
       },
       error: (err) => {
         this.saving = false;
-        this.errorMessage = err?.error?.message || 'Failed to update profile.';
-        setTimeout(() => this.errorMessage = '', 4000);
+        this.errorMessage = err?.error?.message || err?.error?.errors?.[0]?.message || 'Failed to update profile.';
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.errorMessage = '';
+          this.cdr.detectChanges();
+        }, 4000);
       },
     });
   }
@@ -163,16 +172,24 @@ export class Profile implements OnInit {
     this.errorMessage = '';
 
     this.userService.changePassword(this.passwordForm.getRawValue()).subscribe({
-      next: () => {
+      next: (res) => {
         this.passwordSaving = false;
         this.passwordForm.reset();
-        this.successMessage = 'Password changed successfully.';
-        setTimeout(() => this.successMessage = '', 4000);
+        this.successMessage = res?.message || 'Password changed successfully.';
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.successMessage = '';
+          this.cdr.detectChanges();
+        }, 4000);
       },
       error: (err) => {
         this.passwordSaving = false;
-        this.errorMessage = err?.error?.message || 'Failed to change password. Check your current password.';
-        setTimeout(() => this.errorMessage = '', 4000);
+        this.errorMessage = err?.error?.message || err?.error?.errors?.[0]?.message || err?.error?.errors?.[0]?.msg || 'Failed to change password. Please verify your current password.';
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.errorMessage = '';
+          this.cdr.detectChanges();
+        }, 4000);
       },
     });
   }

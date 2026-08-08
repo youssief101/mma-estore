@@ -15,10 +15,13 @@ const {
 const {
     getAllGiftCards,
     getGiftCardById,
+    verifyGiftCard,
     createGiftCard,
     updateGiftCard,
     softDeleteGiftCard
 } = require("../controllers/giftCard.controller");
+
+router.get("/verify/:code", verifyGiftCard);
 
 router.get(
     "/",

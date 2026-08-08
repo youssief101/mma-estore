@@ -11,10 +11,34 @@
     </div>
   </div>
 
+  <!-- BANNERS: ADMIN VS CUSTOMER -->
+  @if (isAdmin()) {
+    <div class="admin-mode-banner">
+      <div class="admin-banner-icon"><i class="bi bi-shield-lock-fill"></i></div>
+      <div class="admin-banner-text">
+        <strong>⚡ Admin Control Mode Active</strong>
+        <p>As a Store Administrator, you can instantly generate official active gift card codes without payment or purchasing fees.</p>
+      </div>
+    </div>
+  } @else {
+    <div class="customer-info-banner">
+      <div class="customer-banner-icon"><i class="bi bi-cart-check-fill"></i></div>
+      <div class="customer-banner-text">
+        <strong>🛒 Customer Gift Card Purchase</strong>
+        <p>Select your amount and recipient. Adding an E-Gift Card to your cart will allow you to pay securely at checkout. Your digital gift card code will be activated upon order completion.</p>
+      </div>
+    </div>
+  }
+
   <div class="gift-grid">
     <!-- LEFT: GIFT CARD CREATOR -->
     <div class="creator-card">
-      <h2>Purchase E-Gift Card</h2>
+      <div class="creator-header">
+        <h2>{{ isAdmin() ? '⚡ Admin Gift Card Issuer' : 'Purchase E-Gift Card' }}</h2>
+        @if (isAdmin()) {
+          <span class="admin-pill-badge">FREE ISSUANCE</span>
+        }
+      </div>
 
       <!-- DENOMINATION PICKER -->
       <div class="form-section">
@@ -49,8 +73,8 @@
         </div>
 
         <div class="form-group">
-          <label for="senderName">Your Name</label>
-          <input id="senderName" type="text" [(ngModel)]="senderName" name="senderName" placeholder="Your Name">
+          <label for="senderName">Your Name / Sender</label>
+          <input id="senderName" type="text" [(ngModel)]="senderName" name="senderName" [placeholder]="isAdmin() ? 'MMA Official Admin' : 'Your Name'">
         </div>
 
         <div class="form-group">
@@ -58,20 +82,61 @@
           <textarea id="msg" [(ngModel)]="message" name="msg" rows="3" placeholder="Happy Birthday! Enjoy the new fight gear!"></textarea>
         </div>
 
-        <button type="button" class="add-cart-btn" (click)="addGiftCardToCart()">
-          <i class="bi bi-cart-plus-fill"></i> Add E-Gift Card to Cart (${{ finalAmount }})
-        </button>
+        <!-- ACTION BUTTONS: ADMIN VS CUSTOMER -->
+        @if (isAdmin()) {
+          <div class="admin-actions-group">
+            <button type="button" class="admin-generate-btn" (click)="generateAdminGiftCard()" [disabled]="isCreatingAdminCard">
+              <i class="bi bi-lightning-charge-fill"></i> Generate Gift Card Instantly (Free)
+            </button>
+            <button type="button" class="secondary-cart-btn" (click)="addGiftCardToCart()">
+              <i class="bi bi-cart-plus"></i> Or Add to Cart as Customer (${{ finalAmount }})
+            </button>
+          </div>
+        } @else {
+          <button type="button" class="add-cart-btn" (click)="addGiftCardToCart()">
+            <i class="bi bi-cart-plus-fill"></i> Add E-Gift Card to Cart (${{ finalAmount }})
+          </button>
+        }
       </form>
+
+      <!-- ADMIN CREATED CODE SUCCESS DISPLAY -->
+      @if (generatedCardResult) {
+        <div class="generated-code-box">
+          <div class="gen-header">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>
+              <strong>Gift Card Generated Successfully!</strong>
+              <span>Active and ready to use at checkout.</span>
+            </div>
+          </div>
+          <div class="gen-body">
+            <div class="gen-code-row">
+              <span class="gen-label">Card Code:</span>
+              <span class="gen-code">{{ generatedCardResult.code }}</span>
+              <button class="copy-btn" (click)="copyCode(generatedCardResult.code)">
+                <i class="bi bi-copy"></i> Copy Code
+              </button>
+            </div>
+            <div class="gen-details">
+              <span>Value: <strong>${{ generatedCardResult.amount.toFixed(2) }}</strong></span>
+              <span>Recipient: <strong>{{ generatedCardResult.recipientEmail }}</strong></span>
+            </div>
+          </div>
+        </div>
+      }
     </div>
 
     <!-- RIGHT: GIFT CARD PREVIEW & BALANCE CHECKER -->
     <div class="sidebar-column">
       <!-- PREVIEW CARD -->
       <div class="card-preview">
-        <div class="gc-badge">OFFICIAL STORE</div>
-        <div class="gc-brand">MMA E-STORE</div>
-        <div class="gc-amount">${{ finalAmount }}</div>
-        <div class="gc-footer">Digital E-Gift Card</div>
+        <img src="/giftCards/giftCard.png" alt="MMA Gift Card" class="gc-preview-img">
+        <div class="gc-overlay">
+          <div class="gc-badge">OFFICIAL STORE</div>
+          <div class="gc-brand">MMA E-STORE</div>
+          <div class="gc-amount">${{ finalAmount }}</div>
+          <div class="gc-footer">Digital E-Gift Card</div>
+        </div>
       </div>
 
       <!-- CHECK BALANCE -->
@@ -89,7 +154,7 @@
             @if (checkResult.valid) {
               <i class="bi bi-check-circle-fill"></i>
               <div>
-                <strong>Active Gift Card</strong>
+                <strong>Active Gift Card {{ checkResult.code ? '(' + checkResult.code + ')' : '' }}</strong>
                 <span>Available Balance: ${{ checkResult.balance?.toFixed(2) }}</span>
               </div>
             } @else {

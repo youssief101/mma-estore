@@ -324,12 +324,143 @@ const mockUser = {
   firstName: "UFC",
   lastName: "Fan",
   phone: "+1 555-0199",
-  role: "customer",
+  role: "Customer",
   isActive: true,
   createdAt: new Date(),
   updatedAt: new Date(),
   addresses: []
 };
+
+const bcrypt = require("bcryptjs");
+
+const memoryUsers = new Map();
+const userPasswordHashes = new Map();
+
+// Default seed passwords
+userPasswordHashes.set("customer@mma.com", {
+  plainPassword: "password123",
+  passwordHash: bcrypt.hashSync("password123", 10)
+});
+userPasswordHashes.set("admin@mma.com", {
+  plainPassword: "admin123",
+  passwordHash: bcrypt.hashSync("admin123", 10)
+});
+
+function normalizeEmail(email) {
+  return (email || "").trim().toLowerCase();
+}
+
+function verifyUserPassword(email, inputPassword) {
+  const normEmail = normalizeEmail(email);
+  if (!normEmail || !inputPassword) return false;
+
+  const record = userPasswordHashes.get(normEmail);
+  if (record) {
+    if (record.plainPassword && (inputPassword === record.plainPassword || inputPassword.trim() === record.plainPassword)) {
+      return true;
+    }
+    if (record.passwordHash && bcrypt.compareSync(inputPassword, record.passwordHash)) {
+      return true;
+    }
+    if (record.passwordHash && bcrypt.compareSync(inputPassword.trim(), record.passwordHash)) {
+      return true;
+    }
+  }
+
+  // Fallback defaults if not set in map yet
+  if (normEmail === "customer@mma.com") {
+    return inputPassword === "password123" || inputPassword.trim() === "password123";
+  }
+  if (normEmail === "admin@mma.com") {
+    return inputPassword === "admin123" || inputPassword.trim() === "admin123";
+  }
+
+  return false;
+}
+
+function setStoredUserPassword(email, newPasswordHash, newPlainPassword) {
+  const normEmail = normalizeEmail(email);
+  if (!normEmail) return;
+  userPasswordHashes.set(normEmail, {
+    passwordHash: newPasswordHash || bcrypt.hashSync(newPlainPassword || "", 10),
+    plainPassword: newPlainPassword || ""
+  });
+}
+
+function getFallbackUser(email) {
+  const normEmail = normalizeEmail(email);
+  if (memoryUsers.has(normEmail)) {
+    return memoryUsers.get(normEmail);
+  }
+  if (normEmail === "customer@mma.com") {
+    return mockUser;
+  }
+  if (normEmail === "admin@mma.com") {
+    return {
+      ...mockUser,
+      _id: "650000000000000000000088",
+      username: "adminuser",
+      email: "admin@mma.com",
+      firstName: "Admin",
+      lastName: "User",
+      role: "Admin"
+    };
+  }
+  return null;
+}
+
+function registerFallbackUser(userData) {
+  const normEmail = normalizeEmail(userData.email);
+  const userObj = {
+    _id: "650000000000" + Date.now().toString().slice(-12),
+    username: (userData.username || "").trim().toLowerCase(),
+    email: normEmail,
+    firstName: (userData.firstName || "").trim(),
+    lastName: (userData.lastName || "").trim(),
+    phone: userData.phone || "",
+    role: userData.role || "Customer",
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    addresses: []
+  };
+  memoryUsers.set(normEmail, userObj);
+  if (userData.password) {
+    setStoredUserPassword(normEmail, bcrypt.hashSync(userData.password, 10), userData.password);
+  }
+  return userObj;
+}
+
+const mockGiftCards = [
+  { _id: 'gc1', code: 'GIFT-25', amount: 25, isActive: true, createdAt: new Date() },
+  { _id: 'gc2', code: 'GIFT-50', amount: 50, isActive: true, createdAt: new Date() },
+  { _id: 'gc3', code: 'GIFT-100', amount: 100, isActive: true, createdAt: new Date() },
+  { _id: 'gc4', code: 'MMA25', amount: 25, isActive: true, createdAt: new Date() },
+  { _id: 'gc5', code: 'MMA50', amount: 50, isActive: true, createdAt: new Date() },
+  { _id: 'gc6', code: 'MMA100', amount: 100, isActive: true, createdAt: new Date() }
+];
+
+function addFallbackGiftCard(cardData) {
+  const card = {
+    _id: 'gc_' + Date.now(),
+    code: (cardData.code || '').toUpperCase().trim(),
+    amount: Number(cardData.amount) || 0,
+    expirationDate: cardData.expirationDate ? new Date(cardData.expirationDate) : null,
+    isActive: true,
+    recipientEmail: cardData.recipientEmail || '',
+    recipientName: cardData.recipientName || '',
+    senderName: cardData.senderName || '',
+    message: cardData.message || '',
+    createdAt: new Date()
+  };
+  mockGiftCards.unshift(card);
+  return card;
+}
+
+function getFallbackGiftCard(code) {
+  const norm = (code || '').toUpperCase().trim();
+  return mockGiftCards.find(g => g.code === norm);
+}
 
 module.exports = {
   mockBrands,
@@ -339,4 +470,13 @@ module.exports = {
   mockEvents,
   mockProducts,
   mockUser,
+  mockGiftCards,
+  addFallbackGiftCard,
+  getFallbackGiftCard,
+  memoryUsers,
+  userPasswordHashes,
+  verifyUserPassword,
+  setStoredUserPassword,
+  getFallbackUser,
+  registerFallbackUser
 };

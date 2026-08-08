@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -29,10 +29,9 @@ import { Button } from '../../../../shared/components/button/button';
 })
 export class Login {
   private fb = inject(FormBuilder);
-
   private authService = inject(AuthService);
-
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   loading = false;
 
@@ -96,10 +95,9 @@ export class Login {
       .subscribe({
         next: () => {
           this.loading = false;
-
           this.redirecting = true;
-
           this.successMessage = 'Login successful. Redirecting...';
+          this.cdr.detectChanges();
 
           setTimeout(() => {
             this.router.navigate(['/']);
@@ -110,42 +108,49 @@ export class Login {
           this.loading = false;
 
           const status = err.status;
-          const msg = err.error?.message;
+          const msg = err.error?.message || err.error?.errors?.[0]?.message;
 
           if (status === 404) {
             this.errorMessage = msg || 'Email does not exist.';
+            this.cdr.detectChanges();
             return;
           }
 
           if (status === 401) {
             this.handleFailedLogin();
             this.errorMessage = msg || 'Incorrect password.';
+            this.cdr.detectChanges();
             return;
           }
 
           if (status === 403) {
             this.errorMessage = msg || 'Your account is disabled.';
+            this.cdr.detectChanges();
             return;
           }
 
           if (status === 412) {
             this.emailNotVerified = true;
             this.errorMessage = msg || 'Email address not verified.';
+            this.cdr.detectChanges();
             return;
           }
 
           if (status === 428) {
             this.requireMfa = true;
             this.errorMessage = msg || 'Two-factor authentication required.';
+            this.cdr.detectChanges();
             return;
           }
 
           if (status === 0) {
             this.errorMessage = 'Unable to reach the server. Check your connection.';
+            this.cdr.detectChanges();
             return;
           }
 
-          this.errorMessage = msg ?? 'Something went wrong. Please try again.';
+          this.errorMessage = msg ?? 'Invalid credentials or login failed. Please try again.';
+          this.cdr.detectChanges();
         },
       });
   }

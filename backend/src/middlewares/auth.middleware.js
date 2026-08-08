@@ -45,20 +45,8 @@ const authenticate = async (req, res, next) => {
         }
 
         if (!user) {
-            const { mockUser } = require("../utils/fallbackStore");
-            if (decoded.id === mockUser._id || decoded.email === mockUser.email) {
-                user = mockUser;
-            } else if (decoded.email === "admin@mma.com" || decoded.id === "650000000000000000000088") {
-                user = {
-                    ...mockUser,
-                    _id: "650000000000000000000088",
-                    username: "adminuser",
-                    email: "admin@mma.com",
-                    firstName: "Admin",
-                    lastName: "User",
-                    role: "Admin"
-                };
-            }
+            const { getFallbackUser } = require("../utils/fallbackStore");
+            user = getFallbackUser(decoded.email);
         }
 
         if (!user) {

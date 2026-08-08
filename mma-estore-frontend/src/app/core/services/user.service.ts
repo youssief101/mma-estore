@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 import {
   ProfileResponse,
   UpdateProfileRequest,
@@ -19,7 +21,7 @@ import {
 export class UserService {
   private http = inject(HttpClient);
 
-  private apiUrl = '/api/users';
+  private apiUrl = `${environment.apiUrl}/users`;
 
   getProfile(): Observable<ProfileResponse> {
     return this.http.get<ProfileResponse>(

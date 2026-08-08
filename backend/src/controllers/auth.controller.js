@@ -30,41 +30,58 @@ const register = async (req, res) => {
         const normalizedUsername = username.trim().toLowerCase();
         const normalizedEmail = email.trim().toLowerCase();
 
-        if (password.length < 6) {
+        if (password.trim().length < 6) {
             return res.status(400).json({
                 success: false,
                 message: "Password must be at least 6 characters long."
             });
         }
 
-        const existingUsername = await User.findOne({ username: normalizedUsername });
-        if (existingUsername) {
-            return res.status(409).json({
-                success: false,
-                message: "Username is already taken."
+        let user = null;
+        try {
+            const existingUsername = await User.findOne({ username: normalizedUsername });
+            if (existingUsername) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Username is already taken."
+                });
+            }
+
+            const existingEmail = await User.findOne({ email: normalizedEmail });
+            if (existingEmail) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Email is already registered."
+                });
+            }
+
+            const passwordHash = await bcrypt.hash(password, 12);
+
+            user = await User.create({
+                username: normalizedUsername,
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                email: normalizedEmail,
+                passwordHash,
+                phone: phone ? phone.trim() : "",
+                role: "Customer",
+                isActive: true
+            });
+        } catch (dbErr) {
+            console.warn("[AI Studio] Register DB warning, using fallback store:", dbErr.message);
+            const { registerFallbackUser } = require("../utils/fallbackStore");
+            user = registerFallbackUser({
+                username: normalizedUsername,
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                email: normalizedEmail,
+                password,
+                phone: phone ? phone.trim() : ""
             });
         }
 
-        const existingEmail = await User.findOne({ email: normalizedEmail });
-        if (existingEmail) {
-            return res.status(409).json({
-                success: false,
-                message: "Email is already registered."
-            });
-        }
-
-        const passwordHash = await bcrypt.hash(password, 12);
-
-        const user = await User.create({
-            username: normalizedUsername,
-            firstName: firstName.trim(),
-            lastName: lastName.trim(),
-            email: normalizedEmail,
-            passwordHash,
-            phone: phone ? phone.trim() : "",
-            role: "Customer",
-            isActive: true
-        });
+        const { setStoredUserPassword } = require("../utils/fallbackStore");
+        setStoredUserPassword(normalizedEmail, await bcrypt.hash(password, 10), password);
 
         const token = generateToken(user);
 
@@ -105,44 +122,33 @@ const login = async (req, res) => {
             console.warn("[AI Studio] Login DB warning:", dbErr.message);
         }
 
+        const { verifyUserPassword, getFallbackUser } = require("../utils/fallbackStore");
+
         if (!user) {
-            const { mockUser } = require("../utils/fallbackStore");
-            if (normalizedEmail === mockUser.email || normalizedEmail === "customer@mma.com") {
-                if (password === "password123") {
-                    user = {
-                        ...mockUser,
-                        passwordHash: await bcrypt.hash("password123", 10),
-                        save: async () => {}
-                    };
-                }
-            } else if (normalizedEmail === "admin@mma.com") {
-                if (password === "admin123") {
-                    user = {
-                        ...mockUser,
-                        _id: "650000000000000000000088",
-                        username: "adminuser",
-                        email: "admin@mma.com",
-                        firstName: "Admin",
-                        lastName: "User",
-                        role: "Admin",
-                        passwordHash: await bcrypt.hash("admin123", 10),
-                        save: async () => {}
-                    };
-                }
+            const fallbackUser = getFallbackUser(normalizedEmail);
+            if (fallbackUser && verifyUserPassword(normalizedEmail, password)) {
+                user = {
+                    ...fallbackUser,
+                    passwordHash: await bcrypt.hash(password, 10),
+                    save: async () => {}
+                };
             }
         }
 
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: "Email does not exist."
+                message: "Email does not exist or incorrect password."
             });
         }
 
-        const isPasswordCorrect = await bcrypt.compare(
-            password,
-            user.passwordHash
-        );
+        let isPasswordCorrect = false;
+        if (user.passwordHash) {
+            isPasswordCorrect = await bcrypt.compare(password, user.passwordHash) || await bcrypt.compare(password.trim(), user.passwordHash);
+        }
+        if (!isPasswordCorrect) {
+            isPasswordCorrect = verifyUserPassword(normalizedEmail, password);
+        }
 
         if (!isPasswordCorrect) {
             return res.status(401).json({

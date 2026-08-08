@@ -52,6 +52,9 @@
     <button class="tab-btn" [class.active]="activeTab === 'orders'" (click)="switchTab('orders')">
       <i class="bi bi-receipt"></i> Orders
     </button>
+    <button class="tab-btn" [class.active]="activeTab === 'giftcards'" (click)="switchTab('giftcards')">
+      <i class="bi bi-gift-fill"></i> Gift Cards
+    </button>
     <button class="tab-btn" [class.active]="activeTab === 'categories'" (click)="switchTab('categories')">
       <i class="bi bi-tags-fill"></i> Categories
     </button>
@@ -61,6 +64,9 @@
     <button class="tab-btn" [class.active]="activeTab === 'brands'" (click)="switchTab('brands')">
       <i class="bi bi-shield-fill"></i> Brands
     </button>
+    <a routerLink="/gift-cards" class="tab-btn portal-link">
+      <i class="bi bi-box-arrow-up-right"></i> Gift Cards Portal
+    </a>
   </div>
 
   <!-- TAB CONTENT: PRODUCTS -->
@@ -120,30 +126,118 @@
               <th>Order #</th>
               <th>Date</th>
               <th>Customer</th>
+              <th>Items & Digital Codes</th>
               <th>Total</th>
               <th>Status</th>
               <th>Update Status</th>
             </tr>
           </thead>
           <tbody>
-            @for (order of orders; track order._id) {
+            @for (order of orders; track (order._id || order.orderNumber)) {
               <tr>
                 <td><strong>#{{ order.orderNumber }}</strong></td>
                 <td>{{ order.createdAt | date:'shortDate' }}</td>
-                <td>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</td>
-                <td class="price-cell">${{ order.totalAmount.toFixed(2) }}</td>
                 <td>
-                  <span class="status-pill" [ngClass]="order.status.toLowerCase()">{{ order.status }}</span>
+                  <div><strong>{{ order.shippingAddress?.firstName || 'Customer' }} {{ order.shippingAddress?.lastName || '' }}</strong></div>
+                  <small class="text-muted">{{ order.shippingAddress?.email || order.userEmail || '' }}</small>
                 </td>
                 <td>
-                  <select [value]="order.status" (change)="updateOrderStatus(order, $any($event.target).value)" class="status-select">
+                  <div class="order-items-summary">
+                    @for (item of order.items; track $index) {
+                      <div class="item-summary-line">
+                        <span>{{ item.quantity }}x {{ item.product?.name || 'UFC Item' }}</span>
+                        @if (item.giftCardCode || (item.product?.name && (item.product.name.toLowerCase().includes('gift card') || item.product.name.toLowerCase().includes('e-gift')))) {
+                          <span class="gc-badge">
+                            <i class="bi bi-gift-fill"></i> E-GIFT: <code>{{ item.giftCardCode || item.product?.giftCardCode || 'MMA-GC' + order.orderNumber }}</code>
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </td>
+                <td class="price-cell">${{ (order.totalAmount || 0).toFixed(2) }}</td>
+                <td>
+                  <span class="status-pill" [ngClass]="(order.status || 'Processing').toLowerCase()">
+                    {{ order.status || 'Processing' }}
+                  </span>
+                </td>
+                <td>
+                  <select [value]="order.status || 'Processing'" (change)="updateOrderStatus(order, $any($event.target).value)" class="status-select">
                     <option value="Pending">Pending</option>
                     <option value="Processing">Processing</option>
                     <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
+                    <option value="Delivered">Delivered / Processed</option>
                     <option value="Cancelled">Cancelled</option>
                   </select>
                 </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- TAB CONTENT: GIFT CARDS -->
+  @if (activeTab === 'giftcards') {
+    <div class="tab-panel">
+      <div class="panel-toolbar">
+        <div class="gc-summary-pills">
+          <span class="pill-info"><i class="bi bi-gift-fill"></i> Total Gift Cards: <strong>{{ giftCards.length }}</strong></span>
+          <span class="pill-info success"><i class="bi bi-check-circle-fill"></i> Status: <strong>Active & Redeemable</strong></span>
+        </div>
+        <a routerLink="/gift-cards" class="primary-add-btn">
+          <i class="bi bi-plus-lg"></i> Issue New Gift Card
+        </a>
+      </div>
+
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Gift Card Code</th>
+              <th>Value</th>
+              <th>Recipient</th>
+              <th>Sender / Purchaser</th>
+              <th>Status</th>
+              <th>Issued Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (card of giftCards; track (card._id || card.code)) {
+              <tr>
+                <td>
+                  <div class="gc-code-cell">
+                    <code class="gc-code-display">{{ card.code }}</code>
+                    <button class="icon-btn copy" (click)="copyToClipboard(card.code)" title="Copy Code">
+                      <i class="bi bi-clipboard"></i>
+                    </button>
+                  </div>
+                </td>
+                <td class="price-cell">${{ (card.amount || 0).toFixed(2) }}</td>
+                <td>{{ card.recipientEmail || card.recipientName || 'Customer' }}</td>
+                <td>{{ card.senderName || 'E-Store Online Checkout' }}</td>
+                <td>
+                  <span class="status-pill" [class.delivered]="card.isActive !== false" [class.cancelled]="card.isActive === false">
+                    {{ card.isActive !== false ? 'Active' : 'Deactivated' }}
+                  </span>
+                </td>
+                <td>{{ (card.createdAt | date:'short') || 'Recently' }}</td>
+                <td class="actions-cell">
+                  <button class="icon-btn edit" (click)="toggleGiftCardStatus(card)">
+                    <i class="bi" [class.bi-toggle-on]="card.isActive !== false" [class.bi-toggle-off]="card.isActive === false"></i>
+                    {{ card.isActive !== false ? 'Deactivate' : 'Activate' }}
+                  </button>
+                  <button class="icon-btn delete" (click)="deleteGiftCard(card._id || card.code)">
+                    <i class="bi bi-trash-fill"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            }
+            @if (giftCards.length === 0) {
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 2rem;">No gift cards found. Purchased gift cards will be listed here automatically as processed purchases.</td>
               </tr>
             }
           </tbody>
